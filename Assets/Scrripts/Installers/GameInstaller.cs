@@ -4,6 +4,7 @@ using Asteroids.Core.Player;
 using Asteroids.Core.PlayerInput;
 using Asteroids.Presentation.Player;
 using UnityEngine.Assertions;
+using Utils.JsonLoader;
 
 namespace Asteroids.Installers
 {
@@ -12,15 +13,32 @@ namespace Asteroids.Installers
     /// </summary>
     public class GameInstaller : MonoInstaller
     {
+        private const string PlayerSettingsFileName = "player_settings.json";
+        
         [SerializeField] private ShipView _shipViewPrefab;
         [SerializeField] private KeyboardInputSettings _inputSettings;
-        [SerializeField] private ShipMovement.MovementSettings _movementSettings;
 
         public override void InstallBindings()
         {
+            InstallSettings();
             InstallSignals();
             InstallInput();
             InstallShip();
+        }
+
+        private void InstallSettings()
+        {
+            // Load player settings from JSON
+            var jsonLoader = new JsonLoader();
+            var playerSettings = jsonLoader.LoadFromStreamingAssets<PlayerSettings>(PlayerSettingsFileName);
+
+            Assert.IsNotNull(playerSettings, "Failed to load player settings from JSON!");
+            Assert.IsNotNull(playerSettings.Movement, "Movement settings are null in player settings!");
+            Assert.IsNotNull(playerSettings.StartPosition, "Start position settings are null in player settings!");
+
+            // Bind settings directly from JSON
+            Container.BindInstance(playerSettings.Movement);
+            Container.BindInstance(playerSettings.StartPosition);
         }
 
         private void InstallSignals()
@@ -31,6 +49,7 @@ namespace Asteroids.Installers
 
         private void InstallInput()
         {
+            // Input Settings - ScriptableObject from Inspector
             Assert.IsNotNull(_inputSettings, "KeyboardInputSettings is not assigned in GameInstaller! Please assign it in Inspector or create a ScriptableObject asset via: Create > Asteroids > Settings > Keyboard Input Settings");
             Container.BindInstance(_inputSettings);
 
@@ -41,9 +60,6 @@ namespace Asteroids.Installers
         private void InstallShip()
         {
             Container.Bind<ShipModel>().AsSingle();
-
-            Assert.IsNotNull(_movementSettings, "MovementSettings is not assigned in GameInstaller!");
-            Container.BindInstance(_movementSettings);
 
             // Ship Components
             Container.BindInterfacesAndSelfTo<ShipInitializer>().AsSingle();

@@ -8,7 +8,7 @@ namespace Asteroids.Core.Player
     /// <summary>
     /// Handles ship movement with acceleration and inertia
     /// </summary>
-    public partial class ShipMovement : ITickable
+    public class ShipMovement : ITickable
     {
         private readonly ShipModel _shipModel;
         private readonly MovementSettings _movementSettings;

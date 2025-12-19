@@ -1,5 +1,5 @@
 {
-    "name": "Asteroids.Infrastructure",
+    "name": "Utils.JsonLoader",
     "rootNamespace": "Asteroids.Infrastructure",
     "references": [
         "GUID:0d8beb7f090555447a6cf5ce9e54dbb4"
@@ -8,7 +8,9 @@
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
-    "precompiledReferences": [],
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],
