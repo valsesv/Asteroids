@@ -1,8 +1,9 @@
 {
-    "name": "Asteroids.Core",
-    "rootNamespace": "Asteroids.Core",
+    "name": "Asteroids.Core.Player",
+    "rootNamespace": "Asteroids.Core.Player",
     "references": [
-        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4"
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
+        "GUID:32224528ddec740dd8f1c3caccca42e9"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

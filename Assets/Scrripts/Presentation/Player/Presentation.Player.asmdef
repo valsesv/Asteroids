@@ -1,8 +1,10 @@
 {
-    "name": "Asteroids.Presentation",
-    "rootNamespace": "Asteroids.Presentation",
+    "name": "Asteroids.Presentation.Player",
+    "rootNamespace": "Asteroids.Presentation.Player",
     "references": [
-        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4"
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
+        "GUID:7aa25f9b7ed714afa937b71d399ce2c2",
+        "GUID:ff0a258f41ffa493084102685b4b558b"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -14,4 +16,3 @@
     "versionDefines": [],
     "noEngineReferences": false
 }
-
