@@ -17,6 +17,11 @@ namespace Asteroids.Core.Entity.Components
             Friction = friction;
             Speed = 0f;
         }
+
+        public void UpdateSpeed(float currentSpeed)
+        {
+            Speed = currentSpeed;
+        }
     }
 }
 

@@ -15,6 +15,21 @@ namespace Asteroids.Core.Entity.Components
             Position = position;
             Rotation = rotation;
         }
+
+        public void SetPosition(Vector2 position)
+        {
+            Position = position;
+        }
+
+        public void SetRotation(float rotation)
+        {
+            Rotation = rotation;
+        }
+
+        public void Move(Vector2 delta)
+        {
+            Position += delta;
+        }
     }
 }
 

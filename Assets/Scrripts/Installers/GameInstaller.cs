@@ -62,7 +62,6 @@ namespace Asteroids.Installers
             Container.Bind<ShipModel>().AsSingle();
 
             // Ship Components
-            Container.BindInterfacesAndSelfTo<ShipInitializer>().AsSingle();
             Container.BindInterfacesAndSelfTo<ShipMovement>().AsSingle();
 
             Assert.IsNotNull(_shipViewPrefab, "ShipViewPrefab is not assigned in GameInstaller!");

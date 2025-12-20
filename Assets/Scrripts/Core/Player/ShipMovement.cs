@@ -2,11 +2,13 @@ using UnityEngine;
 using Zenject;
 using Asteroids.Core.Signals;
 using Asteroids.Core.PlayerInput;
+using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Core.Player
 {
     /// <summary>
     /// Handles ship movement with acceleration and inertia
+    /// Works with Entity component system
     /// </summary>
     public class ShipMovement : ITickable
     {
@@ -28,16 +30,24 @@ namespace Asteroids.Core.Player
 
         public void Tick()
         {
-            if (_shipModel.CanControl)
+            var transform = _shipModel.GetTransform();
+            var physics = _shipModel.GetPhysics();
+
+            if (transform == null || physics == null)
             {
-                HandleMovement();
+                return;
             }
 
-            ApplyFriction();
-            UpdatePosition();
+            if (_shipModel.CanControl)
+            {
+                HandleMovement(physics);
+            }
+
+            ApplyFriction(physics);
+            UpdatePosition(transform, physics);
         }
 
-        private void HandleMovement()
+        private void HandleMovement(PhysicsComponent physics)
         {
             Vector2 input = _inputProvider.GetMovementInput();
 
@@ -45,32 +55,34 @@ namespace Asteroids.Core.Player
             {
                 return;
             }
-            _shipModel.Velocity += input * _movementSettings.Acceleration * Time.deltaTime;
+
+            // Apply acceleration
+            Vector2 acceleration = input * _movementSettings.Acceleration;
+            physics.AddVelocity(acceleration * Time.deltaTime);
 
             // Limit max speed
-            if (_shipModel.Velocity.magnitude > _movementSettings.MaxSpeed)
-            {
-                _shipModel.Velocity = _shipModel.Velocity.normalized * _movementSettings.MaxSpeed;
-            }
+            physics.ClampSpeed(_movementSettings.MaxSpeed);
         }
 
-        private void ApplyFriction()
+        private void ApplyFriction(PhysicsComponent physics)
         {
-            _shipModel.Velocity *= Mathf.Pow(_movementSettings.Friction, Time.deltaTime);
+            physics.ApplyFriction(_movementSettings.Friction, Time.deltaTime);
         }
 
-        private void UpdatePosition()
+        private void UpdatePosition(TransformComponent transform, PhysicsComponent physics)
         {
-            _shipModel.Position += _shipModel.Velocity * Time.deltaTime;
+            // Update position based on velocity
+            transform.Move(physics.Velocity * Time.deltaTime);
 
-            _positionSignal.X = _shipModel.Position.x;
-            _positionSignal.Y = _shipModel.Position.y;
-            _positionSignal.Rotation = _shipModel.Rotation;
+            // Fire signals
+            _positionSignal.X = transform.Position.x;
+            _positionSignal.Y = transform.Position.y;
+            _positionSignal.Rotation = transform.Rotation;
             _signalBus.Fire(_positionSignal);
 
-            _velocitySignal.VelocityX = _shipModel.Velocity.x;
-            _velocitySignal.VelocityY = _shipModel.Velocity.y;
-            _velocitySignal.Speed = _shipModel.Velocity.magnitude;
+            _velocitySignal.VelocityX = physics.Velocity.x;
+            _velocitySignal.VelocityY = physics.Velocity.y;
+            _velocitySignal.Speed = physics.Velocity.magnitude;
             _signalBus.Fire(_velocitySignal);
         }
     }

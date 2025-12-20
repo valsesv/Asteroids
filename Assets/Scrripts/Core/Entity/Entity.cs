@@ -1,15 +1,24 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Core.Entity
 {
     /// <summary>
     /// Base entity class that can hold components
     /// Both player and enemy entities can attach components like physics, motion, etc.
+    /// Every entity automatically has a TransformComponent by default.
     /// </summary>
-    public class Entity
+    public class GameEntity
     {
         private readonly Dictionary<Type, IComponent> _components = new Dictionary<Type, IComponent>();
+
+        public GameEntity(Vector2 position = default, float rotation = 0f)
+        {
+            // Every entity has a transform component by default
+            AddComponent(new TransformComponent(position, rotation));
+        }
 
         /// <summary>
         /// Add a component to this entity

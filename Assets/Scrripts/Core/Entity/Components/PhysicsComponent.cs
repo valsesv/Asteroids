@@ -16,6 +16,16 @@ namespace Asteroids.Core.Entity.Components
             Velocity = Vector2.zero;
         }
 
+        public void SetVelocity(Vector2 velocity)
+        {
+            Velocity = velocity;
+        }
+
+        public void AddVelocity(Vector2 delta)
+        {
+            Velocity += delta;
+        }
+
         public void ApplyForce(Vector2 force)
         {
             if (Mass > 0)
@@ -29,6 +39,19 @@ namespace Asteroids.Core.Entity.Components
             if (Mass > 0)
             {
                 Velocity += impulse / Mass;
+            }
+        }
+
+        public void ApplyFriction(float frictionCoefficient, float deltaTime)
+        {
+            Velocity *= Mathf.Pow(frictionCoefficient, deltaTime);
+        }
+
+        public void ClampSpeed(float maxSpeed)
+        {
+            if (Velocity.magnitude > maxSpeed)
+            {
+                Velocity = Velocity.normalized * maxSpeed;
             }
         }
     }
