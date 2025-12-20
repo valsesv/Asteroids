@@ -5,6 +5,8 @@ using Asteroids.Core.PlayerInput;
 using Asteroids.Presentation.Player;
 using UnityEngine.Assertions;
 using Utils.JsonLoader;
+using Asteroids.Core.Entity;
+using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Installers
 {
@@ -14,7 +16,7 @@ namespace Asteroids.Installers
     public class GameInstaller : MonoInstaller
     {
         private const string PlayerSettingsFileName = "player_settings.json";
-        
+
         [SerializeField] private ShipView _shipViewPrefab;
         [SerializeField] private KeyboardInputSettings _inputSettings;
 
@@ -43,8 +45,9 @@ namespace Asteroids.Installers
 
         private void InstallSignals()
         {
-            Container.DeclareSignal<Core.Signals.ShipPositionChangedSignal>();
-            Container.DeclareSignal<Core.Signals.ShipVelocityChangedSignal>();
+            // Declare generic component signals (reusable for any entity)
+            Container.DeclareSignal<TransformChangedSignal>();
+            Container.DeclareSignal<PhysicsChangedSignal>();
         }
 
         private void InstallInput()
@@ -61,8 +64,17 @@ namespace Asteroids.Installers
         {
             Container.Bind<ShipModel>().AsSingle();
 
-            // Ship Components
-            Container.BindInterfacesAndSelfTo<ShipMovement>().AsSingle();
+            // Bind ITickableComponents as ITickable so they update automatically
+            // Using ITickableComponent interface for type safety
+            Container.Bind<ITickable>()
+                .To<PhysicsComponent>()
+                .FromMethod(ctx => ctx.Container.Resolve<ShipModel>().GetComponent<PhysicsComponent>())
+                .AsSingle();
+
+            Container.Bind<ITickable>()
+                .To<ShipMovement>()
+                .FromMethod(ctx => ctx.Container.Resolve<ShipModel>().GetComponent<ShipMovement>())
+                .AsSingle();
 
             Assert.IsNotNull(_shipViewPrefab, "ShipViewPrefab is not assigned in GameInstaller!");
             Container.Bind<ShipView>().FromComponentInNewPrefab(_shipViewPrefab).AsSingle();

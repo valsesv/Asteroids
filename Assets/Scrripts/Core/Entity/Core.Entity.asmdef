@@ -1,7 +1,10 @@
 {
     "name": "Asteroids.Core.Entity",
     "rootNamespace": "Asteroids.Core.Entity",
-    "references": [],
+    "references": [
+        "GUID:b7cba9e4f0222420595c55ed53901f63",
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -63,6 +63,20 @@ namespace Asteroids.Core.Entity
         {
             return _components.Values;
         }
+
+        /// <summary>
+        /// Get all tickable components
+        /// </summary>
+        public IEnumerable<ITickableComponent> GetTickableComponents()
+        {
+            foreach (var component in _components.Values)
+            {
+                if (component is ITickableComponent tickable)
+                {
+                    yield return tickable;
+                }
+            }
+        }
     }
 }
 

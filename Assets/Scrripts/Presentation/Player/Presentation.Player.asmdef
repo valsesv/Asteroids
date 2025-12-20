@@ -3,7 +3,8 @@
     "rootNamespace": "Asteroids.Presentation.Player",
     "references": [
         "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
-        "GUID:ff0a258f41ffa493084102685b4b558b"
+        "GUID:ff0a258f41ffa493084102685b4b558b",
+        "GUID:be052474870db4c049c0bdee77eae8f1"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

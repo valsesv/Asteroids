@@ -1,13 +1,13 @@
 using System;
 using UnityEngine;
 using Zenject;
-using Asteroids.Core.Signals;
+using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Presentation.Player
 {
     /// <summary>
     /// Ship view - MonoBehaviour that represents the ship in the scene
-    /// Subscribes to signals directly (no ViewModel needed for game objects)
+    /// Subscribes to component signals directly (no ViewModel needed for game objects)
     /// </summary>
     public class ShipView : MonoBehaviour, IInitializable, IDisposable
     {
@@ -15,23 +15,23 @@ namespace Asteroids.Presentation.Player
 
         public void Initialize()
         {
-            _signalBus.Subscribe<ShipPositionChangedSignal>(OnPositionChanged);
-            _signalBus.Subscribe<ShipVelocityChangedSignal>(OnVelocityChanged);
+            _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
+            _signalBus.Subscribe<PhysicsChangedSignal>(OnPhysicsChanged);
         }
 
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<ShipPositionChangedSignal>(OnPositionChanged);
-            _signalBus?.Unsubscribe<ShipVelocityChangedSignal>(OnVelocityChanged);
+            _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
+            _signalBus?.Unsubscribe<PhysicsChangedSignal>(OnPhysicsChanged);
         }
 
-        private void OnPositionChanged(ShipPositionChangedSignal signal)
+        private void OnTransformChanged(TransformChangedSignal signal)
         {
             transform.position = new Vector3(signal.X, signal.Y, 0f);
             transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
         }
 
-        private void OnVelocityChanged(ShipVelocityChangedSignal signal)
+        private void OnPhysicsChanged(PhysicsChangedSignal signal)
         {
             // Can be used for visual effects based on speed
         }
