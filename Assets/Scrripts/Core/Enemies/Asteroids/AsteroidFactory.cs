@@ -18,6 +18,8 @@ namespace Asteroids.Core.Enemies
             Vector2 position,
             float rotation,
             float maxHealth,
+            Vector2 direction,
+            float speed,
             SignalBus signalBus)
         {
             // Create base enemy entity
@@ -26,6 +28,11 @@ namespace Asteroids.Core.Enemies
             // Add asteroid-specific component
             var asteroidComponent = new AsteroidComponent(size);
             entity.AddComponent(asteroidComponent);
+
+            // Add movement component (handles velocity and will handle collisions)
+            var physics = entity.GetComponent<PhysicsComponent>();
+            var movement = new AsteroidMovement(entity, physics, direction, speed, signalBus);
+            entity.AddComponent(movement);
 
             return entity;
         }
