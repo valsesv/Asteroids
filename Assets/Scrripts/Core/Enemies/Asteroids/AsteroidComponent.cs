@@ -1,17 +1,15 @@
 namespace Asteroids.Core.Enemies
 {
     /// <summary>
-    /// Asteroid model - contains asteroid-specific data
-    /// Laser destroys immediately, bullets cause fragmentation (or destruction if smallest)
+    /// Component for asteroid-specific data and behavior
     /// </summary>
-    public class AsteroidModel : EnemyModel
+    public class AsteroidComponent : EnemyComponent
     {
-        public AsteroidSize Size { get; set; }
+        public AsteroidSize Size { get; private set; }
 
-        public AsteroidModel(AsteroidSize size) : base(EnemyType.Asteroid)
+        public AsteroidComponent(AsteroidSize size) : base(EnemyType.Asteroid)
         {
             Size = size;
-            Type = EnemyType.Asteroid;
         }
 
         /// <summary>

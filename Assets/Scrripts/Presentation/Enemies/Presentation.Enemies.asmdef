@@ -3,7 +3,8 @@
     "rootNamespace": "Asteroids.Presentation.Enemies",
     "references": [
         "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
-        "GUID:b4f507807ff8440d1a44838312512860"
+        "GUID:b4f507807ff8440d1a44838312512860",
+        "GUID:be052474870db4c049c0bdee77eae8f1"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
