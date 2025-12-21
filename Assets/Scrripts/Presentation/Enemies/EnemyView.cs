@@ -61,6 +61,11 @@ namespace Asteroids.Presentation.Enemies
                 screenWrap.Reset();
             }
         }
+
+        protected virtual void OnCollisionEnter2D(Collision2D collision)
+        {
+            Debug.Log($"[EnemyView] {gameObject.name} collision entered with: {collision.gameObject.name}");
+        }
     }
 }
 

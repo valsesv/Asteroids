@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3601702483812920581}
   - component: {fileID: 8263256475669420597}
-  m_Layer: 0
+  - component: {fileID: 5601387121313377674}
+  m_Layer: 8
   m_Name: AsteroidSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,6 +85,41 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &5601387121313377674
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097587189801284026}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &8253083797725317176
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,7 +132,8 @@ GameObject:
   - component: {fileID: -6295164328782476283}
   - component: {fileID: 8820815153043058968}
   - component: {fileID: -1714950718672654663}
-  m_Layer: 0
+  - component: {fileID: 8724706786518926493}
+  m_Layer: 8
   m_Name: Asteroid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,7 +189,6 @@ MonoBehaviour:
   _size: 0
   _maxHealth: 100
   _direction: {x: 1, y: -1}
-  _speed: 2
 --- !u!114 &-1714950718672654663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,3 +203,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyType: 0
   _enemyViewPrefab: {fileID: 8820815153043058968}
+--- !u!50 &8724706786518926493
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8253083797725317176}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

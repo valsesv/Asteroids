@@ -20,7 +20,6 @@ namespace Asteroids.Presentation.Player
         public void Construct(ShipModel shipModel)
         {
             Entity = shipModel;
-            Debug.Log($"ShipView constructed with Entity: {Entity}");
         }
 
         public void Initialize()
@@ -44,6 +43,11 @@ namespace Asteroids.Presentation.Player
         private void OnPhysicsChanged(PhysicsChangedSignal signal)
         {
             // Can be used for visual effects based on speed
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            Debug.Log($"[ShipView] Collision entered with: {collision.gameObject.name}");
         }
     }
 }
