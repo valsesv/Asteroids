@@ -13,7 +13,7 @@ namespace Asteroids.Core.Enemies
     {
         private readonly GameEntity _entity;
         private readonly PhysicsComponent _physics;
-        private readonly Vector2 _direction;
+        private Vector2 _direction;
         private readonly float _speed;
 
         public AsteroidMovement(
@@ -26,14 +26,14 @@ namespace Asteroids.Core.Enemies
             _physics = physics;
             _direction = direction.normalized;
             _speed = speed;
+        }
 
-            // Set initial velocity - asteroid moves with constant speed in given direction (no friction)
+        public void SetDirection(Vector2 direction)
+        {
+            _direction = direction.normalized;
             _physics.SetVelocity(_direction * _speed);
             _physics.ClampSpeed(_speed);
         }
-
-        // This component will be used for collision handling in the future
-        // For now, velocity is set once in constructor and maintained by PhysicsComponent
     }
 }
 

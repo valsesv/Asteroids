@@ -89,18 +89,33 @@ namespace Asteroids.Presentation.Enemies
             {
                 var asteroid = _asteroidPool.Get();
                 enemy = asteroid;
+
+                // Set spawn position first (updates both Unity transform and TransformComponent)
+                enemy.SetSpawnPosition(spawnPosition);
+
+                // Calculate direction to random point inside game area
+                Vector2 targetPoint = GetRandomPointInsideGameArea();
+                Vector2 direction = (targetPoint - spawnPosition).normalized;
+                asteroid.SetDirection(direction);
             }
             else
             {
                 var ufo = _ufoPool.Get();
                 enemy = ufo;
-            }
 
-            // Set spawn position (updates both Unity transform and TransformComponent)
-            enemy.SetSpawnPosition(spawnPosition);
+                // Set spawn position (updates both Unity transform and TransformComponent)
+                enemy.SetSpawnPosition(spawnPosition);
+            }
 
             // Add to active enemies list
             _activeEnemies.Add(enemy);
+        }
+
+        private Vector2 GetRandomPointInsideGameArea()
+        {
+            float x = Random.Range(_screenBounds.Left, _screenBounds.Right);
+            float y = Random.Range(_screenBounds.Bottom, _screenBounds.Top);
+            return new Vector2(x, y);
         }
 
         /// <summary>

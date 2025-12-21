@@ -67,6 +67,21 @@ namespace Asteroids.Presentation.Enemies
                 _tickableManager.Add(tickableComponent);
             }
         }
+
+        /// <summary>
+        /// Set movement direction - used when spawning asteroid
+        /// </summary>
+        public void SetDirection(Vector2 direction)
+        {
+            if (Entity != null)
+            {
+                var movement = Entity.GetComponent<AsteroidMovement>();
+                if (movement != null)
+                {
+                    movement.SetDirection(direction);
+                }
+            }
+        }
     }
 }
 
