@@ -152,7 +152,7 @@ MonoBehaviour:
   _size: 0
   _maxHealth: 100
   _direction: {x: 1, y: -1}
-  _speed: 5
+  _speed: 2
 --- !u!114 &-1714950718672654663
 MonoBehaviour:
   m_ObjectHideFlags: 0

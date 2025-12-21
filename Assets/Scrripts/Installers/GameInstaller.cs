@@ -5,6 +5,8 @@ using Asteroids.Core.PlayerInput;
 using UnityEngine.Assertions;
 using Utils.JsonLoader;
 using Asteroids.Core.Entity;
+using Asteroids.Presentation.Player;
+using Asteroids.Presentation.Enemies;
 
 namespace Asteroids.Installers
 {
@@ -16,12 +18,15 @@ namespace Asteroids.Installers
         private const string PlayerSettingsFileName = "player_settings.json";
 
         [SerializeField] private KeyboardInputSettings _inputSettings;
+        [SerializeField] private ShipView _shipViewPrefab;
+        [SerializeField] private EnemySpawner _enemySpawner;
 
         public override void InstallBindings()
         {
             InstallSettings();
             InstallInput();
             InstallCommonServices();
+            InstallEnemySpawner();
         }
 
         private void InstallSettings()
@@ -56,6 +61,16 @@ namespace Asteroids.Installers
             Container.Bind<ScreenBounds>()
                 .FromMethod(ctx => new ScreenBounds(Camera.main))
                 .AsSingle();
+
+            Container.Bind<ShipView>().FromInstance(_shipViewPrefab).AsSingle();
+        }
+
+        private void InstallEnemySpawner()
+        {
+            if (_enemySpawner != null)
+            {
+                Container.BindInterfacesTo<EnemySpawner>().FromInstance(_enemySpawner).AsSingle();
+            }
         }
     }
 }

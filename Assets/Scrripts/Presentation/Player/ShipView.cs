@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Zenject;
 using Asteroids.Core.Entity.Components;
+using Asteroids.Core.Player;
 
 namespace Asteroids.Presentation.Player
 {
@@ -11,7 +12,16 @@ namespace Asteroids.Presentation.Player
     /// </summary>
     public class ShipView : MonoBehaviour, IInitializable, IDisposable
     {
+        public ShipModel Entity { get; private set; }
+
         [Inject] private SignalBus _signalBus;
+
+        [Inject]
+        public void Construct(ShipModel shipModel)
+        {
+            Entity = shipModel;
+            Debug.Log($"ShipView constructed with Entity: {Entity}");
+        }
 
         public void Initialize()
         {

@@ -3,6 +3,7 @@ using Zenject;
 using Asteroids.Core.Enemies;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
+using Asteroids.Presentation.Player;
 
 namespace Asteroids.Presentation.Enemies
 {
@@ -12,6 +13,7 @@ namespace Asteroids.Presentation.Enemies
     public class UfoView : EnemyView
     {
         [SerializeField] private float _maxHealth = 100f;
+        [SerializeField] private float _speed = 5f;
 
         private DiContainer _container;
         private TickableManager _tickableManager;
@@ -22,7 +24,8 @@ namespace Asteroids.Presentation.Enemies
             ScreenBounds screenBounds,
             DiContainer container,
             UfoFactory ufoFactory,
-            TickableManager tickableManager)
+            TickableManager tickableManager,
+            ShipView shipView)
         {
             _container = container;
             _tickableManager = tickableManager;
@@ -34,9 +37,18 @@ namespace Asteroids.Presentation.Enemies
             // Create base enemy entity using UfoFactory
             Entity = ufoFactory.CreateUfo(position, rotation, _maxHealth, signalBus);
 
-            // Add screen wrap component for teleportation at screen boundaries
+            // Get player TransformComponent from parent container (PlayerInstaller)
+            TransformComponent playerTransform = shipView.Entity.GetComponent<TransformComponent>();
+
+            // Add movement component (chases player with direct motion)
+            var physics = Entity.GetComponent<PhysicsComponent>();
             var transformComponent = Entity.GetComponent<TransformComponent>();
-            var screenWrap = new ScreenWrapComponent(transformComponent, screenBounds, signalBus);
+            var movement = new UfoMovement(Entity, physics, transformComponent, playerTransform, signalBus, _speed);
+            Entity.AddComponent(movement);
+
+            // Add screen wrap component for teleportation at screen boundaries
+            var entityTransform = Entity.GetComponent<TransformComponent>();
+            var screenWrap = new ScreenWrapComponent(entityTransform, screenBounds, signalBus);
             Entity.AddComponent(screenWrap);
 
             // Register Entity in container

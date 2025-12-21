@@ -13,7 +13,6 @@ namespace Asteroids.Core.Enemies
     {
         private readonly GameEntity _entity;
         private readonly PhysicsComponent _physics;
-        private readonly SignalBus _signalBus;
         private readonly Vector2 _direction;
         private readonly float _speed;
 
@@ -24,14 +23,13 @@ namespace Asteroids.Core.Enemies
             float speed,
             SignalBus signalBus)
         {
-            _entity = entity;
             _physics = physics;
             _direction = direction.normalized;
             _speed = speed;
-            _signalBus = signalBus;
 
             // Set initial velocity - asteroid moves with constant speed in given direction (no friction)
             _physics.SetVelocity(_direction * _speed);
+            _physics.ClampSpeed(_speed);
         }
 
         // This component will be used for collision handling in the future
