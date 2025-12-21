@@ -8,6 +8,7 @@ namespace Asteroids.Core.Player
     {
         public MovementSettings Movement;
         public StartPositionSettings StartPosition;
+        public HealthSettings Health;
     }
 }
 

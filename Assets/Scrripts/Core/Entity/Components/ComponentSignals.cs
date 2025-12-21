@@ -21,5 +21,15 @@ namespace Asteroids.Core.Entity.Components
         public float VelocityY { get; set; }
         public float Speed { get; set; }
     }
+
+    /// <summary>
+    /// Signal fired when health component changes (current health, max health)
+    /// Generic signal that can be used by any entity with HealthComponent
+    /// </summary>
+    public class HealthChangedSignal
+    {
+        public float CurrentHealth { get; set; }
+        public float MaxHealth { get; set; }
+    }
 }
 

@@ -30,6 +30,7 @@ namespace Asteroids.Installers
             SignalBusInstaller.Install(Container);
             Container.DeclareSignal<TransformChangedSignal>();
             Container.DeclareSignal<PhysicsChangedSignal>();
+            Container.DeclareSignal<HealthChangedSignal>();
         }
 
         private void InstallShipModel()

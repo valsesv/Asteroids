@@ -40,8 +40,10 @@ namespace Asteroids.Installers
             Assert.IsNotNull(playerSettings, "Failed to load player settings from JSON!");
             Assert.IsNotNull(playerSettings.Movement, "Movement settings are null in player settings!");
             Assert.IsNotNull(playerSettings.StartPosition, "Start position settings are null in player settings!");
+            Assert.IsNotNull(playerSettings.Health, "Health settings are null in player settings!");
             Container.BindInstance(playerSettings.Movement);
             Container.BindInstance(playerSettings.StartPosition);
+            Container.BindInstance(playerSettings.Health);
 
             // Load enemy settings
             var enemySettings = jsonLoader.LoadFromStreamingAssets<EnemySettings>(EnemySettingsFileName);

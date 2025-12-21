@@ -14,8 +14,9 @@ namespace Asteroids.Core.Player
     {
         private PhysicsComponent _physicsComponent;
         private ShipMovement _shipMovement;
+        private HealthComponent _healthComponent;
 
-        public ShipModel(StartPositionSettings startPositionSettings, MovementSettings movementSettings, SignalBus signalBus, IInputProvider inputProvider, ScreenBounds screenBounds)
+        public ShipModel(StartPositionSettings startPositionSettings, MovementSettings movementSettings, HealthSettings healthSettings, SignalBus signalBus, IInputProvider inputProvider, ScreenBounds screenBounds)
             : base(startPositionSettings.Position, startPositionSettings.Rotation, signalBus)
         {
             CanControl = true;
@@ -27,7 +28,9 @@ namespace Asteroids.Core.Player
             _shipMovement = new ShipMovement(this, movementSettings, inputProvider, _physicsComponent, signalBus);
             AddComponent(_shipMovement);
 
-            // Add screen wrap component for teleportation at screen boundaries
+            _healthComponent = new HealthComponent(signalBus, healthSettings.MaxHealth);
+            AddComponent(_healthComponent);
+
             var screenWrap = new ScreenWrapComponent(transform, screenBounds, signalBus);
             AddComponent(screenWrap);
         }
