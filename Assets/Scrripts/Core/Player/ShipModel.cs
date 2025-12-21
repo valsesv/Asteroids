@@ -15,6 +15,7 @@ namespace Asteroids.Core.Player
         private PhysicsComponent _physicsComponent;
         private ShipMovement _shipMovement;
         private HealthComponent _healthComponent;
+        private DamageHandler _damageHandler;
 
         public ShipModel(StartPositionSettings startPositionSettings, MovementSettings movementSettings, HealthSettings healthSettings, SignalBus signalBus, IInputProvider inputProvider, ScreenBounds screenBounds)
             : base(startPositionSettings.Position, startPositionSettings.Rotation, signalBus)
@@ -31,11 +32,14 @@ namespace Asteroids.Core.Player
             _healthComponent = new HealthComponent(signalBus, healthSettings.MaxHealth);
             AddComponent(_healthComponent);
 
+            _damageHandler = new DamageHandler(_healthComponent, this, signalBus, healthSettings.InvincibilityDuration);
+            AddComponent(_damageHandler);
+
             var screenWrap = new ScreenWrapComponent(transform, screenBounds, signalBus);
             AddComponent(screenWrap);
         }
 
-        public bool CanControl { get; private set; }
+        public bool CanControl { get; set; }
     }
 }
 

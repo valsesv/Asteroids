@@ -3,6 +3,7 @@ using UnityEngine;
 using Zenject;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Player;
+using Asteroids.Presentation.Enemies;
 
 namespace Asteroids.Presentation.Player
 {
@@ -48,6 +49,28 @@ namespace Asteroids.Presentation.Player
         private void OnCollisionEnter2D(Collision2D collision)
         {
             Debug.Log($"[ShipView] Collision entered with: {collision.gameObject.name}");
+
+            if (collision.gameObject.GetComponent<EnemyView>() == null)
+            {
+                return;
+            }
+
+            // Get damage handler from entity (handles damage and invincibility in Core)
+            var damageHandler = Entity?.GetComponent<DamageHandler>();
+            if (damageHandler == null)
+            {
+                Debug.LogWarning("[ShipView] DamageHandler not found on ShipModel!");
+                return;
+            }
+
+            // Try to take damage (1 health point per collision as per requirements)
+            // DamageHandler will handle invincibility and control blocking
+            bool damageTaken = damageHandler.TryTakeDamage(1f);
+            if (damageTaken)
+            {
+                var healthComponent = Entity?.GetComponent<HealthComponent>();
+                Debug.Log($"[ShipView] Player took damage! Health: {healthComponent?.CurrentHealth}/{healthComponent?.MaxHealth}");
+            }
         }
     }
 }

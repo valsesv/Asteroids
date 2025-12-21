@@ -12,6 +12,7 @@
         "Rotation": 0.0
     },
     "Health": {
-        "MaxHealth": 3.0
+        "MaxHealth": 3.0,
+        "InvincibilityDuration": 3.0
     }
 }

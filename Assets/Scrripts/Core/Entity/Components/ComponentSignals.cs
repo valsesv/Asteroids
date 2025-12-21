@@ -31,5 +31,13 @@ namespace Asteroids.Core.Entity.Components
         public float CurrentHealth { get; set; }
         public float MaxHealth { get; set; }
     }
+
+    /// <summary>
+    /// Signal fired when player invincibility state changes
+    /// </summary>
+    public class InvincibilityChangedSignal
+    {
+        public bool IsInvincible { get; set; }
+    }
 }
 
