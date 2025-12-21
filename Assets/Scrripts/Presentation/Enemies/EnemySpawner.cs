@@ -16,7 +16,7 @@ namespace Asteroids.Presentation.Enemies
         [SerializeField] private GameObject _asteroidPrefab;
         [SerializeField] private GameObject _ufoPrefab;
         [SerializeField] private float _spawnInterval = 3f;
-        [SerializeField] private float _spawnDistance = 1.2f; // Distance outside screen bounds
+        [SerializeField] private float _spawnDistance = 2f; // Distance outside screen bounds (minimum distance from screen edge)
 
         private float _lastSpawnTime;
         private ScreenBounds _screenBounds;
@@ -88,15 +88,16 @@ namespace Asteroids.Presentation.Enemies
             if (spawnAsteroid)
             {
                 var asteroid = _asteroidPool.Get();
-                asteroid.transform.position = new Vector3(spawnPosition.x, spawnPosition.y, 0f);
                 enemy = asteroid;
             }
             else
             {
                 var ufo = _ufoPool.Get();
-                ufo.transform.position = new Vector3(spawnPosition.x, spawnPosition.y, 0f);
                 enemy = ufo;
             }
+
+            // Set spawn position (updates both Unity transform and TransformComponent)
+            enemy.SetSpawnPosition(spawnPosition);
 
             // Add to active enemies list
             _activeEnemies.Add(enemy);
@@ -130,23 +131,26 @@ namespace Asteroids.Presentation.Enemies
             int side = Random.Range(0, 4);
             float x, y;
 
+            // Calculate safe spawn distance to ensure enemies spawn completely outside screen
+            float safeDistance = _spawnDistance + 1f; // Add extra margin to ensure enemy is fully outside
+
             switch (side)
             {
-                case 0: // Top
-                    x = Random.Range(_screenBounds.Left, _screenBounds.Right);
-                    y = _screenBounds.Top + _spawnDistance;
+                case 0: // Top - spawn above screen
+                    x = Random.Range(_screenBounds.Left - safeDistance, _screenBounds.Right + safeDistance);
+                    y = _screenBounds.Top + safeDistance;
                     break;
-                case 1: // Bottom
-                    x = Random.Range(_screenBounds.Left, _screenBounds.Right);
-                    y = _screenBounds.Bottom - _spawnDistance;
+                case 1: // Bottom - spawn below screen
+                    x = Random.Range(_screenBounds.Left - safeDistance, _screenBounds.Right + safeDistance);
+                    y = _screenBounds.Bottom - safeDistance;
                     break;
-                case 2: // Left
-                    x = _screenBounds.Left - _spawnDistance;
-                    y = Random.Range(_screenBounds.Bottom, _screenBounds.Top);
+                case 2: // Left - spawn to the left of screen
+                    x = _screenBounds.Left - safeDistance;
+                    y = Random.Range(_screenBounds.Bottom - safeDistance, _screenBounds.Top + safeDistance);
                     break;
-                default: // Right
-                    x = _screenBounds.Right + _spawnDistance;
-                    y = Random.Range(_screenBounds.Bottom, _screenBounds.Top);
+                default: // Right - spawn to the right of screen
+                    x = _screenBounds.Right + safeDistance;
+                    y = Random.Range(_screenBounds.Bottom - safeDistance, _screenBounds.Top + safeDistance);
                     break;
             }
 

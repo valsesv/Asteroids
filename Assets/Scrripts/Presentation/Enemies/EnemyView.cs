@@ -32,6 +32,35 @@ namespace Asteroids.Presentation.Enemies
             transform.position = new Vector3(signal.X, signal.Y, 0f);
             transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
         }
+
+        /// <summary>
+        /// Set spawn position - updates both Unity transform and TransformComponent
+        /// Call this when spawning or reusing enemy from pool
+        /// </summary>
+        public void SetSpawnPosition(Vector2 position)
+        {
+            // Update Unity transform
+            transform.position = new Vector3(position.x, position.y, 0f);
+
+            // Update TransformComponent if Entity is already created
+            if (Entity == null)
+            {
+                return;
+            }
+
+            var transformComponent = Entity.GetComponent<TransformComponent>();
+            if (transformComponent != null)
+            {
+                transformComponent.SetPosition(position);
+            }
+
+            // Reset ScreenWrapComponent flag when reusing from pool
+            var screenWrap = Entity.GetComponent<ScreenWrapComponent>();
+            if (screenWrap != null)
+            {
+                screenWrap.Reset();
+            }
+        }
     }
 }
 
