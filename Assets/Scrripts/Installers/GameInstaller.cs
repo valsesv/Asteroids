@@ -2,11 +2,9 @@ using UnityEngine;
 using Zenject;
 using Asteroids.Core.Player;
 using Asteroids.Core.PlayerInput;
-using Asteroids.Presentation.Player;
 using UnityEngine.Assertions;
 using Utils.JsonLoader;
 using Asteroids.Core.Entity;
-using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Installers
 {
@@ -17,15 +15,13 @@ namespace Asteroids.Installers
     {
         private const string PlayerSettingsFileName = "player_settings.json";
 
-        [SerializeField] private ShipView _shipViewPrefab;
         [SerializeField] private KeyboardInputSettings _inputSettings;
 
         public override void InstallBindings()
         {
             InstallSettings();
-            InstallSignals();
             InstallInput();
-            InstallShip();
+            InstallCommonServices();
         }
 
         private void InstallSettings()
@@ -43,13 +39,6 @@ namespace Asteroids.Installers
             Container.BindInstance(playerSettings.StartPosition);
         }
 
-        private void InstallSignals()
-        {
-            // Declare generic component signals (reusable for any entity)
-            Container.DeclareSignal<TransformChangedSignal>();
-            Container.DeclareSignal<PhysicsChangedSignal>();
-        }
-
         private void InstallInput()
         {
             // Input Settings - ScriptableObject from Inspector
@@ -60,37 +49,13 @@ namespace Asteroids.Installers
             Container.Bind<IInputProvider>().To<KeyboardInputProvider>().AsSingle();
         }
 
-        private void InstallShip()
+        private void InstallCommonServices()
         {
             // Bind ScreenBounds service (uses main camera)
+            // This is used by both player and enemies, so it's in the common services
             Container.Bind<ScreenBounds>()
                 .FromMethod(ctx => new ScreenBounds(Camera.main))
                 .AsSingle();
-
-            Container.Bind<ShipModel>().AsSingle();
-
-            // Bind ITickableComponents as ITickable so they update automatically
-            // Using ITickableComponent interface for type safety
-            Container.Bind<ITickable>()
-                .To<PhysicsComponent>()
-                .FromMethod(ctx => ctx.Container.Resolve<ShipModel>().GetComponent<PhysicsComponent>())
-                .AsSingle();
-
-            Container.Bind<ITickable>()
-                .To<ShipMovement>()
-                .FromMethod(ctx => ctx.Container.Resolve<ShipModel>().GetComponent<ShipMovement>())
-                .AsSingle();
-
-            Container.Bind<ITickable>()
-                .To<ScreenWrapComponent>()
-                .FromMethod(ctx => ctx.Container.Resolve<ShipModel>().GetComponent<ScreenWrapComponent>())
-                .AsSingle();
-
-            Assert.IsNotNull(_shipViewPrefab, "ShipViewPrefab is not assigned in GameInstaller!");
-            Container.Bind<ShipView>().FromComponentInNewPrefab(_shipViewPrefab).AsSingle();
-
-            // ShipView implements IInitializable and IDisposable for signal subscriptions
-            Container.BindInterfacesTo<ShipView>().FromResolve();
         }
     }
 }
