@@ -1,6 +1,7 @@
 using UnityEngine;
 using Zenject;
 using Asteroids.Core.Entity;
+using Asteroids.Core.Enemies;
 
 namespace Asteroids.Presentation.Enemies
 {
@@ -17,12 +18,15 @@ namespace Asteroids.Presentation.Enemies
         private float _lastSpawnTime;
         private ScreenBounds _screenBounds;
         private DiContainer _container;
+        private EnemySettings _enemySettings;
+        private int _currentEnemyCount = 0;
 
         [Inject]
-        public void Construct(ScreenBounds screenBounds, DiContainer container)
+        public void Construct(ScreenBounds screenBounds, DiContainer container, EnemySettings enemySettings)
         {
             _screenBounds = screenBounds;
             _container = container;
+            _enemySettings = enemySettings;
         }
 
         public void Initialize()
@@ -32,10 +36,17 @@ namespace Asteroids.Presentation.Enemies
 
         public void Tick()
         {
+            // Check if we can spawn more enemies (don't exceed max count)
+            if (_currentEnemyCount >= _enemySettings.MaxEnemiesOnMap)
+            {
+                return;
+            }
+
             if (Time.time - _lastSpawnTime >= _spawnInterval)
             {
                 SpawnRandomEnemy();
                 _lastSpawnTime = Time.time;
+                _currentEnemyCount++;
             }
         }
 
@@ -57,6 +68,12 @@ namespace Asteroids.Presentation.Enemies
             // Instantiate enemy with GameObjectContext
             GameObject enemy = _container.InstantiatePrefab(prefab);
             enemy.transform.position = new Vector3(spawnPosition.x, spawnPosition.y, 0f);
+
+            // Note: Enemy count is incremented in Tick() method
+            // To properly track enemy destruction, you would need to:
+            // 1. Subscribe to enemy death signals
+            // 2. Decrement _currentEnemyCount when enemy is destroyed
+            // For now, count is incremented on spawn and will be managed later
         }
 
         private Vector2 GetRandomSpawnPosition()

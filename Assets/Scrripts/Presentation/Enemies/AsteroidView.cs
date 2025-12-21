@@ -14,7 +14,6 @@ namespace Asteroids.Presentation.Enemies
         [SerializeField] private AsteroidSize _size = AsteroidSize.Large;
         [SerializeField] private float _maxHealth = 100f;
         [SerializeField] private Vector2 _direction = Vector2.right;
-        [SerializeField] private float _speed = 5f;
 
         private DiContainer _container;
         private TickableManager _tickableManager;
@@ -25,7 +24,8 @@ namespace Asteroids.Presentation.Enemies
             ScreenBounds screenBounds,
             DiContainer container,
             AsteroidFactory asteroidFactory,
-            TickableManager tickableManager)
+            TickableManager tickableManager,
+            EnemySettings enemySettings)
         {
             _container = container;
             _tickableManager = tickableManager;
@@ -41,9 +41,9 @@ namespace Asteroids.Presentation.Enemies
             var asteroidComponent = new AsteroidComponent(_size);
             Entity.AddComponent(asteroidComponent);
 
-            // Add movement component (sets initial velocity)
+            // Add movement component (sets initial velocity) - use speed from settings
             var physics = Entity.GetComponent<PhysicsComponent>();
-            var movement = new AsteroidMovement(Entity, physics, _direction, _speed, signalBus);
+            var movement = new AsteroidMovement(Entity, physics, _direction, enemySettings.AsteroidSpeed, signalBus);
             Entity.AddComponent(movement);
 
             // Add screen wrap component for teleportation at screen boundaries

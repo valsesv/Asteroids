@@ -2,6 +2,7 @@ using UnityEngine;
 using Zenject;
 using Asteroids.Core.Player;
 using Asteroids.Core.PlayerInput;
+using Asteroids.Core.Enemies;
 using UnityEngine.Assertions;
 using Utils.JsonLoader;
 using Asteroids.Core.Entity;
@@ -16,6 +17,7 @@ namespace Asteroids.Installers
     public class GameInstaller : MonoInstaller
     {
         private const string PlayerSettingsFileName = "player_settings.json";
+        private const string EnemySettingsFileName = "enemy_settings.json";
 
         [SerializeField] private KeyboardInputSettings _inputSettings;
         [SerializeField] private ShipView _shipViewPrefab;
@@ -31,17 +33,20 @@ namespace Asteroids.Installers
 
         private void InstallSettings()
         {
-            // Load player settings from JSON
             var jsonLoader = new JsonLoader();
-            var playerSettings = jsonLoader.LoadFromStreamingAssets<PlayerSettings>(PlayerSettingsFileName);
 
+            // Load player settings
+            var playerSettings = jsonLoader.LoadFromStreamingAssets<PlayerSettings>(PlayerSettingsFileName);
             Assert.IsNotNull(playerSettings, "Failed to load player settings from JSON!");
             Assert.IsNotNull(playerSettings.Movement, "Movement settings are null in player settings!");
             Assert.IsNotNull(playerSettings.StartPosition, "Start position settings are null in player settings!");
-
-            // Bind settings directly from JSON
             Container.BindInstance(playerSettings.Movement);
             Container.BindInstance(playerSettings.StartPosition);
+
+            // Load enemy settings
+            var enemySettings = jsonLoader.LoadFromStreamingAssets<EnemySettings>(EnemySettingsFileName);
+            Assert.IsNotNull(enemySettings, "Failed to load enemy settings from JSON!");
+            Container.BindInstance(enemySettings);
         }
 
         private void InstallInput()

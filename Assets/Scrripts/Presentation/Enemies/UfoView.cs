@@ -13,7 +13,6 @@ namespace Asteroids.Presentation.Enemies
     public class UfoView : EnemyView
     {
         [SerializeField] private float _maxHealth = 100f;
-        [SerializeField] private float _speed = 5f;
 
         private DiContainer _container;
         private TickableManager _tickableManager;
@@ -25,7 +24,8 @@ namespace Asteroids.Presentation.Enemies
             DiContainer container,
             UfoFactory ufoFactory,
             TickableManager tickableManager,
-            ShipView shipView)
+            ShipView shipView,
+            EnemySettings enemySettings)
         {
             _container = container;
             _tickableManager = tickableManager;
@@ -40,10 +40,10 @@ namespace Asteroids.Presentation.Enemies
             // Get player TransformComponent from parent container (PlayerInstaller)
             TransformComponent playerTransform = shipView.Entity.GetComponent<TransformComponent>();
 
-            // Add movement component (chases player with direct motion)
+            // Add movement component (chases player with direct motion) - use speed from settings
             var physics = Entity.GetComponent<PhysicsComponent>();
             var transformComponent = Entity.GetComponent<TransformComponent>();
-            var movement = new UfoMovement(Entity, physics, transformComponent, playerTransform, signalBus, _speed);
+            var movement = new UfoMovement(Entity, physics, transformComponent, playerTransform, signalBus, enemySettings.UfoSpeed);
             Entity.AddComponent(movement);
 
             // Add screen wrap component for teleportation at screen boundaries
