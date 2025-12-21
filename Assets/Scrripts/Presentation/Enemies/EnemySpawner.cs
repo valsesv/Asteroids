@@ -81,8 +81,10 @@ namespace Asteroids.Presentation.Enemies
             // Get random spawn position outside screen bounds
             Vector2 spawnPosition = GetRandomSpawnPosition();
 
-            // Randomly choose enemy type
-            bool spawnAsteroid = Random.Range(0, 2) == 0;
+            // Randomly choose enemy type based on spawn weights
+            float totalWeight = _enemySettings.AsteroidSpawnWeight + _enemySettings.UfoSpawnWeight;
+            float randomValue = Random.Range(0f, totalWeight);
+            bool spawnAsteroid = randomValue < _enemySettings.AsteroidSpawnWeight;
 
             EnemyView enemy;
             if (spawnAsteroid)
