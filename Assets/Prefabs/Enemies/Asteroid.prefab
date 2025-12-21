@@ -93,7 +93,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6524789533566487971}
+  - component: {fileID: -6295164328782476283}
   - component: {fileID: 8820815153043058968}
+  - component: {fileID: -1714950718672654663}
   m_Layer: 0
   m_Name: Asteroid
   m_TagString: Untagged
@@ -117,6 +119,24 @@ Transform:
   - {fileID: 3601702483812920581}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-6295164328782476283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8253083797725317176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: -1714950718672654663}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
 --- !u!114 &8820815153043058968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,3 +149,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1770d4eb014c0406f808f89735c94df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-1714950718672654663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8253083797725317176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2db472c61587c4cadad5b1c2a580d7f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyViewPrefab: {fileID: 8820815153043058968}

@@ -4,7 +4,6 @@ using Asteroids.Core.Player;
 using Asteroids.Presentation.Player;
 using Asteroids.Core.Entity.Components;
 using UnityEngine.Assertions;
-
 namespace Asteroids.Installers
 {
     /// <summary>
@@ -13,30 +12,30 @@ namespace Asteroids.Installers
     /// </summary>
     public class PlayerInstaller : MonoInstaller
     {
+        [SerializeField] private ShipView _shipViewPrefab;
+
         public override void InstallBindings()
         {
+            AssertShipViewPrefab();
             InstallSignals();
             InstallShipModel();
             InstallTickableComponents();
             InstallShipView();
         }
 
+        private void AssertShipViewPrefab()
+        {
+            Assert.IsNotNull(_shipViewPrefab, "ShipViewPrefab is not assigned in PlayerInstaller!");
+        }
+
         private void InstallSignals()
         {
-            // Declare player-specific signals
-            // These signals are separate from enemy signals declared in GameInstaller
             Container.DeclareSignal<TransformChangedSignal>();
             Container.DeclareSignal<PhysicsChangedSignal>();
         }
 
         private void InstallShipModel()
         {
-            // ShipModel requires dependencies from parent container:
-            // - StartPositionSettings
-            // - MovementSettings
-            // - SignalBus
-            // - IInputProvider
-            // - ScreenBounds
             Container.Bind<ShipModel>().AsSingle();
         }
 
@@ -62,26 +61,9 @@ namespace Asteroids.Installers
 
         private void InstallShipView()
         {
-            // ShipView should be on the same GameObject as GameObjectContext
-            // Try to get it from the current GameObject hierarchy
-            var shipView = GetComponentInChildren<ShipView>();
-
-            if (shipView == null)
-            {
-                // If not found, try to get it from the root GameObject
-                shipView = GetComponent<ShipView>();
-            }
-
-            if (shipView != null)
-            {
-                Container.Bind<ShipView>().FromInstance(shipView).AsSingle();
-                // ShipView implements IInitializable and IDisposable for signal subscriptions
-                Container.BindInterfacesTo<ShipView>().FromInstance(shipView);
-            }
-            else
-            {
-                Debug.LogWarning("ShipView not found on player GameObject. Make sure ShipView component is attached to the same GameObject or its children.");
-            }
+            Container.Bind<ShipView>().FromInstance(_shipViewPrefab).AsSingle();
+            // ShipView implements IInitializable and IDisposable for signal subscriptions
+            Container.BindInterfacesTo<ShipView>().FromInstance(_shipViewPrefab);
         }
     }
 }
