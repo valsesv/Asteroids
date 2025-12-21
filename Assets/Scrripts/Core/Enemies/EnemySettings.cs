@@ -12,6 +12,8 @@ namespace Asteroids.Core.Enemies
         public int MaxEnemiesOnMap = 10;
         public float AsteroidSpawnWeight = 7f;
         public float UfoSpawnWeight = 3f;
+        public float SpawnInterval = 3f;
+        public float SpawnDistance = 2f;
     }
 }
 

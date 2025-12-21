@@ -3,5 +3,7 @@
     "UfoSpeed": 2.0,
     "MaxEnemiesOnMap": 10,
     "AsteroidSpawnWeight": 7.0,
-    "UfoSpawnWeight": 3.0
+    "UfoSpawnWeight": 3.0,
+    "SpawnInterval": 3.0,
+    "SpawnDistance": 2.0
 }

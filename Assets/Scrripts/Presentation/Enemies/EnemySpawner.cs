@@ -15,8 +15,6 @@ namespace Asteroids.Presentation.Enemies
         [SerializeField] private Transform _ufoParent;
         [SerializeField] private GameObject _asteroidPrefab;
         [SerializeField] private GameObject _ufoPrefab;
-        [SerializeField] private float _spawnInterval = 3f;
-        [SerializeField] private float _spawnDistance = 2f; // Distance outside screen bounds (minimum distance from screen edge)
 
         private float _lastSpawnTime;
         private ScreenBounds _screenBounds;
@@ -69,7 +67,7 @@ namespace Asteroids.Presentation.Enemies
                 return;
             }
 
-            if (Time.time - _lastSpawnTime >= _spawnInterval)
+            if (Time.time - _lastSpawnTime >= _enemySettings.SpawnInterval)
             {
                 SpawnRandomEnemy();
                 _lastSpawnTime = Time.time;
@@ -149,7 +147,7 @@ namespace Asteroids.Presentation.Enemies
             float x, y;
 
             // Calculate safe spawn distance to ensure enemies spawn completely outside screen
-            float safeDistance = _spawnDistance + 1f; // Add extra margin to ensure enemy is fully outside
+            float safeDistance = _enemySettings.SpawnDistance;
 
             switch (side)
             {
