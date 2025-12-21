@@ -62,6 +62,11 @@ namespace Asteroids.Installers
 
         private void InstallShip()
         {
+            // Bind ScreenBounds service (uses main camera)
+            Container.Bind<ScreenBounds>()
+                .FromMethod(ctx => new ScreenBounds(Camera.main))
+                .AsSingle();
+
             Container.Bind<ShipModel>().AsSingle();
 
             // Bind ITickableComponents as ITickable so they update automatically
@@ -74,6 +79,11 @@ namespace Asteroids.Installers
             Container.Bind<ITickable>()
                 .To<ShipMovement>()
                 .FromMethod(ctx => ctx.Container.Resolve<ShipModel>().GetComponent<ShipMovement>())
+                .AsSingle();
+
+            Container.Bind<ITickable>()
+                .To<ScreenWrapComponent>()
+                .FromMethod(ctx => ctx.Container.Resolve<ShipModel>().GetComponent<ScreenWrapComponent>())
                 .AsSingle();
 
             Assert.IsNotNull(_shipViewPrefab, "ShipViewPrefab is not assigned in GameInstaller!");

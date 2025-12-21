@@ -20,7 +20,8 @@ namespace Asteroids.Core.Enemies
             float maxHealth,
             Vector2 direction,
             float speed,
-            SignalBus signalBus)
+            SignalBus signalBus,
+            ScreenBounds screenBounds)
         {
             // Create base enemy entity
             var entity = EnemyFactory.CreateEnemy(EnemyType.Asteroid, position, rotation, maxHealth, signalBus);
@@ -33,6 +34,11 @@ namespace Asteroids.Core.Enemies
             var physics = entity.GetComponent<PhysicsComponent>();
             var movement = new AsteroidMovement(entity, physics, direction, speed, signalBus);
             entity.AddComponent(movement);
+
+            // Add screen wrap component for teleportation at screen boundaries
+            var transform = entity.GetComponent<TransformComponent>();
+            var screenWrap = new ScreenWrapComponent(transform, screenBounds, signalBus);
+            entity.AddComponent(screenWrap);
 
             return entity;
         }
