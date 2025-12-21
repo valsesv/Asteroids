@@ -6,10 +6,6 @@ using UnityEngine.Assertions;
 
 namespace Asteroids.Installers
 {
-    /// <summary>
-    /// EnemyInstaller - installs bindings for enemy GameObjects
-    /// Should be used with GameObjectContext on enemy GameObjects
-    /// </summary>
     public class EnemyInstaller : MonoInstaller
     {
         [SerializeField] private EnemyView _enemyViewPrefab;
@@ -28,8 +24,6 @@ namespace Asteroids.Installers
 
         private void InstallSignals()
         {
-            // Declare enemy-specific signals
-            // These signals are separate from player signals declared in PlayerInstaller
             Container.DeclareSignal<TransformChangedSignal>();
             Container.DeclareSignal<PhysicsChangedSignal>();
         }
@@ -37,7 +31,6 @@ namespace Asteroids.Installers
         private void InstallEnemyView()
         {
             Container.Bind<EnemyView>().FromInstance(_enemyViewPrefab).AsSingle();
-            // EnemyView implements IInitializable and IDisposable for signal subscriptions
             Container.BindInterfacesTo<EnemyView>().FromInstance(_enemyViewPrefab);
         }
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Asteroids.Core.Entity.Components;
+using Zenject;
 
 namespace Asteroids.Core.Entity
 {
@@ -14,10 +15,10 @@ namespace Asteroids.Core.Entity
     {
         private readonly Dictionary<Type, IComponent> _components = new Dictionary<Type, IComponent>();
 
-        public GameEntity(Vector2 position = default, float rotation = 0f)
+        public GameEntity(Vector2 position = default, float rotation = 0f, SignalBus signalBus = null)
         {
             // Every entity has a transform component by default
-            AddComponent(new TransformComponent(position, rotation));
+            AddComponent(new TransformComponent(position, rotation, signalBus));
         }
 
         /// <summary>

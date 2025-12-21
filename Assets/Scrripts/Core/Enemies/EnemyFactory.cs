@@ -21,7 +21,7 @@ namespace Asteroids.Core.Enemies
             float maxHealth,
             SignalBus signalBus)
         {
-            var entity = new GameEntity(position, rotation);
+            var entity = new GameEntity(position, rotation, signalBus);
 
             // Add enemy component
             var enemyComponent = new EnemyComponent(type);

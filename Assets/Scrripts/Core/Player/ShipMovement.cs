@@ -49,7 +49,7 @@ namespace Asteroids.Core.Player
 
             // Apply acceleration (components will fire their own signals)
             Vector2 acceleration = input * _movementSettings.Acceleration;
-            _physics.AddVelocity(acceleration * Time.deltaTime, _signalBus);
+            _physics.AddVelocity(acceleration * Time.deltaTime);
 
             // Limit max speed
             _physics.ClampSpeed(_movementSettings.MaxSpeed);

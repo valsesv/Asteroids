@@ -31,7 +31,7 @@ namespace Asteroids.Core.Enemies
             _signalBus = signalBus;
 
             // Set initial velocity - asteroid moves with constant speed in given direction (no friction)
-            _physics.SetVelocity(_direction * _speed, _signalBus);
+            _physics.SetVelocity(_direction * _speed);
         }
 
         // This component will be used for collision handling in the future

@@ -31,40 +31,40 @@ namespace Asteroids.Core.Entity.Components
             _frictionCoefficient = frictionCoefficient;
         }
 
-        public void SetVelocity(Vector2 velocity, SignalBus signalBus = null)
+        public void SetVelocity(Vector2 velocity)
         {
             Velocity = velocity;
-            FireSignal(signalBus);
+            FireSignal();
         }
 
-        public void AddVelocity(Vector2 delta, SignalBus signalBus = null)
+        public void AddVelocity(Vector2 delta)
         {
             Velocity += delta;
-            FireSignal(signalBus);
+            FireSignal();
         }
 
-        public void ApplyForce(Vector2 force, SignalBus signalBus = null)
+        public void ApplyForce(Vector2 force)
         {
             if (Mass > 0)
             {
                 Velocity += force / Mass * Time.deltaTime;
-                FireSignal(signalBus);
+                FireSignal();
             }
         }
 
-        public void ApplyImpulse(Vector2 impulse, SignalBus signalBus = null)
+        public void ApplyImpulse(Vector2 impulse)
         {
             if (Mass > 0)
             {
                 Velocity += impulse / Mass;
-                FireSignal(signalBus);
+                FireSignal();
             }
         }
 
-        public void ApplyFriction(float frictionCoefficient, float deltaTime, SignalBus signalBus = null)
+        public void ApplyFriction(float frictionCoefficient, float deltaTime)
         {
             Velocity *= Mathf.Pow(frictionCoefficient, deltaTime);
-            FireSignal(signalBus);
+            FireSignal();
         }
 
         public void ClampSpeed(float maxSpeed)
@@ -87,20 +87,20 @@ namespace Asteroids.Core.Entity.Components
             }
 
             // Update position based on velocity
-            _transform.Move(Velocity * Time.deltaTime, _signalBus);
-            FireSignal(_signalBus);
+            _transform.Move(Velocity * Time.deltaTime);
+            FireSignal();
         }
 
-        private void FireSignal(SignalBus signalBus)
+        private void FireSignal()
         {
-            if (signalBus == null)
+            if (_signalBus == null)
             {
                 return;
             }
             _signal.VelocityX = Velocity.x;
             _signal.VelocityY = Velocity.y;
             _signal.Speed = Velocity.magnitude;
-            signalBus.Fire(_signal);
+            _signalBus.Fire(_signal);
         }
     }
 }

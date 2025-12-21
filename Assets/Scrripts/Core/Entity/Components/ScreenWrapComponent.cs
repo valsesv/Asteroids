@@ -52,7 +52,7 @@ namespace Asteroids.Core.Entity.Components
             // Update position if it was wrapped
             if (positionChanged)
             {
-                _transform.SetPosition(newPosition, _signalBus);
+                _transform.SetPosition(newPosition);
             }
         }
     }

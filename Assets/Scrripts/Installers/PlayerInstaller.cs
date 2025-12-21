@@ -4,12 +4,9 @@ using Asteroids.Core.Player;
 using Asteroids.Presentation.Player;
 using Asteroids.Core.Entity.Components;
 using UnityEngine.Assertions;
+
 namespace Asteroids.Installers
 {
-    /// <summary>
-    /// PlayerInstaller - installs bindings for the player GameObject
-    /// Should be used with GameObjectContext on the player GameObject
-    /// </summary>
     public class PlayerInstaller : MonoInstaller
     {
         [SerializeField] private ShipView _shipViewPrefab;

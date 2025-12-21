@@ -16,7 +16,7 @@ namespace Asteroids.Core.Player
         private ShipMovement _shipMovement;
 
         public ShipModel(StartPositionSettings startPositionSettings, MovementSettings movementSettings, SignalBus signalBus, IInputProvider inputProvider, ScreenBounds screenBounds)
-            : base(startPositionSettings.Position, startPositionSettings.Rotation)
+            : base(startPositionSettings.Position, startPositionSettings.Rotation, signalBus)
         {
             CanControl = true;
 
