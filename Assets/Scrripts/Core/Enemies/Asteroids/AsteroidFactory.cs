@@ -1,47 +1,26 @@
 using UnityEngine;
-using Asteroids.Core.Entity;
-using Asteroids.Core.Entity.Components;
 using Zenject;
+using Asteroids.Core.Entity;
 
 namespace Asteroids.Core.Enemies
 {
     /// <summary>
     /// Factory for creating asteroid entities
+    /// Inherits from EnemyFactory to reuse common enemy creation logic
     /// </summary>
-    public static class AsteroidFactory
+    public class AsteroidFactory : EnemyFactory
     {
         /// <summary>
-        /// Create an asteroid entity with all required components
+        /// Create an asteroid entity using base EnemyFactory logic
         /// </summary>
-        public static GameEntity CreateAsteroid(
-            AsteroidSize size,
+        public GameEntity CreateAsteroidEntity(
             Vector2 position,
             float rotation,
             float maxHealth,
-            Vector2 direction,
-            float speed,
-            SignalBus signalBus,
-            ScreenBounds screenBounds)
+            SignalBus signalBus)
         {
-            // Create base enemy entity
-            var entity = EnemyFactory.CreateEnemy(EnemyType.Asteroid, position, rotation, maxHealth, signalBus);
-
-            // Add asteroid-specific component
-            var asteroidComponent = new AsteroidComponent(size);
-            entity.AddComponent(asteroidComponent);
-
-            // Add movement component (handles velocity and will handle collisions)
-            var physics = entity.GetComponent<PhysicsComponent>();
-            var movement = new AsteroidMovement(entity, physics, direction, speed, signalBus);
-            entity.AddComponent(movement);
-
-            // Add screen wrap component for teleportation at screen boundaries
-            var transform = entity.GetComponent<TransformComponent>();
-            var screenWrap = new ScreenWrapComponent(transform, screenBounds, signalBus);
-            entity.AddComponent(screenWrap);
-
-            return entity;
+            // Use protected CreateEnemy method from base class
+            return CreateEnemy(EnemyType.Asteroid, position, rotation, maxHealth, signalBus);
         }
     }
 }
-

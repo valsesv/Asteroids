@@ -14,16 +14,10 @@ namespace Asteroids.Presentation.Enemies
     {
         protected GameEntity Entity;
 
-        [Inject] private SignalBus _signalBus;
+        [Inject] protected SignalBus _signalBus;
 
-        public void Initialize(GameEntity entity)
+        public virtual void Initialize()
         {
-            Entity = entity;
-        }
-
-        public void Initialize()
-        {
-            // Subscribe to transform changes
             _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
         }
 
@@ -32,8 +26,11 @@ namespace Asteroids.Presentation.Enemies
             _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
         }
 
-        private void OnTransformChanged(TransformChangedSignal signal)
+        protected virtual void OnTransformChanged(TransformChangedSignal signal)
         {
+            // Update Unity transform from signal
+            transform.position = new Vector3(signal.X, signal.Y, 0f);
+            transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
         }
     }
 }

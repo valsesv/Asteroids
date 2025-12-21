@@ -6,15 +6,15 @@ using Zenject;
 namespace Asteroids.Core.Enemies
 {
     /// <summary>
-    /// Factory/Builder for creating enemy entities
+    /// Base factory/Builder for creating enemy entities
     /// Creates GameEntity and adds enemy-specific components
     /// </summary>
-    public static class EnemyFactory
+    public class EnemyFactory
     {
         /// <summary>
         /// Create a basic enemy entity with common components
         /// </summary>
-        public static GameEntity CreateEnemy(
+        protected GameEntity CreateEnemy(
             EnemyType type,
             Vector2 position,
             float rotation,

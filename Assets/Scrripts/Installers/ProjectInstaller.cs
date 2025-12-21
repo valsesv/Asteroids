@@ -9,7 +9,7 @@ namespace Asteroids.Installers
     {
         public override void InstallBindings()
         {
-            SignalBusInstaller.Install(Container);
+            
         }
     }
 }

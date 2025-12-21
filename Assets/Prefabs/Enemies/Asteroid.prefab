@@ -149,6 +149,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1770d4eb014c0406f808f89735c94df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _size: 0
+  _maxHealth: 100
+  _direction: {x: 1, y: -1}
+  _speed: 5
 --- !u!114 &-1714950718672654663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,4 +165,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2db472c61587c4cadad5b1c2a580d7f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyType: 0
   _enemyViewPrefab: {fileID: 8820815153043058968}
