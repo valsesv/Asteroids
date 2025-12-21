@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using Asteroids.Core.Entity;
@@ -6,10 +7,12 @@ using Asteroids.Core.Enemies;
 namespace Asteroids.Presentation.Enemies
 {
     /// <summary>
-    /// Simple enemy spawner that creates enemies at random positions outside screen bounds
+    /// Enemy spawner that uses ObjectPool and factories to spawn enemies outside screen bounds
     /// </summary>
     public class EnemySpawner : MonoBehaviour, IInitializable, ITickable
     {
+        [SerializeField] private Transform _asteroidParent;
+        [SerializeField] private Transform _ufoParent;
         [SerializeField] private GameObject _asteroidPrefab;
         [SerializeField] private GameObject _ufoPrefab;
         [SerializeField] private float _spawnInterval = 3f;
@@ -19,7 +22,22 @@ namespace Asteroids.Presentation.Enemies
         private ScreenBounds _screenBounds;
         private DiContainer _container;
         private EnemySettings _enemySettings;
-        private int _currentEnemyCount = 0;
+
+        // Object pools for enemies
+        private ObjectPool<AsteroidView> _asteroidPool;
+        private ObjectPool<UfoView> _ufoPool;
+
+        // Factories for creating enemies
+        private EnemyViewFactory<AsteroidView> _asteroidFactory;
+        private EnemyViewFactory<UfoView> _ufoFactory;
+
+        // List to store all active enemies in one place
+        private List<EnemyView> _activeEnemies = new List<EnemyView>();
+
+        /// <summary>
+        /// Get all active enemies (similar to List<T>)
+        /// </summary>
+        public List<EnemyView> ActiveEnemies => _activeEnemies;
 
         [Inject]
         public void Construct(ScreenBounds screenBounds, DiContainer container, EnemySettings enemySettings)
@@ -32,12 +50,21 @@ namespace Asteroids.Presentation.Enemies
         public void Initialize()
         {
             _lastSpawnTime = Time.time;
+
+            // Create factories
+            _asteroidFactory = new EnemyViewFactory<AsteroidView>(_container, _asteroidPrefab);
+            _ufoFactory = new EnemyViewFactory<UfoView>(_container, _ufoPrefab);
+
+            // Create object pools with factories
+            // Factory will be called with position when Get() is called, but we need to set position after getting from pool
+            _asteroidPool = new ObjectPool<AsteroidView>(() => _asteroidFactory.Create(Vector2.zero), _asteroidParent);
+            _ufoPool = new ObjectPool<UfoView>(() => _ufoFactory.Create(Vector2.zero), _ufoParent);
         }
 
         public void Tick()
         {
             // Check if we can spawn more enemies (don't exceed max count)
-            if (_currentEnemyCount >= _enemySettings.MaxEnemiesOnMap)
+            if (_activeEnemies.Count >= _enemySettings.MaxEnemiesOnMap)
             {
                 return;
             }
@@ -46,34 +73,55 @@ namespace Asteroids.Presentation.Enemies
             {
                 SpawnRandomEnemy();
                 _lastSpawnTime = Time.time;
-                _currentEnemyCount++;
             }
         }
 
         private void SpawnRandomEnemy()
         {
-            // Randomly choose enemy type
-            bool spawnAsteroid = Random.Range(0, 2) == 0;
-            GameObject prefab = spawnAsteroid ? _asteroidPrefab : _ufoPrefab;
-
-            if (prefab == null)
-            {
-                Debug.LogWarning($"Enemy prefab is not assigned in EnemySpawner!");
-                return;
-            }
-
             // Get random spawn position outside screen bounds
             Vector2 spawnPosition = GetRandomSpawnPosition();
 
-            // Instantiate enemy with GameObjectContext
-            GameObject enemy = _container.InstantiatePrefab(prefab);
-            enemy.transform.position = new Vector3(spawnPosition.x, spawnPosition.y, 0f);
+            // Randomly choose enemy type
+            bool spawnAsteroid = Random.Range(0, 2) == 0;
 
-            // Note: Enemy count is incremented in Tick() method
-            // To properly track enemy destruction, you would need to:
-            // 1. Subscribe to enemy death signals
-            // 2. Decrement _currentEnemyCount when enemy is destroyed
-            // For now, count is incremented on spawn and will be managed later
+            EnemyView enemy;
+            if (spawnAsteroid)
+            {
+                var asteroid = _asteroidPool.Get();
+                asteroid.transform.position = new Vector3(spawnPosition.x, spawnPosition.y, 0f);
+                enemy = asteroid;
+            }
+            else
+            {
+                var ufo = _ufoPool.Get();
+                ufo.transform.position = new Vector3(spawnPosition.x, spawnPosition.y, 0f);
+                enemy = ufo;
+            }
+
+            // Add to active enemies list
+            _activeEnemies.Add(enemy);
+        }
+
+        /// <summary>
+        /// Return enemy to pool (call this when enemy is destroyed)
+        /// </summary>
+        public void ReturnEnemy(EnemyView enemy)
+        {
+            if (enemy == null)
+            {
+                return;
+            }
+
+            _activeEnemies.Remove(enemy);
+
+            if (enemy is AsteroidView asteroid)
+            {
+                _asteroidPool.Return(asteroid);
+            }
+            else if (enemy is UfoView ufo)
+            {
+                _ufoPool.Return(ufo);
+            }
         }
 
         private Vector2 GetRandomSpawnPosition()
