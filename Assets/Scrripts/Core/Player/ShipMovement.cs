@@ -11,7 +11,7 @@ namespace Asteroids.Core.Player
     /// </summary>
     public class ShipMovement : ITickableComponent
     {
-        private readonly ShipModel _entity;
+        private readonly ShipComponent _shipComponent;
         private readonly MovementSettings _movementSettings;
         private readonly SignalBus _signalBus;
         private readonly IInputProvider _inputProvider;
@@ -20,9 +20,9 @@ namespace Asteroids.Core.Player
         /// <summary>
         /// Create movement component with all required dependencies
         /// </summary>
-        public ShipMovement(ShipModel entity, MovementSettings settings, IInputProvider inputProvider, PhysicsComponent physics, SignalBus signalBus)
+        public ShipMovement(GameEntity entity, MovementSettings settings, IInputProvider inputProvider, PhysicsComponent physics, SignalBus signalBus)
         {
-            _entity = entity;
+            _shipComponent = entity.GetComponent<ShipComponent>();
             _movementSettings = settings;
             _inputProvider = inputProvider;
             _physics = physics;
@@ -31,8 +31,8 @@ namespace Asteroids.Core.Player
 
         public void Tick()
         {
-            // Check if entity has CanControl property (ShipModel specific)
-            if (_entity.CanControl)
+            // Check if entity can be controlled via ShipComponent
+            if (_shipComponent != null && _shipComponent.CanControl)
             {
                 HandleMovement();
             }

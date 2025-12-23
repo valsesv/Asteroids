@@ -23,7 +23,6 @@ namespace Asteroids.Presentation.Enemies
             SignalBus signalBus,
             ScreenBounds screenBounds,
             DiContainer container,
-            AsteroidFactory asteroidFactory,
             TickableManager tickableManager,
             EnemySettings enemySettings)
         {
@@ -34,8 +33,8 @@ namespace Asteroids.Presentation.Enemies
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
-            // Create base enemy entity using AsteroidFactory
-            Entity = asteroidFactory.CreateAsteroidEntity(position, rotation, _maxHealth, signalBus);
+            // Create base enemy entity using static AsteroidFactory
+            Entity = AsteroidFactory.CreateAsteroidEntity(position, rotation, _maxHealth, signalBus);
 
             // Add asteroid-specific component
             var asteroidComponent = new AsteroidComponent(_size);

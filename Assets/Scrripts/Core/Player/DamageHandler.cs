@@ -11,7 +11,7 @@ namespace Asteroids.Core.Player
     public class DamageHandler : IComponent
     {
         private readonly HealthComponent _healthComponent;
-        private readonly ShipModel _shipModel;
+        private readonly ShipComponent _shipComponent;
         private readonly SignalBus _signalBus;
         private readonly float _invincibilityDuration;
 
@@ -20,10 +20,10 @@ namespace Asteroids.Core.Player
         /// <summary>
         /// Create damage handler with all required dependencies
         /// </summary>
-        public DamageHandler(HealthComponent healthComponent, ShipModel shipModel, SignalBus signalBus, float invincibilityDuration = 3f)
+        public DamageHandler(HealthComponent healthComponent, GameEntity entity, SignalBus signalBus, float invincibilityDuration = 3f)
         {
             _healthComponent = healthComponent;
-            _shipModel = shipModel;
+            _shipComponent = entity.GetComponent<ShipComponent>();
             _signalBus = signalBus;
             _invincibilityDuration = invincibilityDuration;
         }
@@ -61,7 +61,10 @@ namespace Asteroids.Core.Player
         private async UniTaskVoid StartInvincibility()
         {
             IsInvincible = true;
-            _shipModel.CanControl = false;
+            if (_shipComponent != null)
+            {
+                _shipComponent.CanControl = false;
+            }
 
             // Fire invincibility started signal
             var invincibilitySignal = new InvincibilityChangedSignal
@@ -75,7 +78,10 @@ namespace Asteroids.Core.Player
 
             // End invincibility
             IsInvincible = false;
-            _shipModel.CanControl = true;
+            if (_shipComponent != null)
+            {
+                _shipComponent.CanControl = true;
+            }
 
             // Fire invincibility ended signal
             invincibilitySignal.IsInvincible = false;

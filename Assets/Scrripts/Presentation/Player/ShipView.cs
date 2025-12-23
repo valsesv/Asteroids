@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Zenject;
+using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Player;
 using Asteroids.Presentation.Enemies;
@@ -13,14 +14,14 @@ namespace Asteroids.Presentation.Player
     /// </summary>
     public class ShipView : MonoBehaviour, IInitializable, IDisposable
     {
-        public ShipModel Entity { get; private set; }
+        public GameEntity Entity { get; private set; }
 
         [Inject] private SignalBus _signalBus;
 
         [Inject]
-        public void Construct(ShipModel shipModel)
+        public void Construct(GameEntity entity)
         {
-            Entity = shipModel;
+            Entity = entity;
         }
 
         public void Initialize()
@@ -59,7 +60,7 @@ namespace Asteroids.Presentation.Player
             var damageHandler = Entity?.GetComponent<DamageHandler>();
             if (damageHandler == null)
             {
-                Debug.LogWarning("[ShipView] DamageHandler not found on ShipModel!");
+                Debug.LogWarning("[ShipView] DamageHandler not found on GameEntity!");
                 return;
             }
 

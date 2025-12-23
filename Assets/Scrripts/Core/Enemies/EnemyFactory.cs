@@ -9,12 +9,12 @@ namespace Asteroids.Core.Enemies
     /// Base factory/Builder for creating enemy entities
     /// Creates GameEntity and adds enemy-specific components
     /// </summary>
-    public class EnemyFactory
+    public static class EnemyFactory
     {
         /// <summary>
         /// Create a basic enemy entity with common components
         /// </summary>
-        protected GameEntity CreateEnemy(
+        public static GameEntity CreateEnemy(
             EnemyType type,
             Vector2 position,
             float rotation,

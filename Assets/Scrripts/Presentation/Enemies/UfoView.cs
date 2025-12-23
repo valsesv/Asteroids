@@ -22,7 +22,6 @@ namespace Asteroids.Presentation.Enemies
             SignalBus signalBus,
             ScreenBounds screenBounds,
             DiContainer container,
-            UfoFactory ufoFactory,
             TickableManager tickableManager,
             ShipView shipView,
             EnemySettings enemySettings)
@@ -34,8 +33,8 @@ namespace Asteroids.Presentation.Enemies
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
-            // Create base enemy entity using UfoFactory
-            Entity = ufoFactory.CreateUfo(position, rotation, _maxHealth, signalBus);
+            // Create base enemy entity using static UfoFactory
+            Entity = UfoFactory.CreateUfo(position, rotation, _maxHealth, signalBus);
 
             // Get player TransformComponent from parent container (PlayerInstaller)
             TransformComponent playerTransform = shipView.Entity.GetComponent<TransformComponent>();
