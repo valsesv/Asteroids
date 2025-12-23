@@ -5,6 +5,7 @@ using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Player;
 using Asteroids.Presentation.Enemies;
+using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.Player
 {
@@ -15,6 +16,8 @@ namespace Asteroids.Presentation.Player
     public class ShipView : MonoBehaviour, IInitializable, IDisposable
     {
         public GameEntity Entity { get; private set; }
+
+        [SerializeField] private InvincibilityEffects _invincibilityEffects;
 
         [Inject] private SignalBus _signalBus;
 
@@ -28,12 +31,23 @@ namespace Asteroids.Presentation.Player
         {
             _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
             _signalBus.Subscribe<PhysicsChangedSignal>(OnPhysicsChanged);
+            _signalBus.Subscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
+
+            // Initialize invincibility effects
+            if (_invincibilityEffects != null)
+            {
+                _invincibilityEffects.Initialize();
+            }
         }
 
         public void Dispose()
         {
             _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
             _signalBus?.Unsubscribe<PhysicsChangedSignal>(OnPhysicsChanged);
+            _signalBus?.Unsubscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
+
+            // Cleanup effects
+            _invincibilityEffects?.Dispose();
         }
 
         private void OnTransformChanged(TransformChangedSignal signal)
@@ -47,16 +61,29 @@ namespace Asteroids.Presentation.Player
             // Can be used for visual effects based on speed
         }
 
+        private void OnInvincibilityChanged(InvincibilityChangedSignal signal)
+        {
+            if (signal.IsInvincible)
+            {
+                _invincibilityEffects.StartEffects();
+            }
+            else
+            {
+                _invincibilityEffects.StopEffects();
+            }
+        }
+
         private void OnCollisionEnter2D(Collision2D collision)
         {
             Debug.Log($"[ShipView] Collision entered with: {collision.gameObject.name}");
 
-            if (collision.gameObject.GetComponent<EnemyView>() == null)
+            var enemyView = collision.gameObject.GetComponent<EnemyView>();
+            if (enemyView == null)
             {
                 return;
             }
 
-            // Get damage handler from entity (handles damage and invincibility in Core)
+            // Get damage handler from entity (handles damage, bounce, and invincibility in Core)
             var damageHandler = Entity?.GetComponent<DamageHandler>();
             if (damageHandler == null)
             {
@@ -64,9 +91,9 @@ namespace Asteroids.Presentation.Player
                 return;
             }
 
-            // Try to take damage (1 health point per collision as per requirements)
-            // DamageHandler will handle invincibility and control blocking
-            bool damageTaken = damageHandler.TryTakeDamage(1f);
+            // Handle collision (applies bounce, damage, and starts invincibility)
+            GameEntity enemyEntity = enemyView.Entity;
+            bool damageTaken = damageHandler.HandleCollision(enemyEntity, 1f);
             if (damageTaken)
             {
                 var healthComponent = Entity?.GetComponent<HealthComponent>();

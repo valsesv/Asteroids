@@ -9,6 +9,7 @@ namespace Asteroids.Core.Player
     {
         public float MaxHealth = 3f;
         public float InvincibilityDuration = 3f;
+        public float BounceForce = 5f;
     }
 }
 

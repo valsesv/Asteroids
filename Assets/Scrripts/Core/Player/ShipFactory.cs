@@ -43,7 +43,7 @@ namespace Asteroids.Core.Player
             entity.AddComponent(healthComponent);
 
             // Add damage handler
-            var damageHandler = new DamageHandler(healthComponent, entity, signalBus, healthSettings.InvincibilityDuration);
+            var damageHandler = new DamageHandler(healthComponent, entity, signalBus, healthSettings.InvincibilityDuration, healthSettings.BounceForce);
             entity.AddComponent(damageHandler);
 
             // Add screen wrap component

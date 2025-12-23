@@ -319,10 +319,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _asteroidParent: {fileID: 280470057}
   _ufoParent: {fileID: 66288746}
-  _asteroidPrefab: {fileID: 8253083797725317176, guid: 5551e9b80dabc42f4acaadafc243a415, type: 3}
-  _ufoPrefab: {fileID: 666591401832987727, guid: c3b5fc9c15e6b4668a3bbaa9c604f00b, type: 3}
-  _spawnInterval: 3
-  _spawnDistance: 1.2
+  _asteroidPrefab: {fileID: 6282731507384293212, guid: 7290609ab52e445348129f0682dafac8, type: 3}
+  _ufoPrefab: {fileID: 3918739752281442906, guid: 46b28c70116b948cd9dc4a6f15a45b8f, type: 3}
 --- !u!4 &1315153831
 Transform:
   m_ObjectHideFlags: 0

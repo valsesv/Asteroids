@@ -13,6 +13,7 @@
     },
     "Health": {
         "MaxHealth": 3.0,
-        "InvincibilityDuration": 3.0
+        "InvincibilityDuration": 3.0,
+        "BounceForce": 5.0
     }
 }

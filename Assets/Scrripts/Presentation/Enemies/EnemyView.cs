@@ -12,7 +12,7 @@ namespace Asteroids.Presentation.Enemies
     /// </summary>
     public abstract class EnemyView : MonoBehaviour, IInitializable, IDisposable
     {
-        protected GameEntity Entity;
+        public GameEntity Entity { get; protected set; }
 
         [Inject] protected SignalBus _signalBus;
 
