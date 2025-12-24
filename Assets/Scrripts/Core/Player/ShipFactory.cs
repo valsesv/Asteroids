@@ -19,14 +19,17 @@ namespace Asteroids.Core.Player
             StartPositionSettings startPositionSettings,
             MovementSettings movementSettings,
             HealthSettings healthSettings,
+            WeaponSettings weaponSettings,
             SignalBus signalBus,
             IInputProvider inputProvider,
-            ScreenBounds screenBounds)
+            ScreenBounds screenBounds,
+            BulletFactory bulletFactory,
+            LaserFactory laserFactory)
         {
             var entity = new GameEntity(startPositionSettings.Position, startPositionSettings.Rotation, signalBus);
 
             // Add ship component
-            var shipComponent = new ShipComponent();
+            var shipComponent = new ShipComponent(entity);
             entity.AddComponent(shipComponent);
 
             // Add physics component
@@ -49,6 +52,10 @@ namespace Asteroids.Core.Player
             // Add screen wrap component
             var screenWrap = new ScreenWrapComponent(transform, screenBounds, signalBus);
             entity.AddComponent(screenWrap);
+
+            // Add weapon shooting component (handles both bullets and laser)
+            var weaponShooting = new WeaponShooting(entity, inputProvider, weaponSettings, signalBus, bulletFactory, laserFactory);
+            entity.AddComponent(weaponShooting);
 
             return entity;
         }

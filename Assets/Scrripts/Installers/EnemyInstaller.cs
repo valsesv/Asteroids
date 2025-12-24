@@ -24,7 +24,6 @@ namespace Asteroids.Installers
 
         private void InstallSignals()
         {
-            SignalBusInstaller.Install(Container);
             Container.DeclareSignal<TransformChangedSignal>();
             Container.DeclareSignal<PhysicsChangedSignal>();
         }

@@ -30,6 +30,16 @@ namespace Asteroids.Core.PlayerInput
             // Normalize to prevent faster diagonal movement
             return input.normalized;
         }
+
+        public bool GetShootBulletInput()
+        {
+            return Input.GetKeyDown(KeyCode.Space);
+        }
+
+        public bool GetShootLaserInput()
+        {
+            return Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
+        }
     }
 }
 

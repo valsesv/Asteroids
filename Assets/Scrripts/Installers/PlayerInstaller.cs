@@ -4,6 +4,7 @@ using Asteroids.Core.Entity;
 using Asteroids.Core.Player;
 using Asteroids.Presentation.Player;
 using Asteroids.Core.Entity.Components;
+using Asteroids.Core.Enemies;
 using UnityEngine.Assertions;
 using Asteroids.Core.PlayerInput;
 
@@ -16,7 +17,6 @@ namespace Asteroids.Installers
         public override void InstallBindings()
         {
             AssertShipViewPrefab();
-            InstallSignals();
             InstallShipModel();
             InstallTickableComponents();
             InstallShipView();
@@ -27,15 +27,6 @@ namespace Asteroids.Installers
             Assert.IsNotNull(_shipViewPrefab, "ShipViewPrefab is not assigned in PlayerInstaller!");
         }
 
-        private void InstallSignals()
-        {
-            SignalBusInstaller.Install(Container);
-            Container.DeclareSignal<TransformChangedSignal>();
-            Container.DeclareSignal<PhysicsChangedSignal>();
-            Container.DeclareSignal<HealthChangedSignal>();
-            Container.DeclareSignal<InvincibilityChangedSignal>();
-        }
-
         private void InstallShipModel()
         {
             Container.Bind<GameEntity>()
@@ -43,9 +34,12 @@ namespace Asteroids.Installers
                     ctx.Container.Resolve<StartPositionSettings>(),
                     ctx.Container.Resolve<MovementSettings>(),
                     ctx.Container.Resolve<HealthSettings>(),
+                    ctx.Container.Resolve<WeaponSettings>(),
                     ctx.Container.Resolve<SignalBus>(),
                     ctx.Container.Resolve<IInputProvider>(),
-                    ctx.Container.Resolve<ScreenBounds>()))
+                    ctx.Container.Resolve<ScreenBounds>(),
+                    ctx.Container.Resolve<BulletFactory>(),
+                    ctx.Container.Resolve<LaserFactory>()))
                 .AsSingle();
         }
 
@@ -66,6 +60,11 @@ namespace Asteroids.Installers
             Container.Bind<ITickable>()
                 .To<ScreenWrapComponent>()
                 .FromMethod(ctx => ctx.Container.Resolve<GameEntity>().GetComponent<ScreenWrapComponent>())
+                .AsSingle();
+
+            Container.Bind<ITickable>()
+                .To<WeaponShooting>()
+                .FromMethod(ctx => ctx.Container.Resolve<GameEntity>().GetComponent<WeaponShooting>())
                 .AsSingle();
         }
 

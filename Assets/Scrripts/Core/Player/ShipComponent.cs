@@ -8,10 +8,36 @@ namespace Asteroids.Core.Player
     /// </summary>
     public class ShipComponent : IComponent
     {
-        public bool CanControl { get; set; }
+        private GameEntity _entity;
+        private bool _canControl = true;
 
-        public ShipComponent()
+        public bool CanControl
         {
+            get => _canControl;
+            set
+            {
+                if (_canControl == value)
+                {
+                    return;
+                }
+
+                _canControl = value;
+
+                // Sync weapon shooting with control state
+                if (_entity != null)
+                {
+                    var weaponShooting = _entity.GetComponent<WeaponShooting>();
+                    if (weaponShooting != null)
+                    {
+                        weaponShooting.CanShooting = value;
+                    }
+                }
+            }
+        }
+
+        public ShipComponent(GameEntity entity)
+        {
+            _entity = entity;
             CanControl = true;
         }
     }

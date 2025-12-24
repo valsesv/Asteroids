@@ -15,5 +15,18 @@
         "MaxHealth": 3.0,
         "InvincibilityDuration": 3.0,
         "BounceForce": 5.0
+    },
+    "Weapon": {
+        "Bullet": {
+            "Speed": 10.0,
+            "FireRate": 2.0,
+            "Lifetime": 3.0
+        },
+        "Laser": {
+            "MaxCharges": 3,
+            "RechargeTime": 5.0,
+            "Duration": 0.5,
+            "Width": 0.2
+        }
     }
 }

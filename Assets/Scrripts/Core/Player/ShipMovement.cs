@@ -11,6 +11,7 @@ namespace Asteroids.Core.Player
     /// </summary>
     public class ShipMovement : ITickableComponent
     {
+        private readonly GameEntity _entity;
         private readonly ShipComponent _shipComponent;
         private readonly MovementSettings _movementSettings;
         private readonly SignalBus _signalBus;
@@ -22,6 +23,7 @@ namespace Asteroids.Core.Player
         /// </summary>
         public ShipMovement(GameEntity entity, MovementSettings settings, IInputProvider inputProvider, PhysicsComponent physics, SignalBus signalBus)
         {
+            _entity = entity;
             _shipComponent = entity.GetComponent<ShipComponent>();
             _movementSettings = settings;
             _inputProvider = inputProvider;

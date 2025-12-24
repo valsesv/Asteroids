@@ -8,6 +8,8 @@ namespace Asteroids.Core.PlayerInput
     public interface IInputProvider
     {
         Vector2 GetMovementInput();
+        bool GetShootBulletInput();
+        bool GetShootLaserInput();
     }
 }
 
