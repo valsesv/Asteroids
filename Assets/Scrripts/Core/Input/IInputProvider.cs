@@ -9,7 +9,6 @@ namespace Asteroids.Core.PlayerInput
     {
         Vector2 GetMovementInput();
         bool GetShootBulletInput();
-        bool GetShootLaserInput();
     }
 }
 

@@ -39,7 +39,7 @@ namespace Asteroids.Installers
             SignalBusInstaller.Install(Container);
 
             // Declare all game signals here so they're available to all components
-            // (bullets, lasers, enemies, player, etc.)
+            // (bullets, enemies, player, etc.)
             Container.DeclareSignal<TransformChangedSignal>();
             Container.DeclareSignal<PhysicsChangedSignal>();
             Container.DeclareSignal<HealthChangedSignal>();
@@ -47,9 +47,6 @@ namespace Asteroids.Installers
             Container.DeclareSignal<BulletCreatedSignal>();
             Container.DeclareSignal<BulletShotSignal>();
             Container.DeclareSignal<BulletDestroyedSignal>();
-            Container.DeclareSignal<LaserCreatedSignal>();
-            Container.DeclareSignal<LaserChargesChangedSignal>();
-            Container.DeclareSignal<LaserDestroyedSignal>();
             Container.DeclareSignal<EnemyDestroyedSignal>();
             // AsteroidFragmentSignal - временно отключено, добавим позже
         }
@@ -70,7 +67,6 @@ namespace Asteroids.Installers
             Container.BindInstance(playerSettings.Health);
             Container.BindInstance(playerSettings.Weapon);
             Container.BindInstance(playerSettings.Weapon.Bullet);
-            Container.BindInstance(playerSettings.Weapon.Laser);
 
             // Load enemy settings
             var enemySettings = jsonLoader.LoadFromStreamingAssets<EnemySettings>(EnemySettingsFileName);
@@ -99,7 +95,6 @@ namespace Asteroids.Installers
             Container.Bind<ShipView>().FromInstance(_shipViewPrefab).AsSingle();
 
             Container.Bind<BulletFactory>().AsSingle();
-            Container.Bind<LaserFactory>().AsSingle();
 
             Assert.IsNotNull(_projectileSpawner, "ProjectileSpawner is not assigned in GameInstaller!");
             Container.BindInterfacesTo<ProjectileSpawner>().FromInstance(_projectileSpawner).AsSingle();

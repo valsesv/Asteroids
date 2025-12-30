@@ -33,12 +33,7 @@ namespace Asteroids.Core.PlayerInput
 
         public bool GetShootBulletInput()
         {
-            return Input.GetKeyDown(KeyCode.Space);
-        }
-
-        public bool GetShootLaserInput()
-        {
-            return Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
+            return Input.GetKey(KeyCode.Space);
         }
     }
 }

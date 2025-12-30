@@ -66,36 +66,6 @@ namespace Asteroids.Core.Entity.Components
     }
 
     /// <summary>
-    /// Signal fired when a laser is created
-    /// </summary>
-    public class LaserCreatedSignal
-    {
-        public GameEntity Entity { get; set; }
-        public Vector2 Position { get; set; }
-        public Vector2 Direction { get; set; }
-        public float Duration { get; set; }
-        public float Width { get; set; }
-    }
-
-    /// <summary>
-    /// Signal fired when laser charges change
-    /// </summary>
-    public class LaserChargesChangedSignal
-    {
-        public int CurrentCharges { get; set; }
-        public int MaxCharges { get; set; }
-        public float RechargeTime { get; set; }
-    }
-
-    /// <summary>
-    /// Signal fired when a laser is destroyed
-    /// </summary>
-    public class LaserDestroyedSignal
-    {
-        public GameEntity Entity { get; set; }
-    }
-
-    /// <summary>
     /// Signal fired when an enemy is destroyed
     /// </summary>
     public class EnemyDestroyedSignal

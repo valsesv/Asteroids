@@ -41,10 +41,6 @@ namespace Asteroids.Core.Player
             var bulletLifetime = new BulletLifetime(entity, _signalBus);
             entity.AddComponent(bulletLifetime);
 
-            // Add collision handler
-            var collisionHandler = new BulletCollisionHandler(entity, _signalBus);
-            entity.AddComponent(collisionHandler);
-
             // Fire signal that bullet was created
             _signalBus?.Fire(new BulletCreatedSignal { Entity = entity });
 

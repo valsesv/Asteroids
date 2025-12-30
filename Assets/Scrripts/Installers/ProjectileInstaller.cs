@@ -6,7 +6,7 @@ using Asteroids.Core.Entity.Components;
 namespace Asteroids.Installers
 {
     /// <summary>
-    /// Installer for projectile entities (bullets and lasers)
+    /// Installer for projectile entities (bullets)
     /// Creates subcontainer for each projectile to track its signals
     /// </summary>
     public class ProjectileInstaller : InstallerBase

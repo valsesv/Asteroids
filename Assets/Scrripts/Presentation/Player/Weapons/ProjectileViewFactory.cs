@@ -1,13 +1,12 @@
 using UnityEngine;
 using Zenject;
-using Asteroids.Core.Entity;
 
 namespace Asteroids.Presentation.Player
 {
     /// <summary>
-    /// Generic factory for creating projectile views (bullets and lasers)
+    /// Generic factory for creating bullet views
     /// </summary>
-    public class ProjectileViewFactory<T> where T : MonoBehaviour
+    public class ProjectileViewFactory<T> where T : BulletView
     {
         private readonly DiContainer _container;
         private readonly GameObject _prefab;
@@ -20,29 +19,13 @@ namespace Asteroids.Presentation.Player
             _parent = parent;
         }
 
-        public T Create(GameEntity entity)
+        public T Create(Vector2 position)
         {
-            // Create instance without automatic injection if entity is null (for pool creation)
-            GameObject instance;
-            if (entity == null)
-            {
-                // Create without injection - will be injected later in OnBulletCreated
-                instance = Object.Instantiate(_prefab, _parent);
-            }
-            else
-            {
-                // Create with injection when entity is provided
-                instance = _container.InstantiatePrefab(_prefab, _parent);
-                var projectileView = instance.GetComponent<T>();
-                
-                // Inject GameEntity explicitly
-                var extraArgs = InjectUtil.CreateArgListExplicit(entity);
-                _container.InjectExplicit(projectileView, extraArgs);
-                
-                return projectileView;
-            }
+            GameObject instance = _container.InstantiatePrefab(_prefab);
+            instance.transform.position = new Vector3(position.x, position.y, 0f);
 
-            return instance.GetComponent<T>();
+            var enemy = instance.GetComponent<T>();
+            return enemy;
         }
     }
 }
