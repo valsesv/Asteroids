@@ -12,10 +12,7 @@ namespace Asteroids.Presentation.Enemies
     /// </summary>
     public class UfoView : EnemyView
     {
-        [SerializeField] private float _maxHealth = 100f;
-
         private DiContainer _container;
-        private TickableManager _tickableManager;
 
         [Inject]
         public void Construct(
@@ -27,14 +24,13 @@ namespace Asteroids.Presentation.Enemies
             EnemySettings enemySettings)
         {
             _container = container;
-            _tickableManager = tickableManager;
 
             // Get position and rotation from Unity transform
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
-            // Create base enemy entity using static UfoFactory
-            Entity = UfoFactory.CreateUfo(position, rotation, _maxHealth, signalBus);
+            // Create base enemy entity using static UfoFactory (no health needed)
+            Entity = UfoFactory.CreateUfo(position, rotation, signalBus);
 
             // Get player TransformComponent from parent container (PlayerInstaller)
             TransformComponent playerTransform = shipView.Entity.GetComponent<TransformComponent>();
@@ -65,6 +61,14 @@ namespace Asteroids.Presentation.Enemies
             {
                 _tickableManager.Add(tickableComponent);
             }
+        }
+
+        protected override void HandleEnemyDeath()
+        {
+            base.HandleEnemyDeath();
+
+            // Return UFO to pool
+            _enemySpawner.ReturnEnemy(this);
         }
     }
 }

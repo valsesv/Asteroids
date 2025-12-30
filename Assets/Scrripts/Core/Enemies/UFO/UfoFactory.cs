@@ -13,15 +13,15 @@ namespace Asteroids.Core.Enemies
     {
         /// <summary>
         /// Create a UFO entity using EnemyFactory logic
+        /// UFOs don't have health - they die immediately on bullet hit
         /// </summary>
         public static GameEntity CreateUfo(
             Vector2 position,
             float rotation,
-            float maxHealth,
             SignalBus signalBus)
         {
-            // Use static CreateEnemy method from EnemyFactory
-            var entity = EnemyFactory.CreateEnemy(EnemyType.Ufo, position, rotation, maxHealth, signalBus);
+            // Use static CreateEnemy method from EnemyFactory (maxHealth not used for UFOs)
+            var entity = EnemyFactory.CreateEnemy(EnemyType.Ufo, position, rotation, 0f, signalBus);
 
             // Add UFO-specific component
             var ufoComponent = new UfoComponent();

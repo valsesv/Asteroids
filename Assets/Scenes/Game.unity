@@ -195,7 +195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 280470057}
   m_Layer: 0
-  m_Name: ASteroids
+  m_Name: Asteroids
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -246,9 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bulletPrefab: {fileID: 7030452589636227368, guid: f9a80c1fcf133487da03f9d0aeb6c367, type: 3}
-  _laserPrefab: {fileID: 6487861105934728829, guid: 87c526b018a444ed398c1cc6fcb52ddf, type: 3}
   _bulletParent: {fileID: 45581372}
-  _laserParent: {fileID: 955281295}
 --- !u!4 &374777428
 Transform:
   m_ObjectHideFlags: 0
@@ -431,8 +429,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _asteroidParent: {fileID: 280470057}
   _ufoParent: {fileID: 66288746}
+  _fragmentParent: {fileID: 1855672152}
   _asteroidPrefab: {fileID: 6282731507384293212, guid: 7290609ab52e445348129f0682dafac8, type: 3}
   _ufoPrefab: {fileID: 3918739752281442906, guid: 46b28c70116b948cd9dc4a6f15a45b8f, type: 3}
+  _fragmentPrefab: {fileID: 6282731507384293212, guid: 61bb44ba2728a43d087e3a92cea484fc, type: 3}
 --- !u!4 &1315153831
 Transform:
   m_ObjectHideFlags: 0
@@ -448,6 +448,7 @@ Transform:
   m_Children:
   - {fileID: 66288746}
   - {fileID: 280470057}
+  - {fileID: 1855672152}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1847487932
@@ -507,6 +508,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: da0e9939c480e4c14b5bd1a4353828df, type: 3}
+--- !u!1 &1855672151
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1855672152}
+  m_Layer: 0
+  m_Name: Fragments
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1855672152
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1855672151}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1315153831}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &8219513853237146306
 PrefabInstance:
   m_ObjectHideFlags: 0

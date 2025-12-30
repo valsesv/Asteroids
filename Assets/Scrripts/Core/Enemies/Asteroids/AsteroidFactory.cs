@@ -12,15 +12,15 @@ namespace Asteroids.Core.Enemies
     {
         /// <summary>
         /// Create an asteroid entity using EnemyFactory logic
+        /// Asteroids don't have health - they die immediately on bullet hit
         /// </summary>
         public static GameEntity CreateAsteroidEntity(
             Vector2 position,
             float rotation,
-            float maxHealth,
             SignalBus signalBus)
         {
-            // Use static CreateEnemy method from EnemyFactory
-            return EnemyFactory.CreateEnemy(EnemyType.Asteroid, position, rotation, maxHealth, signalBus);
+            // Use static CreateEnemy method from EnemyFactory (maxHealth not used for asteroids)
+            return EnemyFactory.CreateEnemy(EnemyType.Asteroid, position, rotation, 0f, signalBus);
         }
     }
 }

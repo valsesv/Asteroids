@@ -101,7 +101,7 @@ namespace Asteroids.Installers
         private void InstallEnemySpawner()
         {
             Assert.IsNotNull(_enemySpawner, "EnemySpawner is not assigned in GameInstaller!");
-            Container.BindInterfacesTo<EnemySpawner>().FromInstance(_enemySpawner).AsSingle();
+            Container.BindInterfacesAndSelfTo<EnemySpawner>().FromInstance(_enemySpawner).AsSingle();
         }
     }
 }

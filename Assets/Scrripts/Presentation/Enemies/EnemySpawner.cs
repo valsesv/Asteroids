@@ -13,8 +13,10 @@ namespace Asteroids.Presentation.Enemies
     {
         [SerializeField] private Transform _asteroidParent;
         [SerializeField] private Transform _ufoParent;
+        [SerializeField] private Transform _fragmentParent;
         [SerializeField] private GameObject _asteroidPrefab;
         [SerializeField] private GameObject _ufoPrefab;
+        [SerializeField] private GameObject _fragmentPrefab;
 
         private float _lastSpawnTime;
         private ScreenBounds _screenBounds;
@@ -24,10 +26,12 @@ namespace Asteroids.Presentation.Enemies
         // Object pools for enemies
         private ObjectPool<AsteroidView> _asteroidPool;
         private ObjectPool<UfoView> _ufoPool;
+        private ObjectPool<FragmentView> _fragmentPool;
 
         // Factories for creating enemies
         private EnemyViewFactory<AsteroidView> _asteroidFactory;
         private EnemyViewFactory<UfoView> _ufoFactory;
+        private EnemyViewFactory<FragmentView> _fragmentFactory;
 
         // List to store all active enemies in one place
         private List<EnemyView> _activeEnemies = new List<EnemyView>();
@@ -52,11 +56,13 @@ namespace Asteroids.Presentation.Enemies
             // Create factories
             _asteroidFactory = new EnemyViewFactory<AsteroidView>(_container, _asteroidPrefab);
             _ufoFactory = new EnemyViewFactory<UfoView>(_container, _ufoPrefab);
+            _fragmentFactory = new EnemyViewFactory<FragmentView>(_container, _fragmentPrefab);
 
             // Create object pools with factories
             // Factory will be called with position when Get() is called, but we need to set position after getting from pool
             _asteroidPool = new ObjectPool<AsteroidView>(() => _asteroidFactory.Create(Vector2.zero), _asteroidParent);
             _ufoPool = new ObjectPool<UfoView>(() => _ufoFactory.Create(Vector2.zero), _ufoParent);
+            _fragmentPool = new ObjectPool<FragmentView>(() => _fragmentFactory.Create(Vector2.zero), _fragmentParent);
         }
 
         public void Tick()
@@ -138,6 +144,60 @@ namespace Asteroids.Presentation.Enemies
             {
                 _ufoPool.Return(ufo);
             }
+            else if (enemy is FragmentView fragment)
+            {
+                _fragmentPool.Return(fragment);
+            }
+        }
+
+        /// <summary>
+        /// Fragment an asteroid into Fragment enemies
+        /// </summary>
+        public void FragmentAsteroid(AsteroidView originalAsteroid, Vector2 position, Vector2 originalVelocity, AsteroidComponent asteroidComponent)
+        {
+            if (originalAsteroid == null || asteroidComponent == null)
+            {
+                return;
+            }
+
+            // Return original asteroid to pool
+            ReturnEnemy(originalAsteroid);
+
+            // Get fragment count
+            int fragmentCount = asteroidComponent.GetFragmentCount();
+
+            // Spawn Fragment enemies
+            for (int i = 0; i < fragmentCount; i++)
+            {
+                // Get fragment from pool
+                var fragment = _fragmentPool.Get();
+
+                // Set spawn position
+                fragment.SetSpawnPosition(position);
+
+                // Calculate fragment direction (spread out from original velocity)
+                float angleOffset = (i - fragmentCount / 2f + 0.5f) * 45f * Mathf.Deg2Rad; // Spread fragments in 45-degree increments
+                Vector2 fragmentDirection = RotateVector(originalVelocity.normalized, angleOffset);
+
+                // Set fragment direction (this will set the velocity via FragmentMovement)
+                fragment.SetDirection(fragmentDirection);
+
+                // Add to active enemies list
+                _activeEnemies.Add(fragment);
+            }
+        }
+
+        /// <summary>
+        /// Rotate a vector by an angle (in radians)
+        /// </summary>
+        private Vector2 RotateVector(Vector2 vector, float angle)
+        {
+            float cos = Mathf.Cos(angle);
+            float sin = Mathf.Sin(angle);
+            return new Vector2(
+                vector.x * cos - vector.y * sin,
+                vector.x * sin + vector.y * cos
+            );
         }
 
         private Vector2 GetRandomSpawnPosition()

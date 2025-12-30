@@ -4,6 +4,7 @@ using Zenject;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Player;
+using Asteroids.Presentation.Enemies;
 
 namespace Asteroids.Presentation.Player
 {
@@ -71,6 +72,11 @@ namespace Asteroids.Presentation.Player
 
             var movement = Entity.GetComponent<BulletMovement>();
             movement.SetDirection(direction);
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            _signalBus?.Fire(new BulletDestroyedSignal { Entity = Entity });
         }
     }
 }

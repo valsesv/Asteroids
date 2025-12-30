@@ -3,6 +3,8 @@ using UnityEngine;
 using Zenject;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
+using Asteroids.Presentation.Player;
+using Asteroids.Core.Enemies;
 
 namespace Asteroids.Presentation.Enemies
 {
@@ -15,6 +17,8 @@ namespace Asteroids.Presentation.Enemies
         public GameEntity Entity { get; protected set; }
 
         [Inject] protected SignalBus _signalBus;
+        [Inject] protected EnemySpawner _enemySpawner;
+        [Inject] protected TickableManager _tickableManager;
 
         public virtual void Initialize()
         {
@@ -24,6 +28,25 @@ namespace Asteroids.Presentation.Enemies
         public void Dispose()
         {
             _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
+        }
+
+        /// <summary>
+        /// Reinitialize enemy when retrieved from pool
+        /// Re-subscribes to signals and re-registers tickable components
+        /// </summary>
+        public virtual void Reinitialize()
+        {
+            // Re-subscribe to signals
+            Initialize();
+
+            // Re-register tickable components if Entity exists
+            if (Entity != null)
+            {
+                foreach (var tickableComponent in Entity.GetTickableComponents())
+                {
+                    _tickableManager.Add(tickableComponent);
+                }
+            }
         }
 
         protected virtual void OnTransformChanged(TransformChangedSignal signal)
@@ -64,7 +87,33 @@ namespace Asteroids.Presentation.Enemies
 
         protected virtual void OnCollisionEnter2D(Collision2D collision)
         {
-            Debug.Log($"[EnemyView] {gameObject.name} collision entered with: {collision.gameObject.name}");
+            // Check if collision is with a bullet/projectile
+            var bulletView = collision.gameObject.GetComponent<BulletView>();
+            if (bulletView == null || Entity == null)
+            {
+                return;
+            }
+
+            // All enemies die immediately on bullet hit (no health system)
+            HandleEnemyDeath();
+        }
+
+        /// <summary>
+        /// Handle enemy death - override in derived classes for specific behavior
+        /// </summary>
+        protected virtual void HandleEnemyDeath()
+        {
+            // Remove ITickable components from enemy entity before returning to pool
+            if (Entity != null)
+            {
+                foreach (var tickableComponent in Entity.GetTickableComponents())
+                {
+                    _tickableManager.Remove(tickableComponent);
+                }
+            }
+
+            // Dispose to clean up subscriptions
+            Dispose();
         }
     }
 }

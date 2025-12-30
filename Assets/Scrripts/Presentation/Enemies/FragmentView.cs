@@ -7,9 +7,10 @@ using Asteroids.Core.Entity.Components;
 namespace Asteroids.Presentation.Enemies
 {
     /// <summary>
-    /// Asteroid view that creates GameEntity using AsteroidFactory
+    /// Fragment view that creates GameEntity using FragmentFactory
+    /// Fragments are spawned when asteroids are destroyed by bullets
     /// </summary>
-    public class AsteroidView : EnemyView
+    public class FragmentView : EnemyView
     {
         [SerializeField] private Vector2 _direction = Vector2.right;
 
@@ -29,16 +30,12 @@ namespace Asteroids.Presentation.Enemies
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
-            // Create base enemy entity using static AsteroidFactory (no health needed)
-            Entity = AsteroidFactory.CreateAsteroidEntity(position, rotation, signalBus);
+            // Create base enemy entity using static FragmentFactory (no health needed)
+            Entity = FragmentFactory.CreateFragment(position, rotation, signalBus);
 
-            // Add asteroid-specific component (no size needed)
-            var asteroidComponent = new AsteroidComponent();
-            Entity.AddComponent(asteroidComponent);
-
-            // Add movement component (sets initial velocity) - use speed from settings
+            // Add movement component (sets initial velocity) - use FragmentSpeed from settings
             var physics = Entity.GetComponent<PhysicsComponent>();
-            var movement = new AsteroidMovement(Entity, physics, _direction, enemySettings.AsteroidSpeed, signalBus);
+            var movement = new AsteroidMovement(Entity, physics, _direction, enemySettings.FragmentSpeed, signalBus);
             Entity.AddComponent(movement);
 
             // Add screen wrap component for teleportation at screen boundaries
@@ -64,7 +61,7 @@ namespace Asteroids.Presentation.Enemies
         }
 
         /// <summary>
-        /// Set movement direction - used when spawning asteroid
+        /// Set movement direction - used when spawning fragment
         /// </summary>
         public void SetDirection(Vector2 direction)
         {
@@ -79,31 +76,14 @@ namespace Asteroids.Presentation.Enemies
         }
 
         /// <summary>
-        /// Handle asteroid death - always fragment into Fragment enemies
+        /// Handle fragment death - return to pool (fragments don't fragment further)
         /// </summary>
         protected override void HandleEnemyDeath()
         {
             base.HandleEnemyDeath();
 
-            // Get asteroid component
-            var asteroidComponent = Entity?.GetComponent<AsteroidComponent>();
-            if (asteroidComponent != null)
-            {
-                // Get position and velocity for fragmentation
-                var transformComponent = Entity.GetComponent<TransformComponent>();
-                var physicsComponent = Entity.GetComponent<PhysicsComponent>();
-
-                Vector2 position = transformComponent?.Position ?? Vector2.zero;
-                Vector2 velocity = physicsComponent?.Velocity ?? Vector2.zero;
-
-                // Fragment the asteroid into Fragment enemies
-                _enemySpawner.FragmentAsteroid(this, position, velocity, asteroidComponent);
-            }
-            else
-            {
-                // No asteroid component: return to pool
-                _enemySpawner.ReturnEnemy(this);
-            }
+            // Return fragment to pool
+            _enemySpawner.ReturnEnemy(this);
         }
     }
 }
