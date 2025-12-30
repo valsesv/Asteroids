@@ -50,7 +50,7 @@ namespace Asteroids.Core.Player
         private void Shoot()
         {
             // Calculate bullet direction based on ship rotation
-            float angle = _transform.Rotation * Mathf.Deg2Rad;
+            float angle = (_transform.Rotation + 90f) * Mathf.Deg2Rad;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
             // Calculate bullet position (spawn slightly in front of ship)

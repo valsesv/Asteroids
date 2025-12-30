@@ -17,6 +17,7 @@ namespace Asteroids.Core.Player
         private readonly SignalBus _signalBus;
         private readonly IInputProvider _inputProvider;
         private readonly PhysicsComponent _physics;
+        private readonly TransformComponent _transform;
 
         /// <summary>
         /// Create movement component with all required dependencies
@@ -29,6 +30,7 @@ namespace Asteroids.Core.Player
             _inputProvider = inputProvider;
             _physics = physics;
             _signalBus = signalBus;
+            _transform = entity.GetComponent<TransformComponent>();
         }
 
         public void Tick()
@@ -36,21 +38,40 @@ namespace Asteroids.Core.Player
             // Check if entity can be controlled via ShipComponent
             if (_shipComponent != null && _shipComponent.CanControl)
             {
+                HandleRotation();
                 HandleMovement();
             }
         }
 
-        private void HandleMovement()
+        private void HandleRotation()
         {
-            Vector2 input = _inputProvider.GetMovementInput();
+            float rotationInput = _inputProvider.GetRotationInput();
 
-            if (input.magnitude < 0.01f)
+            if (Mathf.Abs(rotationInput) < 0.01f)
             {
                 return;
             }
 
-            // Apply acceleration (components will fire their own signals)
-            Vector2 acceleration = input * _movementSettings.Acceleration;
+            // Apply rotation (inverted: negative input rotates right, positive rotates left)
+            float rotationDelta = -rotationInput * _movementSettings.RotationSpeed * Time.deltaTime;
+            float newRotation = _transform.Rotation + rotationDelta;
+            _transform.SetRotation(newRotation);
+        }
+
+        private void HandleMovement()
+        {
+            float forwardInput = _inputProvider.GetForwardInput();
+
+            if (Mathf.Abs(forwardInput) < 0.01f)
+            {
+                return;
+            }
+
+            float angle = (_transform.Rotation + 90f) * Mathf.Deg2Rad;
+            Vector2 forwardDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+
+            // Apply acceleration in forward/backward direction
+            Vector2 acceleration = forwardDirection * forwardInput * _movementSettings.Acceleration;
             _physics.AddVelocity(acceleration * Time.deltaTime);
 
             // Limit max speed

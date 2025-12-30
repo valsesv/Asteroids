@@ -14,21 +14,28 @@ namespace Asteroids.Core.PlayerInput
             _settings = settings;
         }
 
-        public Vector2 GetMovementInput()
+        public float GetForwardInput()
         {
-            Vector2 input = Vector2.zero;
+            float input = 0f;
 
             if (Input.GetKey(_settings.MoveUp))
-                input.y += 1f;
+                input += 1f;
             if (Input.GetKey(_settings.MoveDown))
-                input.y -= 1f;
-            if (Input.GetKey(_settings.MoveLeft))
-                input.x -= 1f;
-            if (Input.GetKey(_settings.MoveRight))
-                input.x += 1f;
+                input -= 1f;
 
-            // Normalize to prevent faster diagonal movement
-            return input.normalized;
+            return Mathf.Clamp(input, -1f, 1f);
+        }
+
+        public float GetRotationInput()
+        {
+            float input = 0f;
+
+            if (Input.GetKey(_settings.MoveRight))
+                input += 1f;
+            if (Input.GetKey(_settings.MoveLeft))
+                input -= 1f;
+
+            return Mathf.Clamp(input, -1f, 1f);
         }
 
         public bool GetShootBulletInput()

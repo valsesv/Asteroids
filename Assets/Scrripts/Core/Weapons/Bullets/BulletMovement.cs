@@ -18,12 +18,10 @@ namespace Asteroids.Core.Player
         public BulletMovement(
             GameEntity entity,
             PhysicsComponent physics,
-            Vector2 direction,
             float speed,
             SignalBus signalBus)
         {
             _physics = physics;
-            _direction = direction.normalized;
             _speed = speed;
             
             // Set initial velocity

@@ -58,9 +58,10 @@ namespace Asteroids.Presentation.Player
         private void OnBulletShot(BulletShotSignal signal)
         {
             var bulletView = _bulletPool.Get();
-            bulletView.SetSpawnPosition(signal.Position);
 
-            bulletView.SetDirection(signal.Direction);
+            // Set spawn position and direction (updates both Unity transform and TransformComponent)
+            bulletView.SetSpawnParameters(signal.Position, signal.Direction);
+
             _activeBullets.Add(bulletView);
         }
 

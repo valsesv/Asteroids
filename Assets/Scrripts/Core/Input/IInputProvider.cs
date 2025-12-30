@@ -7,7 +7,18 @@ namespace Asteroids.Core.PlayerInput
     /// </summary>
     public interface IInputProvider
     {
-        Vector2 GetMovementInput();
+        /// <summary>
+        /// Get forward/backward movement input (W/S keys)
+        /// Returns: positive for forward, negative for backward
+        /// </summary>
+        float GetForwardInput();
+        
+        /// <summary>
+        /// Get rotation input (A/D keys)
+        /// Returns: positive for right rotation, negative for left rotation
+        /// </summary>
+        float GetRotationInput();
+        
         bool GetShootBulletInput();
     }
 }

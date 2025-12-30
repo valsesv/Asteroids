@@ -22,27 +22,24 @@ namespace Asteroids.Presentation.Player
         [Inject]
         public void Construct(BulletSettings bulletSettings)
         {
+            // Get position and rotation from Unity transform (like enemies do)
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
 
-            Entity = BulletFactory.CreateBullet(position, Vector2.zero, _signalBus);
-            
-            var bulletComponent = new BulletComponent(bulletSettings.Speed, bulletSettings.Lifetime);
-            Entity.AddComponent(bulletComponent);
+            // Create bullet entity using BulletFactory (like enemies use their factories)
+            // Use speed and lifetime from settings (like enemies use settings)
+            Entity = BulletFactory.CreateBullet(position, bulletSettings.Speed, bulletSettings.Lifetime, _signalBus);
 
-            var physics = Entity.GetComponent<PhysicsComponent>();
-            var movement = new BulletMovement(Entity, physics, Vector2.zero, bulletSettings.Speed, _signalBus);
-            Entity.AddComponent(movement);
-
-            var bulletLifetime = new BulletLifetime(Entity, _signalBus);
-            Entity.AddComponent(bulletLifetime);
-
+            // Register Entity in container (like enemies do)
             _container.BindInstance(Entity).AsSingle();
 
+            // Add ITickable components to TickableManager (like enemies do)
             RegisterTickableComponents();
         }
 
         private void RegisterTickableComponents()
         {
+            // Add ITickable components directly to TickableManager
+            // This allows them to be updated even if they were created after TickableManager initialization
             foreach (var tickableComponent in Entity.GetTickableComponents())
             {
                 _tickableManager.Add(tickableComponent);
@@ -59,34 +56,21 @@ namespace Asteroids.Presentation.Player
             _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
         }
 
-        public void SetSpawnPosition(Vector2 position)
-        {
-            // Update Unity transform
-            transform.position = new Vector3(position.x, position.y, 0f);
-
-            // Update TransformComponent if Entity is already created
-            if (Entity == null)
-            {
-                return;
-            }
-
-            var transformComponent = Entity.GetComponent<TransformComponent>();
-            if (transformComponent != null)
-            {
-                transformComponent.SetPosition(position);
-            }
-        }
-
         private void OnTransformChanged(TransformChangedSignal signal)
         {
             transform.position = new Vector3(signal.X, signal.Y, 0f);
             transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
         }
 
-        public void SetDirection(Vector2 direction)
+        public void SetSpawnParameters(Vector2 position, Vector2 direction)
         {
+            transform.position = new Vector3(position.x, position.y, 0f);
+
+            var transformComponent = Entity.GetComponent<TransformComponent>();
+            transformComponent.SetPosition(position);
+
             var movement = Entity.GetComponent<BulletMovement>();
-            movement?.SetDirection(direction);
+            movement.SetDirection(direction);
         }
     }
 }
