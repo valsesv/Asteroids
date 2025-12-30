@@ -51,10 +51,12 @@ namespace Asteroids.Core.Entity.Components
     }
 
     /// <summary>
-    /// Signal fired when a bullet is shot
+    /// Signal fired when a bullet is shot (before creation, used to get bullet from pool)
     /// </summary>
     public class BulletShotSignal
     {
+        public Vector2 Position { get; set; }
+        public Vector2 Direction { get; set; }
     }
 
     /// <summary>

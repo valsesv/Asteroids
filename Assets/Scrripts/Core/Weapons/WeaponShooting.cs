@@ -19,13 +19,12 @@ namespace Asteroids.Core.Player
             GameEntity entity,
             IInputProvider inputProvider,
             WeaponSettings weaponSettings,
-            SignalBus signalBus,
-            BulletFactory bulletFactory)
+            SignalBus signalBus)
         {
             var transform = entity.GetComponent<TransformComponent>();
 
             // Create shooting logic class (not component)
-            _bulletShooting = new BulletShootingLogic(transform, inputProvider, weaponSettings.Bullet, signalBus, bulletFactory);
+            _bulletShooting = new BulletShootingLogic(transform, inputProvider, weaponSettings.Bullet, signalBus);
         }
 
         public void Tick()

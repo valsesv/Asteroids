@@ -1,52 +1,40 @@
 using UnityEngine;
 using Zenject;
-using Asteroids.Core.Entity;
+using Asteroids.Presentation.Player;
 using Asteroids.Core.Entity.Components;
+using UnityEngine.Assertions;
 
 namespace Asteroids.Installers
 {
     /// <summary>
     /// Installer for projectile entities (bullets)
-    /// Creates subcontainer for each projectile to track its signals
     /// </summary>
-    public class ProjectileInstaller : InstallerBase
+    public class ProjectileInstaller : MonoInstaller
     {
-        private readonly GameEntity _entity;
-
-        public ProjectileInstaller(GameEntity entity)
-        {
-            _entity = entity;
-        }
+        [SerializeField] private BulletView _bulletViewPrefab;
 
         public override void InstallBindings()
         {
+            AssertBulletViewPrefab();
             InstallSignals();
-            InstallEntity();
-            InstallTickableComponents();
+            InstallBulletView();
+        }
+
+        private void AssertBulletViewPrefab()
+        {
+            Assert.IsNotNull(_bulletViewPrefab, "BulletViewPrefab is not assigned in ProjectileInstaller!");
         }
 
         private void InstallSignals()
         {
-            // Declare signals for this projectile's subcontainer (like EnemyInstaller does)
             Container.DeclareSignal<TransformChangedSignal>();
             Container.DeclareSignal<PhysicsChangedSignal>();
         }
 
-        private void InstallEntity()
+        private void InstallBulletView()
         {
-            // Bind the Entity for this projectile
-            Container.BindInstance(_entity).AsSingle();
-        }
-
-        private void InstallTickableComponents()
-        {
-            // Bind ITickable components so they can be resolved and added to TickableManager
-            foreach (var tickableComponent in _entity.GetTickableComponents())
-            {
-                Container.Bind<ITickable>()
-                    .FromInstance(tickableComponent)
-                    .AsSingle();
-            }
+            Container.Bind<BulletView>().FromInstance(_bulletViewPrefab).AsSingle();
+            Container.BindInterfacesTo<BulletView>().FromInstance(_bulletViewPrefab);
         }
     }
 }

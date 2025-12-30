@@ -94,8 +94,6 @@ namespace Asteroids.Installers
 
             Container.Bind<ShipView>().FromInstance(_shipViewPrefab).AsSingle();
 
-            Container.Bind<BulletFactory>().AsSingle();
-
             Assert.IsNotNull(_projectileSpawner, "ProjectileSpawner is not assigned in GameInstaller!");
             Container.BindInterfacesTo<ProjectileSpawner>().FromInstance(_projectileSpawner).AsSingle();
         }

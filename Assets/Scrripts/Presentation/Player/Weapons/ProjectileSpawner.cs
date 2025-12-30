@@ -4,6 +4,7 @@ using UnityEngine;
 using Zenject;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
+using Asteroids.Core.Player;
 using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.Player
@@ -23,8 +24,7 @@ namespace Asteroids.Presentation.Player
         // Object pools for projectiles
         private ObjectPool<BulletView> _bulletPool;
 
-        // Factories for creating projectiles (like enemies)
-        private ProjectileViewFactory<BulletView> _bulletFactory;
+        private ProjectileViewFactory<BulletView> _bulletViewFactory;
 
         private List<BulletView> _activeBullets = new List<BulletView>();
 
@@ -41,47 +41,26 @@ namespace Asteroids.Presentation.Player
             Assert.IsNotNull(_bulletPrefab, "BulletPrefab is not assigned in ProjectileSpawner!");
             Assert.IsNotNull(_bulletParent, "BulletParent is not assigned in ProjectileSpawner!");
 
-            _bulletFactory = new ProjectileViewFactory<BulletView>(_container, _bulletPrefab, _bulletParent);
-            _bulletPool = new ObjectPool<BulletView>(() => _bulletFactory.Create(Vector2.zero), _bulletParent);
+            _bulletViewFactory = new ProjectileViewFactory<BulletView>(_container, _bulletPrefab, _bulletParent);
+            _bulletPool = new ObjectPool<BulletView>(() => _bulletViewFactory.Create(Vector2.zero), _bulletParent);
 
             // Subscribe to signals
-            _signalBus.Subscribe<BulletCreatedSignal>(OnBulletCreated);
+            _signalBus.Subscribe<BulletShotSignal>(OnBulletShot);
             _signalBus.Subscribe<BulletDestroyedSignal>(OnBulletDestroyed);
         }
 
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<BulletCreatedSignal>(OnBulletCreated);
+            _signalBus?.Unsubscribe<BulletShotSignal>(OnBulletShot);
             _signalBus?.Unsubscribe<BulletDestroyedSignal>(OnBulletDestroyed);
         }
 
-        private void OnBulletCreated(BulletCreatedSignal signal)
+        private void OnBulletShot(BulletShotSignal signal)
         {
-            var spawnPosition = signal.Entity.GetComponent<TransformComponent>().Position;
-
-            // Create subcontainer for this bullet to track its signals
-            var subContainer = _container.CreateSubContainer();
-
-            // Install signals (like EnemyInstaller.InstallSignals)
-            subContainer.DeclareSignal<TransformChangedSignal>();
-            subContainer.DeclareSignal<PhysicsChangedSignal>();
-
-            // Bind Entity in subcontainer
-            subContainer.BindInstance(signal.Entity).AsSingle();
-
-            // Get bullet view from pool (created by factory)
             var bulletView = _bulletPool.Get();
+            bulletView.SetSpawnPosition(signal.Position);
 
-            // Inject dependencies using subcontainer
-            subContainer.Inject(bulletView);
-
-            // Register ITickable components directly with TickableManager (like enemies do)
-            foreach (var tickableComponent in signal.Entity.GetTickableComponents())
-            {
-                _tickableManager.Add(tickableComponent);
-            }
-
-            bulletView.Initialize();
+            bulletView.SetDirection(signal.Direction);
             _activeBullets.Add(bulletView);
         }
 

@@ -37,8 +37,7 @@ namespace Asteroids.Installers
                     ctx.Container.Resolve<WeaponSettings>(),
                     ctx.Container.Resolve<SignalBus>(),
                     ctx.Container.Resolve<IInputProvider>(),
-                    ctx.Container.Resolve<ScreenBounds>(),
-                    ctx.Container.Resolve<BulletFactory>()))
+                    ctx.Container.Resolve<ScreenBounds>()))
                 .AsSingle();
         }
 

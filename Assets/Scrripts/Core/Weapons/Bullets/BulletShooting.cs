@@ -14,7 +14,6 @@ namespace Asteroids.Core.Player
         private readonly IInputProvider _inputProvider;
         private readonly BulletSettings _bulletSettings;
         private readonly SignalBus _signalBus;
-        private readonly BulletFactory _bulletFactory;
 
         private float _lastShotTime;
 
@@ -22,14 +21,12 @@ namespace Asteroids.Core.Player
             TransformComponent transform,
             IInputProvider inputProvider,
             BulletSettings bulletSettings,
-            SignalBus signalBus,
-            BulletFactory bulletFactory)
+            SignalBus signalBus)
         {
             _transform = transform;
             _inputProvider = inputProvider;
             _bulletSettings = bulletSettings;
             _signalBus = signalBus;
-            _bulletFactory = bulletFactory;
         }
 
         /// <summary>
@@ -56,14 +53,16 @@ namespace Asteroids.Core.Player
             float angle = _transform.Rotation * Mathf.Deg2Rad;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
-            // Create bullet at ship position
-            Vector2 bulletPosition = _transform.Position + direction * 0.5f; // Spawn slightly in front of ship
-            _bulletFactory.CreateBullet(bulletPosition, direction, _bulletSettings.Speed, _bulletSettings.Lifetime);
+            // Calculate bullet position (spawn slightly in front of ship)
+            Vector2 bulletPosition = _transform.Position + direction * 0.5f;
+
+            _signalBus?.Fire(new BulletShotSignal
+            {
+                Position = bulletPosition,
+                Direction = direction
+            });
 
             _lastShotTime = Time.time;
-
-            // Fire signal for UI updates
-            _signalBus?.Fire(new BulletShotSignal());
         }
     }
 }

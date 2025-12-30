@@ -1,48 +1,24 @@
 using UnityEngine;
-using Zenject;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
+using Zenject;
 
 namespace Asteroids.Core.Player
 {
     /// <summary>
-    /// Factory for creating bullet entities
+    /// Factory for creating bullet entities (static methods like enemy factories)
     /// </summary>
-    public class BulletFactory
+    public static class BulletFactory
     {
-        private readonly SignalBus _signalBus;
-
-        public BulletFactory(SignalBus signalBus)
-        {
-            _signalBus = signalBus;
-        }
-
-        /// <summary>
-        /// Create a bullet entity
-        /// </summary>
-        public GameEntity CreateBullet(Vector2 position, Vector2 direction, float speed, float lifetime)
+        public static GameEntity CreateBullet(Vector2 position, Vector2 direction, SignalBus signalBus)
         {
             // Calculate rotation from direction
             float rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            var entity = new GameEntity(position, rotation, signalBus);
 
-            var entity = new GameEntity(position, rotation, _signalBus);
-
-            // Add bullet component
-            var bulletComponent = new BulletComponent(speed, lifetime);
-            entity.AddComponent(bulletComponent);
-
-            // Add physics component with initial velocity
             var transform = entity.GetComponent<TransformComponent>();
-            var physicsComponent = new PhysicsComponent(transform, _signalBus, mass: 0.1f, frictionCoefficient: 1f);
-            physicsComponent.SetVelocity(direction.normalized * speed);
+            var physicsComponent = new PhysicsComponent(transform, signalBus, mass: 1f, frictionCoefficient: 1f);
             entity.AddComponent(physicsComponent);
-
-            // Add bullet lifetime component
-            var bulletLifetime = new BulletLifetime(entity, _signalBus);
-            entity.AddComponent(bulletLifetime);
-
-            // Fire signal that bullet was created
-            _signalBus?.Fire(new BulletCreatedSignal { Entity = entity });
 
             return entity;
         }

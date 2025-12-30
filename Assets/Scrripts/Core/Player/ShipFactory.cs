@@ -22,8 +22,7 @@ namespace Asteroids.Core.Player
             WeaponSettings weaponSettings,
             SignalBus signalBus,
             IInputProvider inputProvider,
-            ScreenBounds screenBounds,
-            BulletFactory bulletFactory)
+            ScreenBounds screenBounds)
         {
             var entity = new GameEntity(startPositionSettings.Position, startPositionSettings.Rotation, signalBus);
 
@@ -53,7 +52,7 @@ namespace Asteroids.Core.Player
             entity.AddComponent(screenWrap);
 
             // Add weapon shooting component (handles bullets)
-            var weaponShooting = new WeaponShooting(entity, inputProvider, weaponSettings, signalBus, bulletFactory);
+            var weaponShooting = new WeaponShooting(entity, inputProvider, weaponSettings, signalBus);
             entity.AddComponent(weaponShooting);
 
             return entity;
