@@ -9,6 +9,7 @@ using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Presentation.Player;
 using Asteroids.Presentation.Enemies;
+using Asteroids.Presentation.Effects;
 
 namespace Asteroids.Installers
 {
@@ -24,6 +25,7 @@ namespace Asteroids.Installers
         [SerializeField] private ShipView _shipViewPrefab;
         [SerializeField] private EnemySpawner _enemySpawner;
         [SerializeField] private ProjectileSpawner _projectileSpawner;
+        [SerializeField] private ParticleEffectSpawner _particleEffectSpawner;
 
         public override void InstallBindings()
         {
@@ -32,6 +34,7 @@ namespace Asteroids.Installers
             InstallInput();
             InstallCommonServices();
             InstallEnemySpawner();
+            InstallParticleEffectSpawner();
         }
 
         private void InstallSignalBus()
@@ -101,6 +104,14 @@ namespace Asteroids.Installers
         {
             Assert.IsNotNull(_enemySpawner, "EnemySpawner is not assigned in GameInstaller!");
             Container.BindInterfacesAndSelfTo<EnemySpawner>().FromInstance(_enemySpawner).AsSingle();
+        }
+
+        private void InstallParticleEffectSpawner()
+        {
+            if (_particleEffectSpawner != null)
+            {
+                Container.BindInterfacesAndSelfTo<ParticleEffectSpawner>().FromInstance(_particleEffectSpawner).AsSingle();
+            }
         }
     }
 }

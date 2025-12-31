@@ -4,7 +4,7 @@ using Zenject;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Presentation.Player;
-using Asteroids.Core.Enemies;
+using Asteroids.Presentation.Effects;
 
 namespace Asteroids.Presentation.Enemies
 {
@@ -20,6 +20,7 @@ namespace Asteroids.Presentation.Enemies
         [Inject] protected EnemySpawner _enemySpawner;
         [Inject] protected TickableManager _tickableManager;
         [Inject] protected DiContainer _container;
+        [Inject(Optional = true)] protected ParticleEffectSpawner _particleEffectSpawner;
 
         public virtual void Initialize()
         {
@@ -102,6 +103,11 @@ namespace Asteroids.Presentation.Enemies
         /// </summary>
         protected virtual void HandleEnemyDeath()
         {
+            // Spawn explosion particle effect at enemy position
+            if (_particleEffectSpawner != null)
+            {
+                _particleEffectSpawner.SpawnExplosion(transform.position);
+            }
         }
     }
 }

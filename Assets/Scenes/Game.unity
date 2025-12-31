@@ -216,6 +216,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1315153831}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &345916859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 345916861}
+  - component: {fileID: 345916860}
+  m_Layer: 0
+  m_Name: ParticleSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &345916860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 345916859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc196581a1e2548f28b469a8b1a9bb94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _explosionPrefab: {fileID: 9010724674425634494, guid: baf91a37a6b2f4e2094f9f49102f3e21, type: 3}
+  _particleParent: {fileID: 345916861}
+--- !u!4 &345916861
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 345916859}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.736289, y: 3.3933616, z: -0.10550929}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &374777426
 GameObject:
   m_ObjectHideFlags: 0
@@ -559,6 +605,10 @@ PrefabInstance:
       propertyPath: _projectileSpawner
       value: 
       objectReference: {fileID: 374777427}
+    - target: {fileID: 2124988984619475679, guid: 104650bb7e4a04556bcbdcac3ce5a146, type: 3}
+      propertyPath: _particleEffectSpawner
+      value: 
+      objectReference: {fileID: 345916860}
     - target: {fileID: 3294242265455809717, guid: 104650bb7e4a04556bcbdcac3ce5a146, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -617,3 +667,4 @@ SceneRoots:
   - {fileID: 1847487932}
   - {fileID: 1315153831}
   - {fileID: 374777428}
+  - {fileID: 345916861}
