@@ -3,6 +3,7 @@ using Zenject;
 using Asteroids.Core.Player;
 using Asteroids.Core.PlayerInput;
 using Asteroids.Core.Enemies;
+using Asteroids.Core.Score;
 using UnityEngine.Assertions;
 using Utils.JsonLoader;
 using Asteroids.Core.Entity;
@@ -20,6 +21,7 @@ namespace Asteroids.Installers
     {
         private const string PlayerSettingsFileName = "player_settings.json";
         private const string EnemySettingsFileName = "enemy_settings.json";
+        private const string ScoreSettingsFileName = "score_settings.json";
 
         [SerializeField] private KeyboardInputSettings _inputSettings;
         [SerializeField] private ShipView _shipViewPrefab;
@@ -55,6 +57,7 @@ namespace Asteroids.Installers
             Container.DeclareSignal<LaserShotSignal>();
             Container.DeclareSignal<LaserChargesChangedSignal>();
             Container.DeclareSignal<LaserDeactivatedSignal>();
+            Container.DeclareSignal<ScoreChangedSignal>();
             // AsteroidFragmentSignal - временно отключено, добавим позже
         }
 
@@ -81,6 +84,15 @@ namespace Asteroids.Installers
             var enemySettings = jsonLoader.LoadFromStreamingAssets<EnemySettings>(EnemySettingsFileName);
             Assert.IsNotNull(enemySettings, "Failed to load enemy settings from JSON!");
             Container.BindInstance(enemySettings);
+
+            // Load score settings
+            var scoreSettings = jsonLoader.LoadFromStreamingAssets<ScoreSettings>(ScoreSettingsFileName);
+            Assert.IsNotNull(scoreSettings, "Failed to load score settings from JSON!");
+            scoreSettings.InitializeRewards();
+            Container.BindInstance(scoreSettings);
+
+            // Bind score service
+            Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle();
         }
 
         private void InstallInput()

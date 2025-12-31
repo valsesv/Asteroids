@@ -112,5 +112,14 @@ namespace Asteroids.Core.Entity.Components
     public class LaserDeactivatedSignal
     {
     }
+
+    /// <summary>
+    /// Signal fired when player score changes
+    /// </summary>
+    public class ScoreChangedSignal
+    {
+        public int CurrentScore { get; set; }
+        public int PointsAdded { get; set; }
+    }
 }
 
