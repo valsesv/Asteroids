@@ -20,6 +20,12 @@ namespace Asteroids.Core.PlayerInput
         float GetRotationInput();
         
         bool GetShootBulletInput();
+        
+        /// <summary>
+        /// Get laser shoot input
+        /// Returns: true when player wants to shoot laser
+        /// </summary>
+        bool GetShootLaserInput();
     }
 }
 

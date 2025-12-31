@@ -100,13 +100,35 @@ namespace Asteroids.Presentation.Enemies
 
         /// <summary>
         /// Handle enemy death - override in derived classes for specific behavior
+        /// This method may trigger fragmentation for asteroids
         /// </summary>
-        protected virtual void HandleEnemyDeath()
+        public virtual void HandleEnemyDeath()
+        {
+            HandleInstaDeath();
+        }
+
+        /// <summary>
+        /// Handle instant death without fragmentation (used by laser)
+        /// Override in derived classes if needed, but should not trigger fragmentation
+        /// </summary>
+        public virtual void HandleInstaDeath()
         {
             // Spawn explosion particle effect at enemy position
             if (_particleEffectSpawner != null)
             {
                 _particleEffectSpawner.SpawnExplosion(transform.position);
+            }
+
+            // Return enemy to pool
+            if (_enemySpawner != null)
+            {
+                _enemySpawner.ReturnEnemy(this);
+            }
+
+            // Fire enemy destroyed signal
+            if (_signalBus != null && Entity != null)
+            {
+                _signalBus.Fire(new EnemyDestroyedSignal { Entity = Entity });
             }
         }
     }

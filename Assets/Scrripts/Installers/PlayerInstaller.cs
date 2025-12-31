@@ -64,6 +64,11 @@ namespace Asteroids.Installers
                 .To<WeaponShooting>()
                 .FromMethod(ctx => ctx.Container.Resolve<GameEntity>().GetComponent<WeaponShooting>())
                 .AsSingle();
+
+            Container.Bind<ITickable>()
+                .To<LaserComponent>()
+                .FromMethod(ctx => ctx.Container.Resolve<GameEntity>().GetComponent<LaserComponent>())
+                .AsSingle();
         }
 
         private void InstallShipView()

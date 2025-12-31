@@ -26,6 +26,7 @@ namespace Asteroids.Installers
         [SerializeField] private EnemySpawner _enemySpawner;
         [SerializeField] private ProjectileSpawner _projectileSpawner;
         [SerializeField] private ParticleEffectSpawner _particleEffectSpawner;
+        [SerializeField] private LaserView _laserView;
 
         public override void InstallBindings()
         {
@@ -35,6 +36,7 @@ namespace Asteroids.Installers
             InstallCommonServices();
             InstallEnemySpawner();
             InstallParticleEffectSpawner();
+            InstallLaserView();
         }
 
         private void InstallSignalBus()
@@ -50,6 +52,9 @@ namespace Asteroids.Installers
             Container.DeclareSignal<BulletCreatedSignal>();
             Container.DeclareSignal<BulletShotSignal>();
             Container.DeclareSignal<EnemyDestroyedSignal>();
+            Container.DeclareSignal<LaserShotSignal>();
+            Container.DeclareSignal<LaserChargesChangedSignal>();
+            Container.DeclareSignal<LaserDeactivatedSignal>();
             // AsteroidFragmentSignal - временно отключено, добавим позже
         }
 
@@ -69,6 +74,8 @@ namespace Asteroids.Installers
             Container.BindInstance(playerSettings.Health);
             Container.BindInstance(playerSettings.Weapon);
             Container.BindInstance(playerSettings.Weapon.Bullet);
+            Assert.IsNotNull(playerSettings.Weapon.Laser, "Laser settings are null in weapon settings!");
+            Container.BindInstance(playerSettings.Weapon.Laser);
 
             // Load enemy settings
             var enemySettings = jsonLoader.LoadFromStreamingAssets<EnemySettings>(EnemySettingsFileName);
@@ -111,6 +118,14 @@ namespace Asteroids.Installers
             if (_particleEffectSpawner != null)
             {
                 Container.BindInterfacesAndSelfTo<ParticleEffectSpawner>().FromInstance(_particleEffectSpawner).AsSingle();
+            }
+        }
+
+        private void InstallLaserView()
+        {
+            if (_laserView != null)
+            {
+                Container.BindInterfacesAndSelfTo<LaserView>().FromInstance(_laserView).AsSingle();
             }
         }
     }

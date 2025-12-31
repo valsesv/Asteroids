@@ -51,7 +51,11 @@ namespace Asteroids.Core.Player
             var screenWrap = new ScreenWrapComponent(transform, screenBounds, signalBus);
             entity.AddComponent(screenWrap);
 
-            // Add weapon shooting component (handles bullets)
+            // Add laser component (manages charges and recharge)
+            var laserComponent = new LaserComponent(weaponSettings.Laser, signalBus);
+            entity.AddComponent(laserComponent);
+
+            // Add weapon shooting component (handles bullets and laser)
             var weaponShooting = new WeaponShooting(entity, inputProvider, weaponSettings, signalBus);
             entity.AddComponent(weaponShooting);
 

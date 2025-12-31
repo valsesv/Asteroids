@@ -47,7 +47,7 @@ namespace Asteroids.Presentation.Enemies
         /// <summary>
         /// Handle fragment death - return to pool (fragments don't fragment further)
         /// </summary>
-        protected override void HandleEnemyDeath()
+        public override void HandleEnemyDeath()
         {
             base.HandleEnemyDeath();
 

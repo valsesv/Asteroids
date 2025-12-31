@@ -39,9 +39,9 @@ namespace Asteroids.Presentation.Enemies
         }
 
         /// <summary>
-        /// Handle asteroid death - always fragment into Fragment enemies
+        /// Handle asteroid death - always fragment into Fragment enemies (for bullets)
         /// </summary>
-        protected override void HandleEnemyDeath()
+        public override void HandleEnemyDeath()
         {
             base.HandleEnemyDeath();
 
@@ -60,6 +60,16 @@ namespace Asteroids.Presentation.Enemies
 
             // Fragment the asteroid into Fragment enemies
             _enemySpawner.FragmentAsteroid(this, position, velocity, asteroidComponent);
+        }
+
+        /// <summary>
+        /// Handle instant death without fragmentation (for laser)
+        /// Laser destroys asteroids completely without creating fragments
+        /// </summary>
+        public override void HandleInstaDeath()
+        {
+            // Just destroy without fragmentation - call base implementation
+            base.HandleInstaDeath();
         }
     }
 }

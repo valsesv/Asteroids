@@ -86,5 +86,31 @@ namespace Asteroids.Core.Entity.Components
         public int FragmentSize { get; set; } // AsteroidSize enum value (0=Large, 1=Medium, 2=Small)
         public int FragmentCount { get; set; }
     }
+
+    /// <summary>
+    /// Signal fired when laser is shot
+    /// </summary>
+    public class LaserShotSignal
+    {
+        public Vector2 StartPosition { get; set; }
+        public Vector2 Direction { get; set; }
+    }
+
+    /// <summary>
+    /// Signal fired when laser charges change
+    /// </summary>
+    public class LaserChargesChangedSignal
+    {
+        public int CurrentCharges { get; set; }
+        public int MaxCharges { get; set; }
+        public float RechargeProgress { get; set; } // 0-1, progress to next charge
+    }
+
+    /// <summary>
+    /// Signal fired when laser is deactivated
+    /// </summary>
+    public class LaserDeactivatedSignal
+    {
+    }
 }
 

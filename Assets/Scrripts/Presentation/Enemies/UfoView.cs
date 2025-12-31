@@ -31,7 +31,7 @@ namespace Asteroids.Presentation.Enemies
             _container.BindInstance(Entity).AsSingle();
         }
 
-        protected override void HandleEnemyDeath()
+        public override void HandleEnemyDeath()
         {
             base.HandleEnemyDeath();
 
