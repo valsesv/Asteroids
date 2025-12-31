@@ -175,9 +175,10 @@ namespace Asteroids.Presentation.Enemies
                 // Set spawn position
                 fragment.SetSpawnPosition(position);
 
-                // Calculate fragment direction (spread out from original velocity)
+                // Calculate fragment direction (spread out from backward direction of original velocity)
                 float angleOffset = (i - fragmentCount / 2f + 0.5f) * 45f * Mathf.Deg2Rad; // Spread fragments in 45-degree increments
-                Vector2 fragmentDirection = RotateVector(originalVelocity.normalized, angleOffset);
+                Vector2 backwardDirection = -originalVelocity.normalized; // Move in opposite direction
+                Vector2 fragmentDirection = RotateVector(backwardDirection, angleOffset);
 
                 // Set fragment direction (this will set the velocity via FragmentMovement)
                 fragment.SetDirection(fragmentDirection);
