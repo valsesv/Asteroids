@@ -18,10 +18,17 @@ namespace Asteroids.Core.Entity
         /// </summary>
         /// <param name="factory">Function that creates new objects</param>
         /// <param name="parent">Parent transform for pooled objects (optional)</param>
-        public ObjectPool(System.Func<T> factory, Transform parent = null)
+        /// <param name="initialSize">Number of objects to pre-create in the pool (optional, default: 20)</param>
+        public ObjectPool(System.Func<T> factory, Transform parent = null, int initialSize = 20)
         {
             _factory = factory;
             _parent = parent;
+
+            // Pre-warm pool with initial objects
+            if (initialSize > 0)
+            {
+                PreWarm(initialSize);
+            }
         }
 
         /// <summary>
@@ -74,6 +81,24 @@ namespace Asteroids.Core.Entity
         /// Count of active objects
         /// </summary>
         public int Count => _activeObjects.Count;
+
+        /// <summary>
+        /// Pre-warm the pool by creating initial objects
+        /// </summary>
+        /// <param name="count">Number of objects to pre-create</param>
+        public void PreWarm(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var obj = _factory();
+                if (_parent != null)
+                {
+                    obj.transform.SetParent(_parent);
+                }
+                obj.gameObject.SetActive(false);
+                _inactiveObjects.Push(obj);
+            }
+        }
 
         /// <summary>
         /// Clear all objects from pool
