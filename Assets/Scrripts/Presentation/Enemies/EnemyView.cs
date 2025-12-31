@@ -80,13 +80,21 @@ namespace Asteroids.Presentation.Enemies
         {
             // Check if collision is with a bullet/projectile
             var bulletView = collision.gameObject.GetComponent<BulletView>();
-            if (bulletView == null || Entity == null)
+            if (bulletView != null)
             {
+                // All enemies die immediately on bullet hit (no health system)
+                HandleEnemyDeath();
                 return;
             }
 
-            // All enemies die immediately on bullet hit (no health system)
-            HandleEnemyDeath();
+            // Check if collision is with the player ship
+            var shipView = collision.gameObject.GetComponent<ShipView>();
+            if (shipView != null)
+            {
+                // Enemies are destroyed when colliding with player
+                HandleEnemyDeath();
+                return;
+            }
         }
 
         /// <summary>
