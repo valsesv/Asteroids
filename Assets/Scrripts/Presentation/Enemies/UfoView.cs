@@ -27,6 +27,8 @@ namespace Asteroids.Presentation.Enemies
 
             // Create base enemy entity using static UfoFactory (no health needed)
             Entity = UfoFactory.CreateUfo(position, rotation, signalBus, playerTransform, enemySettings, screenBounds);
+            RegisterTickableComponents();
+            _container.BindInstance(Entity).AsSingle();
         }
 
         protected override void HandleEnemyDeath()

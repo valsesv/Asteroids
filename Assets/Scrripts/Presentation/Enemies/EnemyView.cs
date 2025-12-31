@@ -39,24 +39,6 @@ namespace Asteroids.Presentation.Enemies
             }
         }
 
-        /// <summary>
-        /// Unregister tickable components from TickableManager
-        /// </summary>
-        private void UnregisterTickableComponents()
-        {
-            foreach (var tickableComponent in Entity.GetTickableComponents())
-            {
-                try
-                {
-                    _tickableManager.Remove(tickableComponent);
-                }
-                catch
-                {
-                    // Component might not be registered, ignore
-                }
-            }
-        }
-
         protected virtual void OnTransformChanged(TransformChangedSignal signal)
         {
             // Update Unity transform from signal
@@ -70,8 +52,6 @@ namespace Asteroids.Presentation.Enemies
         /// </summary>
         public void SetSpawnPosition(Vector2 position)
         {
-            // Unregister tickable components before setting spawn position
-            UnregisterTickableComponents();
 
             // Update Unity transform
             transform.position = new Vector3(position.x, position.y, 0f);
@@ -94,7 +74,6 @@ namespace Asteroids.Presentation.Enemies
             {
                 screenWrap.Reset();
             }
-            RegisterTickableComponents();
         }
 
         protected virtual void OnCollisionEnter2D(Collision2D collision)

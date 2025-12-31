@@ -11,7 +11,6 @@ namespace Asteroids.Presentation.Enemies
     /// </summary>
     public class AsteroidView : EnemyView
     {
-
         [Inject]
         public void Construct(
             SignalBus signalBus,
@@ -24,6 +23,7 @@ namespace Asteroids.Presentation.Enemies
             Entity = AsteroidFactory.CreateAsteroidEntity(position, rotation, signalBus, enemySettings.AsteroidSpeed, screenBounds);
 
             _container.BindInstance(Entity).AsSingle();
+            RegisterTickableComponents();
         }
 
         /// <summary>
@@ -31,13 +31,10 @@ namespace Asteroids.Presentation.Enemies
         /// </summary>
         public void SetDirection(Vector2 direction)
         {
-            if (Entity != null)
+            var movement = Entity.GetComponent<AsteroidMovement>();
+            if (movement != null)
             {
-                var movement = Entity.GetComponent<AsteroidMovement>();
-                if (movement != null)
-                {
-                    movement.SetDirection(direction);
-                }
+                movement.SetDirection(direction);
             }
         }
 
@@ -50,23 +47,19 @@ namespace Asteroids.Presentation.Enemies
 
             // Get asteroid component
             var asteroidComponent = Entity?.GetComponent<AsteroidComponent>();
-            if (asteroidComponent != null)
+            if (asteroidComponent == null)
             {
-                // Get position and velocity for fragmentation
-                var transformComponent = Entity.GetComponent<TransformComponent>();
-                var physicsComponent = Entity.GetComponent<PhysicsComponent>();
-
-                Vector2 position = transformComponent?.Position ?? Vector2.zero;
-                Vector2 velocity = physicsComponent?.Velocity ?? Vector2.zero;
-
-                // Fragment the asteroid into Fragment enemies
-                _enemySpawner.FragmentAsteroid(this, position, velocity, asteroidComponent);
+                return;
             }
-            else
-            {
-                // No asteroid component: return to pool
-                _enemySpawner.ReturnEnemy(this);
-            }
+            // Get position and velocity for fragmentation
+            var transformComponent = Entity.GetComponent<TransformComponent>();
+            var physicsComponent = Entity.GetComponent<PhysicsComponent>();
+
+            Vector2 position = transformComponent?.Position ?? Vector2.zero;
+            Vector2 velocity = physicsComponent?.Velocity ?? Vector2.zero;
+
+            // Fragment the asteroid into Fragment enemies
+            _enemySpawner.FragmentAsteroid(this, position, velocity, asteroidComponent);
         }
     }
 }

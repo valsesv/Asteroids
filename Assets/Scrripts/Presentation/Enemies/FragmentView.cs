@@ -26,6 +26,7 @@ namespace Asteroids.Presentation.Enemies
 
             // Register Entity in container
             _container.BindInstance(Entity).AsSingle();
+            RegisterTickableComponents();
         }
 
         /// <summary>
