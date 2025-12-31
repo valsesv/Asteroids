@@ -11,42 +11,18 @@ namespace Asteroids.Presentation.Enemies
     /// </summary>
     public class AsteroidView : EnemyView
     {
-        [SerializeField] private Vector2 _direction = Vector2.right;
-
-        private DiContainer _container;
 
         [Inject]
         public void Construct(
             SignalBus signalBus,
             ScreenBounds screenBounds,
-            DiContainer container,
-            TickableManager tickableManager,
             EnemySettings enemySettings)
         {
-            _container = container;
-
-            // Get position and rotation from Unity transform
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
-            // Create base enemy entity using static AsteroidFactory (no health needed)
-            Entity = AsteroidFactory.CreateAsteroidEntity(position, rotation, signalBus);
+            Entity = AsteroidFactory.CreateAsteroidEntity(position, rotation, signalBus, enemySettings.AsteroidSpeed, screenBounds);
 
-            // Add asteroid-specific component (no size needed)
-            var asteroidComponent = new AsteroidComponent();
-            Entity.AddComponent(asteroidComponent);
-
-            // Add movement component (sets initial velocity) - use speed from settings
-            var physics = Entity.GetComponent<PhysicsComponent>();
-            var movement = new AsteroidMovement(Entity, physics, _direction, enemySettings.AsteroidSpeed, signalBus);
-            Entity.AddComponent(movement);
-
-            // Add screen wrap component for teleportation at screen boundaries
-            var transformComponent = Entity.GetComponent<TransformComponent>();
-            var screenWrap = new ScreenWrapComponent(transformComponent, screenBounds, signalBus);
-            Entity.AddComponent(screenWrap);
-
-            // Register Entity in container
             _container.BindInstance(Entity).AsSingle();
         }
 

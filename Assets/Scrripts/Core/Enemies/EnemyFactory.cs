@@ -18,8 +18,8 @@ namespace Asteroids.Core.Enemies
             EnemyType type,
             Vector2 position,
             float rotation,
-            float maxHealth,
-            SignalBus signalBus)
+            SignalBus signalBus,
+            ScreenBounds screenBounds)
         {
             var entity = new GameEntity(position, rotation, signalBus);
 
@@ -31,6 +31,10 @@ namespace Asteroids.Core.Enemies
             var transform = entity.GetComponent<TransformComponent>();
             var physicsComponent = new PhysicsComponent(transform, signalBus, mass: 1f, frictionCoefficient: 1f);
             entity.AddComponent(physicsComponent);
+
+            var transformComponent = entity.GetComponent<TransformComponent>();
+            var screenWrap = new ScreenWrapComponent(transformComponent, screenBounds, signalBus);
+            entity.AddComponent(screenWrap);
 
             return entity;
         }

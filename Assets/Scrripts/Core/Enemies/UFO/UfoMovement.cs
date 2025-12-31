@@ -18,15 +18,13 @@ namespace Asteroids.Core.Enemies
 
         public UfoMovement(
             GameEntity entity,
-            PhysicsComponent physics,
-            TransformComponent transform,
             TransformComponent playerTransform,
             SignalBus signalBus,
             float speed)
         {
             _entity = entity;
-            _physics = physics;
-            _transform = transform;
+            _physics = entity.GetComponent<PhysicsComponent>();
+            _transform = entity.GetComponent<TransformComponent>();
             _playerTransform = playerTransform;
             _speed = speed;
         }

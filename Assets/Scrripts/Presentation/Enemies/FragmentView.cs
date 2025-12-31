@@ -2,7 +2,6 @@ using UnityEngine;
 using Zenject;
 using Asteroids.Core.Enemies;
 using Asteroids.Core.Entity;
-using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Presentation.Enemies
 {
@@ -12,36 +11,18 @@ namespace Asteroids.Presentation.Enemies
     /// </summary>
     public class FragmentView : EnemyView
     {
-        [SerializeField] private Vector2 _direction = Vector2.right;
-
-        private DiContainer _container;
-
         [Inject]
         public void Construct(
             SignalBus signalBus,
             ScreenBounds screenBounds,
-            DiContainer container,
-            TickableManager tickableManager,
             EnemySettings enemySettings)
         {
-            _container = container;
-
             // Get position and rotation from Unity transform
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
             // Create base enemy entity using static FragmentFactory (no health needed)
-            Entity = FragmentFactory.CreateFragment(position, rotation, signalBus);
-
-            // Add movement component (sets initial velocity) - use FragmentSpeed from settings
-            var physics = Entity.GetComponent<PhysicsComponent>();
-            var movement = new AsteroidMovement(Entity, physics, _direction, enemySettings.FragmentSpeed, signalBus);
-            Entity.AddComponent(movement);
-
-            // Add screen wrap component for teleportation at screen boundaries
-            var transformComponent = Entity.GetComponent<TransformComponent>();
-            var screenWrap = new ScreenWrapComponent(transformComponent, screenBounds, signalBus);
-            Entity.AddComponent(screenWrap);
+            Entity = FragmentFactory.CreateFragment(position, rotation, signalBus, enemySettings.FragmentSpeed, screenBounds);
 
             // Register Entity in container
             _container.BindInstance(Entity).AsSingle();

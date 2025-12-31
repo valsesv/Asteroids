@@ -18,14 +18,21 @@ namespace Asteroids.Core.Enemies
         public static GameEntity CreateUfo(
             Vector2 position,
             float rotation,
-            SignalBus signalBus)
+            SignalBus signalBus,
+            TransformComponent playerTransform,
+            EnemySettings enemySettings,
+            ScreenBounds screenBounds)
         {
             // Use static CreateEnemy method from EnemyFactory (maxHealth not used for UFOs)
-            var entity = EnemyFactory.CreateEnemy(EnemyType.Ufo, position, rotation, 0f, signalBus);
+            var entity = EnemyFactory.CreateEnemy(EnemyType.Ufo, position, rotation, signalBus, screenBounds);
 
             // Add UFO-specific component
             var ufoComponent = new UfoComponent();
             entity.AddComponent(ufoComponent);
+
+            // Add movement component (chases player with direct motion) - use speed from settings
+            var movement = new UfoMovement(entity, playerTransform, signalBus, enemySettings.UfoSpeed);
+            entity.AddComponent(movement);
 
             return entity;
         }

@@ -12,42 +12,21 @@ namespace Asteroids.Presentation.Enemies
     /// </summary>
     public class UfoView : EnemyView
     {
-        private DiContainer _container;
-
         [Inject]
         public void Construct(
             SignalBus signalBus,
             ScreenBounds screenBounds,
-            DiContainer container,
-            TickableManager tickableManager,
             ShipView shipView,
             EnemySettings enemySettings)
         {
-            _container = container;
-
             // Get position and rotation from Unity transform
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
+            var playerTransform = shipView.Entity.GetComponent<TransformComponent>();
+
             // Create base enemy entity using static UfoFactory (no health needed)
-            Entity = UfoFactory.CreateUfo(position, rotation, signalBus);
-
-            // Get player TransformComponent from parent container (PlayerInstaller)
-            TransformComponent playerTransform = shipView.Entity.GetComponent<TransformComponent>();
-
-            // Add movement component (chases player with direct motion) - use speed from settings
-            var physics = Entity.GetComponent<PhysicsComponent>();
-            var transformComponent = Entity.GetComponent<TransformComponent>();
-            var movement = new UfoMovement(Entity, physics, transformComponent, playerTransform, signalBus, enemySettings.UfoSpeed);
-            Entity.AddComponent(movement);
-
-            // Add screen wrap component for teleportation at screen boundaries
-            var entityTransform = Entity.GetComponent<TransformComponent>();
-            var screenWrap = new ScreenWrapComponent(entityTransform, screenBounds, signalBus);
-            Entity.AddComponent(screenWrap);
-
-            // Register Entity in container
-            _container.BindInstance(Entity).AsSingle();
+            Entity = UfoFactory.CreateUfo(position, rotation, signalBus, playerTransform, enemySettings, screenBounds);
         }
 
         protected override void HandleEnemyDeath()

@@ -17,14 +17,20 @@ namespace Asteroids.Core.Enemies
         public static GameEntity CreateFragment(
             Vector2 position,
             float rotation,
-            SignalBus signalBus)
+            SignalBus signalBus,
+            float speed,
+            ScreenBounds screenBounds)
         {
             // Use static CreateEnemy method from EnemyFactory (maxHealth not used for fragments)
-            var entity = EnemyFactory.CreateEnemy(EnemyType.Fragment, position, rotation, 0f, signalBus);
+            var entity = EnemyFactory.CreateEnemy(EnemyType.Fragment, position, rotation, signalBus, screenBounds);
 
             // Add Fragment-specific component
             var fragmentComponent = new FragmentComponent();
             entity.AddComponent(fragmentComponent);
+
+            // Add movement component (sets initial velocity) - use FragmentSpeed from settings
+            var movement = new AsteroidMovement(entity, speed, signalBus);
+            entity.AddComponent(movement);
 
             return entity;
         }

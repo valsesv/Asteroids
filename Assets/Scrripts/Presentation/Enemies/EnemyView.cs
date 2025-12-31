@@ -19,6 +19,7 @@ namespace Asteroids.Presentation.Enemies
         [Inject] protected SignalBus _signalBus;
         [Inject] protected EnemySpawner _enemySpawner;
         [Inject] protected TickableManager _tickableManager;
+        [Inject] protected DiContainer _container;
 
         public virtual void Initialize()
         {

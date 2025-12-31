@@ -18,13 +18,11 @@ namespace Asteroids.Core.Enemies
 
         public AsteroidMovement(
             GameEntity entity,
-            PhysicsComponent physics,
-            Vector2 direction,
             float speed,
             SignalBus signalBus)
         {
-            _physics = physics;
-            _direction = direction.normalized;
+            _physics = entity.GetComponent<PhysicsComponent>();
+            _direction = Vector2.zero;
             _speed = speed;
         }
 
