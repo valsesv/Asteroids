@@ -4,7 +4,6 @@ using Zenject;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Player;
-using Asteroids.Presentation.Enemies;
 
 namespace Asteroids.Presentation.Player
 {
@@ -19,6 +18,7 @@ namespace Asteroids.Presentation.Player
         [Inject] private SignalBus _signalBus;
         [Inject] private DiContainer _container;
         [Inject] private TickableManager _tickableManager;
+        [Inject] private ProjectileSpawner _projectileSpawner;
 
         [Inject]
         public void Construct(BulletSettings bulletSettings)
@@ -32,29 +32,35 @@ namespace Asteroids.Presentation.Player
 
             // Register Entity in container (like enemies do)
             _container.BindInstance(Entity).AsSingle();
-
-            // Add ITickable components to TickableManager (like enemies do)
             RegisterTickableComponents();
         }
 
         private void RegisterTickableComponents()
         {
-            // Add ITickable components directly to TickableManager
-            // This allows them to be updated even if they were created after TickableManager initialization
             foreach (var tickableComponent in Entity.GetTickableComponents())
             {
                 _tickableManager.Add(tickableComponent);
             }
         }
 
+        private void UnregisterTickableComponents()
+        {
+            foreach (var tickableComponent in Entity.GetTickableComponents())
+            {
+                _tickableManager.Remove(tickableComponent);
+            }
+        }
+
         public void Initialize()
         {
             _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
+            _signalBus.Subscribe<BulletDestroyedSignal>(OnBulletDestroyed);
         }
 
         public void Dispose()
         {
             _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
+            _signalBus?.Unsubscribe<BulletDestroyedSignal>(OnBulletDestroyed);
         }
 
         private void OnTransformChanged(TransformChangedSignal signal)
@@ -76,8 +82,13 @@ namespace Asteroids.Presentation.Player
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            _signalBus?.Fire(new BulletDestroyedSignal { Entity = Entity });
+            OnBulletDestroyed(null);
+        }
+
+        private void OnBulletDestroyed(BulletDestroyedSignal signal)
+        {
+            _projectileSpawner.ReturnBullet(this);
+            UnregisterTickableComponents();
         }
     }
 }
-

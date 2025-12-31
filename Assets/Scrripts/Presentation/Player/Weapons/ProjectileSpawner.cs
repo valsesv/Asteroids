@@ -46,13 +46,11 @@ namespace Asteroids.Presentation.Player
 
             // Subscribe to signals
             _signalBus.Subscribe<BulletShotSignal>(OnBulletShot);
-            _signalBus.Subscribe<BulletDestroyedSignal>(OnBulletDestroyed);
         }
 
         public void Dispose()
         {
             _signalBus?.Unsubscribe<BulletShotSignal>(OnBulletShot);
-            _signalBus?.Unsubscribe<BulletDestroyedSignal>(OnBulletDestroyed);
         }
 
         private void OnBulletShot(BulletShotSignal signal)
@@ -65,38 +63,11 @@ namespace Asteroids.Presentation.Player
             _activeBullets.Add(bulletView);
         }
 
-        private void OnBulletDestroyed(BulletDestroyedSignal signal)
+        public void ReturnBullet(BulletView bulletView)
         {
-            if (signal.Entity == null)
-            {
-                return;
-            }
-
-            // Find and return bullet to pool
-            BulletView bulletView = null;
-            for (int i = _activeBullets.Count - 1; i >= 0; i--)
-            {
-                if (_activeBullets[i].Entity == signal.Entity)
-                {
-                    bulletView = _activeBullets[i];
-                    _activeBullets.RemoveAt(i);
-                    break;
-                }
-            }
-
-            if (bulletView != null)
-            {
-                // Remove ITickable components from TickableManager
-                foreach (var tickableComponent in signal.Entity.GetTickableComponents())
-                {
-                    _tickableManager.Remove(tickableComponent);
-                }
-
-                bulletView.Dispose();
-                _bulletPool.Return(bulletView);
-            }
+            _activeBullets.Remove(bulletView);
+            _bulletPool.Return(bulletView);
         }
-
     }
 }
 

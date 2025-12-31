@@ -21,7 +21,7 @@ namespace Asteroids.Presentation.Player
 
         public T Create(Vector2 position)
         {
-            GameObject instance = _container.InstantiatePrefab(_prefab);
+            GameObject instance = _container.InstantiatePrefab(_prefab, _parent);
             instance.transform.position = new Vector3(position.x, position.y, 0f);
 
             var enemy = instance.GetComponent<T>();

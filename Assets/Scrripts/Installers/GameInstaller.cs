@@ -46,7 +46,6 @@ namespace Asteroids.Installers
             Container.DeclareSignal<InvincibilityChangedSignal>();
             Container.DeclareSignal<BulletCreatedSignal>();
             Container.DeclareSignal<BulletShotSignal>();
-            Container.DeclareSignal<BulletDestroyedSignal>();
             Container.DeclareSignal<EnemyDestroyedSignal>();
             // AsteroidFragmentSignal - временно отключено, добавим позже
         }
@@ -95,7 +94,7 @@ namespace Asteroids.Installers
             Container.Bind<ShipView>().FromInstance(_shipViewPrefab).AsSingle();
 
             Assert.IsNotNull(_projectileSpawner, "ProjectileSpawner is not assigned in GameInstaller!");
-            Container.BindInterfacesTo<ProjectileSpawner>().FromInstance(_projectileSpawner).AsSingle();
+            Container.BindInterfacesAndSelfTo<ProjectileSpawner>().FromInstance(_projectileSpawner).AsSingle();
         }
 
         private void InstallEnemySpawner()

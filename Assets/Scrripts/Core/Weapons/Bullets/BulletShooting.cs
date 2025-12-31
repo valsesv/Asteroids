@@ -54,7 +54,7 @@ namespace Asteroids.Core.Player
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
             // Calculate bullet position (spawn slightly in front of ship)
-            Vector2 bulletPosition = _transform.Position + direction * 0.5f;
+            Vector2 bulletPosition = _transform.Position + direction * 1f;
 
             _signalBus?.Fire(new BulletShotSignal
             {

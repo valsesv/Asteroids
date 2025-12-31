@@ -29,6 +29,7 @@ namespace Asteroids.Installers
         {
             Container.DeclareSignal<TransformChangedSignal>();
             Container.DeclareSignal<PhysicsChangedSignal>();
+            Container.DeclareSignal<BulletDestroyedSignal>();
         }
 
         private void InstallBulletView()
