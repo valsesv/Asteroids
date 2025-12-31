@@ -32,7 +32,6 @@ namespace Asteroids.Presentation.Player
 
             // Register Entity in container (like enemies do)
             _container.BindInstance(Entity).AsSingle();
-            RegisterTickableComponents();
         }
 
         private void RegisterTickableComponents()
@@ -47,7 +46,14 @@ namespace Asteroids.Presentation.Player
         {
             foreach (var tickableComponent in Entity.GetTickableComponents())
             {
-                _tickableManager.Remove(tickableComponent);
+                try
+                {
+                    _tickableManager.Remove(tickableComponent);
+                }
+                catch
+                {
+                    // Component might not be registered, ignore
+                }
             }
         }
 
@@ -71,6 +77,10 @@ namespace Asteroids.Presentation.Player
 
         public void SetSpawnParameters(Vector2 position, Vector2 direction)
         {
+            // Unregister first to avoid duplicates (safe even if not registered)
+            // This handles the case where it's a new bullet (components already registered in Construct)
+            UnregisterTickableComponents();
+
             transform.position = new Vector3(position.x, position.y, 0f);
 
             var transformComponent = Entity.GetComponent<TransformComponent>();
@@ -78,6 +88,13 @@ namespace Asteroids.Presentation.Player
 
             var movement = Entity.GetComponent<BulletMovement>();
             movement.SetDirection(direction);
+
+            // Re-register components so they update (needed when retrieving from pool)
+            RegisterTickableComponents();
+
+            // Reset bullet lifetime elapsed time
+            var bulletLifetime = Entity.GetComponent<BulletLifetime>();
+            bulletLifetime?.Reset();
         }
 
         private void OnCollisionEnter2D(Collision2D collision)

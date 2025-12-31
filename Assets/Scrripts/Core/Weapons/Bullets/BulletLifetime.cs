@@ -32,6 +32,14 @@ namespace Asteroids.Core.Player
                 _signalBus?.Fire(new BulletDestroyedSignal { Entity = _entity });
             }
         }
+
+        /// <summary>
+        /// Reset elapsed time when bullet is reused from pool
+        /// </summary>
+        public void Reset()
+        {
+            _elapsedTime = 0f;
+        }
     }
 }
 

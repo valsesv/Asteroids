@@ -30,21 +30,28 @@ namespace Asteroids.Presentation.Enemies
             _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
         }
 
-        /// <summary>
-        /// Reinitialize enemy when retrieved from pool
-        /// Re-subscribes to signals and re-registers tickable components
-        /// </summary>
-        public virtual void Reinitialize()
+        protected virtual void RegisterTickableComponents()
         {
-            // Re-subscribe to signals
-            Initialize();
-
-            // Re-register tickable components if Entity exists
-            if (Entity != null)
+            foreach (var tickableComponent in Entity.GetTickableComponents())
             {
-                foreach (var tickableComponent in Entity.GetTickableComponents())
+                _tickableManager.Add(tickableComponent);
+            }
+        }
+
+        /// <summary>
+        /// Unregister tickable components from TickableManager
+        /// </summary>
+        private void UnregisterTickableComponents()
+        {
+            foreach (var tickableComponent in Entity.GetTickableComponents())
+            {
+                try
                 {
-                    _tickableManager.Add(tickableComponent);
+                    _tickableManager.Remove(tickableComponent);
+                }
+                catch
+                {
+                    // Component might not be registered, ignore
                 }
             }
         }
@@ -62,6 +69,9 @@ namespace Asteroids.Presentation.Enemies
         /// </summary>
         public void SetSpawnPosition(Vector2 position)
         {
+            // Unregister tickable components before setting spawn position
+            UnregisterTickableComponents();
+
             // Update Unity transform
             transform.position = new Vector3(position.x, position.y, 0f);
 
@@ -83,6 +93,7 @@ namespace Asteroids.Presentation.Enemies
             {
                 screenWrap.Reset();
             }
+            RegisterTickableComponents();
         }
 
         protected virtual void OnCollisionEnter2D(Collision2D collision)
@@ -103,17 +114,6 @@ namespace Asteroids.Presentation.Enemies
         /// </summary>
         protected virtual void HandleEnemyDeath()
         {
-            // Remove ITickable components from enemy entity before returning to pool
-            if (Entity != null)
-            {
-                foreach (var tickableComponent in Entity.GetTickableComponents())
-                {
-                    _tickableManager.Remove(tickableComponent);
-                }
-            }
-
-            // Dispose to clean up subscriptions
-            Dispose();
         }
     }
 }

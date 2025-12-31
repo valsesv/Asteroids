@@ -1,7 +1,7 @@
 {
-    "AsteroidSpeed": 2.0,
+    "AsteroidSpeed": 1.5,
     "UfoSpeed": 1.0,
-    "FragmentSpeed": 3.0,
+    "FragmentSpeed": 2.0,
     "MaxEnemiesOnMap": 10,
     "AsteroidSpawnWeight": 7.0,
     "UfoSpawnWeight": 3.0,

@@ -48,19 +48,6 @@ namespace Asteroids.Presentation.Enemies
 
             // Register Entity in container
             _container.BindInstance(Entity).AsSingle();
-
-            // Add ITickable components to TickableManager so they update automatically
-            RegisterTickableComponents();
-        }
-
-        private void RegisterTickableComponents()
-        {
-            // Add ITickable components directly to TickableManager
-            // This allows them to be updated even if they were created after TickableManager initialization
-            foreach (var tickableComponent in Entity.GetTickableComponents())
-            {
-                _tickableManager.Add(tickableComponent);
-            }
         }
 
         protected override void HandleEnemyDeath()
