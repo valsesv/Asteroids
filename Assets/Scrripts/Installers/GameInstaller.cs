@@ -11,6 +11,7 @@ using Asteroids.Core.Entity.Components;
 using Asteroids.Presentation.Player;
 using Asteroids.Presentation.Enemies;
 using Asteroids.Presentation.Effects;
+using Asteroids.Presentation.UI;
 
 namespace Asteroids.Installers
 {
@@ -29,6 +30,7 @@ namespace Asteroids.Installers
         [SerializeField] private ProjectileSpawner _projectileSpawner;
         [SerializeField] private ParticleEffectSpawner _particleEffectSpawner;
         [SerializeField] private LaserView _laserView;
+        [SerializeField] private ScoreView _scoreView;
 
         public override void InstallBindings()
         {
@@ -39,6 +41,7 @@ namespace Asteroids.Installers
             InstallEnemySpawner();
             InstallParticleEffectSpawner();
             InstallLaserView();
+            InstallScoreUI();
         }
 
         private void InstallSignalBus()
@@ -138,6 +141,18 @@ namespace Asteroids.Installers
             if (_laserView != null)
             {
                 Container.BindInterfacesAndSelfTo<LaserView>().FromInstance(_laserView).AsSingle();
+            }
+        }
+
+        private void InstallScoreUI()
+        {
+            // Bind ScoreViewModel (MVVM pattern)
+            Container.BindInterfacesAndSelfTo<ScoreViewModel>().AsSingle();
+
+            // Bind ScoreView if assigned
+            if (_scoreView != null)
+            {
+                Container.BindInterfacesAndSelfTo<ScoreView>().FromInstance(_scoreView).AsSingle();
             }
         }
     }
