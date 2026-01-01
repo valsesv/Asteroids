@@ -31,6 +31,7 @@ namespace Asteroids.Installers
         [SerializeField] private ParticleEffectSpawner _particleEffectSpawner;
         [SerializeField] private LaserView _laserView;
         [SerializeField] private ScoreView _scoreView;
+        [SerializeField] private HealthView _healthView;
 
         public override void InstallBindings()
         {
@@ -42,6 +43,7 @@ namespace Asteroids.Installers
             InstallParticleEffectSpawner();
             InstallLaserView();
             InstallScoreUI();
+            InstallHealthUI();
         }
 
         private void InstallSignalBus()
@@ -154,6 +156,13 @@ namespace Asteroids.Installers
             {
                 Container.BindInterfacesAndSelfTo<ScoreView>().FromInstance(_scoreView).AsSingle();
             }
+        }
+
+        private void InstallHealthUI()
+        {
+            // Bind HealthViewModel (MVVM pattern)
+            Container.BindInterfacesAndSelfTo<HealthViewModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<HealthView>().FromInstance(_healthView).AsSingle();
         }
     }
 }
