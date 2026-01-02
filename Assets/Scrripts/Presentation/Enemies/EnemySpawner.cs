@@ -166,6 +166,21 @@ namespace Asteroids.Presentation.Enemies
         }
 
         /// <summary>
+        /// Clear all active enemies and return them to pool
+        /// Used when restarting the game
+        /// </summary>
+        public void ClearAllEnemies()
+        {
+            // Create a copy of the list to avoid modification during iteration
+            var enemiesToReturn = new List<EnemyView>(_activeEnemies);
+            
+            foreach (var enemy in enemiesToReturn)
+            {
+                ReturnEnemy(enemy);
+            }
+        }
+
+        /// <summary>
         /// Fragment an asteroid into Fragment enemies
         /// </summary>
         public void FragmentAsteroid(AsteroidView originalAsteroid, Vector2 position, Vector2 originalVelocity, AsteroidComponent asteroidComponent)

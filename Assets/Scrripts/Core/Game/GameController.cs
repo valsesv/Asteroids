@@ -70,6 +70,9 @@ namespace Asteroids.Core.Game
                 return; // Can only start from waiting or game over state
             }
 
+            // Clear all existing enemies (return them to pool)
+            _enemySpawner.ClearAllEnemies();
+
             // Reset player
             ResetPlayer();
 

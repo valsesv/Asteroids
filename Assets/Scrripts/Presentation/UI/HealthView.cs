@@ -59,15 +59,6 @@ namespace Asteroids.Presentation.UI
                 tween?.Kill();
             }
             _activeTweens.Clear();
-
-            // Destroy all heart instances
-            foreach (var heart in _heartImages)
-            {
-                if (heart.gameObject != null)
-                {
-                    Destroy(heart.gameObject);
-                }
-            }
             _heartImages.Clear();
 
             if (_viewModel != null)
