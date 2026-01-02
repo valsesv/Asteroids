@@ -1,11 +1,7 @@
 using UnityEngine;
-using Zenject;
 
 namespace Asteroids.Core.Entity
 {
-    /// <summary>
-    /// Service for getting screen boundaries based on camera
-    /// </summary>
     public class ScreenBounds
     {
         private readonly Camera _camera;

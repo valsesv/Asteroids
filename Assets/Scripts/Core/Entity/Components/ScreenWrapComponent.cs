@@ -3,23 +3,16 @@ using Zenject;
 
 namespace Asteroids.Core.Entity.Components
 {
-    /// <summary>
-    /// Component that wraps objects around screen boundaries
-    /// When object reaches one edge, it appears on the opposite edge
-    /// Only wraps objects that have entered the game area (prevents immediate teleportation on spawn)
-    /// </summary>
     public class ScreenWrapComponent : ITickableComponent
     {
         private readonly TransformComponent _transform;
         private readonly ScreenBounds _screenBounds;
-        private readonly SignalBus _signalBus;
         private bool _isInGameArea = false;
 
-        public ScreenWrapComponent(TransformComponent transform, ScreenBounds screenBounds, SignalBus signalBus)
+        public ScreenWrapComponent(TransformComponent transform, ScreenBounds screenBounds)
         {
             _transform = transform;
             _screenBounds = screenBounds;
-            _signalBus = signalBus;
         }
 
         public void Tick()
@@ -86,7 +79,7 @@ namespace Asteroids.Core.Entity.Components
                 newPosition.y = _screenBounds.Bottom;
                 return true;
             }
-            else if (position.y < _screenBounds.Bottom)
+            if (position.y < _screenBounds.Bottom)
             {
                 newPosition.y = _screenBounds.Top;
                 return true;
@@ -95,9 +88,6 @@ namespace Asteroids.Core.Entity.Components
             return false;
         }
 
-        /// <summary>
-        /// Reset the game area flag - call this when reusing object from pool
-        /// </summary>
         public void Reset()
         {
             _isInGameArea = false;

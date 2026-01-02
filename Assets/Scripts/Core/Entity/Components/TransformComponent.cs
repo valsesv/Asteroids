@@ -3,9 +3,6 @@ using Zenject;
 
 namespace Asteroids.Core.Entity.Components
 {
-    /// <summary>
-    /// Component for spatial transformation data (position, rotation)
-    /// </summary>
     public class TransformComponent : IComponent
     {
         private readonly TransformChangedSignal _signal = new TransformChangedSignal();
@@ -41,13 +38,14 @@ namespace Asteroids.Core.Entity.Components
 
         private void FireSignal()
         {
-            if (_signalBus != null)
+            if (_signalBus == null)
             {
-                _signal.X = Position.x;
-                _signal.Y = Position.y;
-                _signal.Rotation = Rotation;
-                _signalBus.Fire(_signal);
+                return;
             }
+            _signal.X = Position.x;
+            _signal.Y = Position.y;
+            _signal.Rotation = Rotation;
+            _signalBus.Fire(_signal);
         }
     }
 }

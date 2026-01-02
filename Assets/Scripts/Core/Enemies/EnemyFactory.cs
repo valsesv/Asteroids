@@ -33,7 +33,7 @@ namespace Asteroids.Core.Enemies
             entity.AddComponent(physicsComponent);
 
             var transformComponent = entity.GetComponent<TransformComponent>();
-            var screenWrap = new ScreenWrapComponent(transformComponent, screenBounds, signalBus);
+            var screenWrap = new ScreenWrapComponent(transformComponent, screenBounds);
             entity.AddComponent(screenWrap);
 
             return entity;

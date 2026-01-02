@@ -49,7 +49,7 @@ namespace Asteroids.Core.Player
             entity.AddComponent(damageHandler);
 
             // Add screen wrap component
-            var screenWrap = new ScreenWrapComponent(transform, screenBounds, signalBus);
+            var screenWrap = new ScreenWrapComponent(transform, screenBounds);
             entity.AddComponent(screenWrap);
 
             // Add laser component (manages charges and recharge)

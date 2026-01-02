@@ -2,10 +2,6 @@ using UnityEngine;
 
 namespace Asteroids.Core.Entity.Components
 {
-    /// <summary>
-    /// Signal fired when transform component changes (position or rotation)
-    /// Generic signal that can be used by any entity with TransformComponent
-    /// </summary>
     public class TransformChangedSignal
     {
         public float X { get; set; }
@@ -13,10 +9,6 @@ namespace Asteroids.Core.Entity.Components
         public float Rotation { get; set; }
     }
 
-    /// <summary>
-    /// Signal fired when physics component changes (velocity)
-    /// Generic signal that can be used by any entity with PhysicsComponent
-    /// </summary>
     public class PhysicsChangedSignal
     {
         public float VelocityX { get; set; }
@@ -24,61 +16,38 @@ namespace Asteroids.Core.Entity.Components
         public float Speed { get; set; }
     }
 
-    /// <summary>
-    /// Signal fired when health component changes (current health, max health)
-    /// Generic signal that can be used by any entity with HealthComponent
-    /// </summary>
     public class HealthChangedSignal
     {
         public float CurrentHealth { get; set; }
         public float MaxHealth { get; set; }
     }
 
-    /// <summary>
-    /// Signal fired when player invincibility state changes
-    /// </summary>
     public class InvincibilityChangedSignal
     {
         public bool IsInvincible { get; set; }
     }
 
-    /// <summary>
-    /// Signal fired when a bullet is created
-    /// </summary>
     public class BulletCreatedSignal
     {
         public GameEntity Entity { get; set; }
     }
 
-    /// <summary>
-    /// Signal fired when a bullet is shot (before creation, used to get bullet from pool)
-    /// </summary>
     public class BulletShotSignal
     {
         public Vector2 Position { get; set; }
         public Vector2 Direction { get; set; }
     }
 
-    /// <summary>
-    /// Signal fired when a bullet is destroyed
-    /// </summary>
     public class BulletDestroyedSignal
     {
         public GameEntity Entity { get; set; }
     }
 
-    /// <summary>
-    /// Signal fired when an enemy is destroyed
-    /// </summary>
     public class EnemyDestroyedSignal
     {
         public GameEntity Entity { get; set; }
     }
 
-    /// <summary>
-    /// Signal fired when asteroid should fragment
-    /// FragmentSize: 0 = Large, 1 = Medium, 2 = Small (AsteroidSize enum)
-    /// </summary>
     public class AsteroidFragmentSignal
     {
         public Vector2 OriginalPosition { get; set; }
@@ -87,18 +56,12 @@ namespace Asteroids.Core.Entity.Components
         public int FragmentCount { get; set; }
     }
 
-    /// <summary>
-    /// Signal fired when laser is shot
-    /// </summary>
     public class LaserShotSignal
     {
         public Vector2 StartPosition { get; set; }
         public Vector2 Direction { get; set; }
     }
 
-    /// <summary>
-    /// Signal fired when laser charges change
-    /// </summary>
     public class LaserChargesChangedSignal
     {
         public int CurrentCharges { get; set; }
@@ -106,32 +69,20 @@ namespace Asteroids.Core.Entity.Components
         public float RechargeProgress { get; set; } // 0-1, progress to next charge
     }
 
-    /// <summary>
-    /// Signal fired when laser is deactivated
-    /// </summary>
     public class LaserDeactivatedSignal
     {
     }
 
-    /// <summary>
-    /// Signal fired when player score changes
-    /// </summary>
     public class ScoreChangedSignal
     {
         public int CurrentScore { get; set; }
         public int PointsAdded { get; set; }
     }
 
-    /// <summary>
-    /// Signal fired when game starts
-    /// </summary>
     public class GameStartedSignal
     {
     }
 
-    /// <summary>
-    /// Signal fired when game ends (player lost all lives)
-    /// </summary>
     public class GameOverSignal
     {
     }

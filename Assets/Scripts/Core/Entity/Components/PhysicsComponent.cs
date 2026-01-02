@@ -3,10 +3,6 @@ using Zenject;
 
 namespace Asteroids.Core.Entity.Components
 {
-    /// <summary>
-    /// Component for physics data (velocity, forces, mass)
-    /// Automatically updates transform position each tick
-    /// </summary>
     public class PhysicsComponent : ITickableComponent
     {
         private readonly PhysicsChangedSignal _signal = new PhysicsChangedSignal();
@@ -19,9 +15,6 @@ namespace Asteroids.Core.Entity.Components
         public float Mass { get; private set; }
         public float FrictionCoefficient => _frictionCoefficient;
 
-        /// <summary>
-        /// Create physics component with all required dependencies
-        /// </summary>
         public PhysicsComponent(TransformComponent transform, SignalBus signalBus, float mass = 1f, float frictionCoefficient = 1f)
         {
             _transform = transform;
@@ -75,18 +68,13 @@ namespace Asteroids.Core.Entity.Components
             }
         }
 
-        /// <summary>
-        /// Called each frame to update physics (friction and position integration)
-        /// </summary>
         public void Tick()
         {
-            // Apply friction automatically
             if (_frictionCoefficient < 1f)
             {
                 Velocity *= Mathf.Pow(_frictionCoefficient, Time.deltaTime);
             }
 
-            // Update position based on velocity
             _transform.Move(Velocity * Time.deltaTime);
             FireSignal();
         }

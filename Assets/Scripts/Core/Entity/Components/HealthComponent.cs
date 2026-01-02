@@ -2,9 +2,6 @@ using Zenject;
 
 namespace Asteroids.Core.Entity.Components
 {
-    /// <summary>
-    /// Component for health data (current health, max health)
-    /// </summary>
     public class HealthComponent : IComponent
     {
         private readonly HealthChangedSignal _signal = new HealthChangedSignal();
@@ -14,9 +11,6 @@ namespace Asteroids.Core.Entity.Components
         public float MaxHealth { get; private set; }
         public bool IsDead => CurrentHealth <= 0f;
 
-        /// <summary>
-        /// Create health component with all required dependencies
-        /// </summary>
         public HealthComponent(SignalBus signalBus, float maxHealth)
         {
             _signalBus = signalBus;
@@ -25,9 +19,6 @@ namespace Asteroids.Core.Entity.Components
             FireSignal();
         }
 
-        /// <summary>
-        /// Take damage (reduce health)
-        /// </summary>
         public void TakeDamage(float damage)
         {
             if (IsDead)
@@ -39,9 +30,6 @@ namespace Asteroids.Core.Entity.Components
             FireSignal();
         }
 
-        /// <summary>
-        /// Reset health to max
-        /// </summary>
         public void ResetHealth()
         {
             CurrentHealth = MaxHealth;
