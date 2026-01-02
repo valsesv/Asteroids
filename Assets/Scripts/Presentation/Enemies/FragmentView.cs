@@ -29,19 +29,14 @@ namespace Asteroids.Presentation.Enemies
             RegisterTickableComponents();
         }
 
-        /// <summary>
-        /// Set movement direction - used when spawning fragment
-        /// </summary>
         public void SetDirection(Vector2 direction)
         {
-            if (Entity != null)
+            if (Entity == null)
             {
-                var movement = Entity.GetComponent<AsteroidMovement>();
-                if (movement != null)
-                {
-                    movement.SetDirection(direction);
-                }
+                return;
             }
+            var movement = Entity.GetComponent<AsteroidMovement>();
+            movement.SetDirection(direction);
         }
 
         /// <summary>
