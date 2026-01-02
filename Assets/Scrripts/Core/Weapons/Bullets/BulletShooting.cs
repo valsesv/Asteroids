@@ -2,6 +2,7 @@ using UnityEngine;
 using Zenject;
 using Asteroids.Core.PlayerInput;
 using Asteroids.Core.Entity.Components;
+using Asteroids.Core.Weapons;
 
 namespace Asteroids.Core.Player
 {

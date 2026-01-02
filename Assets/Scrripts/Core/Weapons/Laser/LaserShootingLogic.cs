@@ -2,6 +2,7 @@ using UnityEngine;
 using Zenject;
 using Asteroids.Core.PlayerInput;
 using Asteroids.Core.Entity.Components;
+using Asteroids.Core.Weapons;
 
 namespace Asteroids.Core.Player
 {
@@ -12,7 +13,6 @@ namespace Asteroids.Core.Player
     {
         private readonly TransformComponent _transform;
         private readonly IInputProvider _inputProvider;
-        private readonly LaserSettings _laserSettings;
         private readonly LaserComponent _laserComponent;
         private readonly SignalBus _signalBus;
 
@@ -25,7 +25,6 @@ namespace Asteroids.Core.Player
         {
             _transform = transform;
             _inputProvider = inputProvider;
-            _laserSettings = laserSettings;
             _laserComponent = laserComponent;
             _signalBus = signalBus;
         }

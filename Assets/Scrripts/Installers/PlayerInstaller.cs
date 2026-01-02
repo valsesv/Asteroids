@@ -7,6 +7,7 @@ using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Enemies;
 using UnityEngine.Assertions;
 using Asteroids.Core.PlayerInput;
+using Asteroids.Core.Weapons;
 
 namespace Asteroids.Installers
 {

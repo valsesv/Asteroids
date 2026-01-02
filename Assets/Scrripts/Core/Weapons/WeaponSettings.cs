@@ -1,4 +1,4 @@
-namespace Asteroids.Core.Player
+namespace Asteroids.Core.Weapons
 {
     /// <summary>
     /// Weapon settings for bullets and laser

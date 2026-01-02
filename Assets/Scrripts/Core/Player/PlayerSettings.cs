@@ -1,3 +1,5 @@
+using Asteroids.Core.Weapons;
+
 namespace Asteroids.Core.Player
 {
     /// <summary>

@@ -6,6 +6,7 @@ using Asteroids.Presentation.Enemies;
 using Asteroids.Core.Player;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using Asteroids.Core.Weapons;
 
 namespace Asteroids.Presentation.Player
 {
