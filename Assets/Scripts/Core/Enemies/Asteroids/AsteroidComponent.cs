@@ -5,11 +5,6 @@ namespace Asteroids.Core.Enemies
         public AsteroidComponent() : base(EnemyType.Asteroid)
         {
         }
-
-        public int GetFragmentCount()
-        {
-            return 2;
-        }
     }
 }
 

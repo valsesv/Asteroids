@@ -8,18 +8,18 @@ namespace Asteroids.Core.Weapons
 
     public class BulletSettings
     {
-        public float Speed = 10f;
-        public float FireRate = 2f;
-        public float Lifetime = 3f;
+        public float Speed;
+        public float FireRate;
+        public float Lifetime;
     }
 
     public class LaserSettings
     {
-        public int MaxCharges = 3;
-        public float RechargeTime = 5.0f;
-        public float Duration = 0.5f;
-        public float Width = 0.2f;
-        public float Range = 1000f;
+        public int MaxCharges;
+        public float RechargeTime;
+        public float Duration;
+        public float Width;
+        public float Range;
     }
 }
 

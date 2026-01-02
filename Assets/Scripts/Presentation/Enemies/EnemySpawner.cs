@@ -142,7 +142,7 @@ namespace Asteroids.Presentation.Enemies
         public void ClearAllEnemies()
         {
             var enemiesToReturn = new List<EnemyView>(_activeEnemies);
-            
+
             foreach (var enemy in enemiesToReturn)
             {
                 ReturnEnemy(enemy);
@@ -158,7 +158,7 @@ namespace Asteroids.Presentation.Enemies
 
             ReturnEnemy(originalAsteroid);
 
-            int fragmentCount = asteroidComponent.GetFragmentCount();
+            int fragmentCount = _enemySettings.AsteroidFragmentCount;
 
             for (int i = 0; i < fragmentCount; i++)
             {

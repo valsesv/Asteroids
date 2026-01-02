@@ -8,9 +8,9 @@ namespace Asteroids.Core.Score
     {
         public Dictionary<EnemyType, int> EnemyRewards { get; private set; }
 
-        public int AsteroidReward = 20;
-        public int UfoReward = 200;
-        public int FragmentReward = 50;
+        public int AsteroidReward;
+        public int UfoReward;
+        public int FragmentReward;
 
         public ScoreSettings()
         {
