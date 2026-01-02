@@ -29,11 +29,19 @@ namespace Asteroids.Presentation.UI
 
         public float GetRotationInput()
         {
-            if (_joystickView == null)
-                return 0f;
+            // For mobile, rotation is handled via direction input
+            // Return 0 to use direction-based movement instead
+            return 0f;
+        }
 
-            // Joystick X axis: positive = right rotation, negative = left rotation
-            return _joystickView.Direction.x;
+        public Vector2 GetDirectionInput()
+        {
+            if (_joystickView == null)
+                return Vector2.zero;
+
+            // Return joystick direction directly
+            // Y is forward/backward, X is left/right
+            return _joystickView.Direction;
         }
 
         public bool GetShootBulletInput()

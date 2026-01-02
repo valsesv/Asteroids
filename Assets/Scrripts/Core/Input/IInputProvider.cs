@@ -19,6 +19,12 @@ namespace Asteroids.Core.PlayerInput
         /// </summary>
         float GetRotationInput();
         
+        /// <summary>
+        /// Get direction input as vector (for joystick/touch)
+        /// Returns: normalized direction vector, or zero if not available
+        /// </summary>
+        Vector2 GetDirectionInput();
+        
         bool GetShootBulletInput();
         
         /// <summary>

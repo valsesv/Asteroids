@@ -40,6 +40,18 @@ namespace Asteroids.Presentation.UI
             return Mathf.Abs(keyboardInput) > Mathf.Abs(mobileInput) ? keyboardInput : mobileInput;
         }
 
+        public Vector2 GetDirectionInput()
+        {
+            // Prefer mobile direction input if available, otherwise use keyboard
+            Vector2 mobileInput = _mobileProvider?.GetDirectionInput() ?? Vector2.zero;
+
+            // If mobile input is active, use it; otherwise return zero (keyboard doesn't provide direction)
+            if (mobileInput.magnitude > 0.01f)
+                return mobileInput;
+
+            return Vector2.zero;
+        }
+
         public bool GetShootBulletInput()
         {
             // Check both inputs - if either is pressed, return true

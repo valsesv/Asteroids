@@ -38,9 +38,55 @@ namespace Asteroids.Core.Player
             // Check if entity can be controlled via ShipComponent
             if (_shipComponent != null && _shipComponent.CanControl)
             {
-                HandleRotation();
-                HandleMovement();
+                // Check if we have direction input (joystick mode) or separate rotation/forward input (keyboard mode)
+                Vector2 directionInput = _inputProvider.GetDirectionInput();
+
+                if (directionInput.magnitude > 0.01f)
+                {
+                    // Joystick mode: move and rotate towards joystick direction
+                    HandleDirectionBasedMovement(directionInput);
+                }
+                else
+                {
+                    // Keyboard mode: separate rotation and forward movement
+                    HandleRotation();
+                    HandleMovement();
+                }
             }
+        }
+
+        private void HandleDirectionBasedMovement(Vector2 directionInput)
+        {
+            // Calculate target angle from joystick direction
+            // Joystick direction: Y is forward/backward, X is left/right
+            // In Unity 2D, 0° = right, 90° = up, -90° = down, 180° = left
+            // But our ship uses: 0° = up, 90° = right, -90° = left, 180° = down
+            // Invert X to fix rotation direction
+            float targetAngle = Mathf.Atan2(-directionInput.x, directionInput.y) * Mathf.Rad2Deg;
+
+            // Current rotation (ship's forward direction)
+            float currentAngle = _transform.Rotation;
+
+            // Calculate angle difference (normalize to -180..180)
+            float angleDiff = Mathf.DeltaAngle(currentAngle, targetAngle);
+
+            // Rotate towards target angle smoothly
+            float rotationSpeed = _movementSettings.RotationSpeed;
+            float maxRotationDelta = rotationSpeed * Time.deltaTime;
+            float rotationDelta = Mathf.Clamp(angleDiff, -maxRotationDelta, maxRotationDelta);
+            float newRotation = currentAngle + rotationDelta;
+            _transform.SetRotation(newRotation);
+
+            // Apply acceleration in the direction of joystick
+            // Normalize direction so speed doesn't depend on joystick distance
+            Vector2 worldDirection = directionInput.normalized;
+
+            // Use constant acceleration (not dependent on joystick magnitude)
+            Vector2 acceleration = worldDirection * _movementSettings.Acceleration;
+            _physics.AddVelocity(acceleration * Time.deltaTime);
+
+            // Limit max speed
+            _physics.ClampSpeed(_movementSettings.MaxSpeed);
         }
 
         private void HandleRotation()

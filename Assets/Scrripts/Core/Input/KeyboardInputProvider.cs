@@ -45,6 +45,12 @@ namespace Asteroids.Core.PlayerInput
             return Mathf.Clamp(input, -1f, 1f);
         }
 
+        public Vector2 GetDirectionInput()
+        {
+            // Keyboard doesn't provide direction input, only forward/rotation
+            return Vector2.zero;
+        }
+
         public bool GetShootBulletInput()
         {
             // Check keyboard keys
