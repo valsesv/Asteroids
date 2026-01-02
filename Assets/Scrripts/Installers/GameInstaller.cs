@@ -44,7 +44,7 @@ namespace Asteroids.Installers
 
         public override void InstallBindings()
         {
-            InstallSignalBus();
+            InstallSignals();
             InstallSettings();
             InstallInput();
             InstallCommonServices();
@@ -60,12 +60,8 @@ namespace Asteroids.Installers
             InstallGameUI();
         }
 
-        private void InstallSignalBus()
+        private void InstallSignals()
         {
-            SignalBusInstaller.Install(Container);
-
-            // Declare all game signals here so they're available to all components
-            // (bullets, enemies, player, etc.)
             Container.DeclareSignal<TransformChangedSignal>();
             Container.DeclareSignal<PhysicsChangedSignal>();
             Container.DeclareSignal<HealthChangedSignal>();
@@ -77,9 +73,6 @@ namespace Asteroids.Installers
             Container.DeclareSignal<LaserChargesChangedSignal>();
             Container.DeclareSignal<LaserDeactivatedSignal>();
             Container.DeclareSignal<ScoreChangedSignal>();
-            Container.DeclareSignal<GameStartedSignal>();
-            Container.DeclareSignal<GameOverSignal>();
-            // AsteroidFragmentSignal - временно отключено, добавим позже
         }
 
         private void InstallSettings()
