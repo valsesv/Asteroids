@@ -4,6 +4,7 @@ using Asteroids.Core.Player;
 using Asteroids.Core.PlayerInput;
 using Asteroids.Core.Enemies;
 using Asteroids.Core.Score;
+using Asteroids.Core.Weapons;
 using UnityEngine.Assertions;
 using Utils.JsonLoader;
 using Asteroids.Core.Entity;
@@ -12,6 +13,7 @@ using Asteroids.Presentation.Player;
 using Asteroids.Presentation.Enemies;
 using Asteroids.Presentation.Effects;
 using Asteroids.Presentation.UI;
+using Asteroids.Core.Game;
 
 namespace Asteroids.Installers
 {
@@ -33,6 +35,8 @@ namespace Asteroids.Installers
         [SerializeField] private ScoreView _scoreView;
         [SerializeField] private HealthView _healthView;
         [SerializeField] private PlayerStatsView _playerStatsView;
+        [SerializeField] private StartMenuView _startMenuView;
+        [SerializeField] private GameUIView _gameUIView;
 
         public override void InstallBindings()
         {
@@ -40,12 +44,16 @@ namespace Asteroids.Installers
             InstallSettings();
             InstallInput();
             InstallCommonServices();
+            InstallPlayerEntity(); // Install player entity before GameController
             InstallEnemySpawner();
             InstallParticleEffectSpawner();
             InstallLaserView();
             InstallScoreUI();
             InstallHealthUI();
             InstallPlayerStatsUI();
+            InstallGameController();
+            InstallStartMenuUI();
+            InstallGameUI();
         }
 
         private void InstallSignalBus()
@@ -65,6 +73,8 @@ namespace Asteroids.Installers
             Container.DeclareSignal<LaserChargesChangedSignal>();
             Container.DeclareSignal<LaserDeactivatedSignal>();
             Container.DeclareSignal<ScoreChangedSignal>();
+            Container.DeclareSignal<GameStartedSignal>();
+            Container.DeclareSignal<GameOverSignal>();
             // AsteroidFragmentSignal - временно отключено, добавим позже
         }
 
@@ -126,6 +136,21 @@ namespace Asteroids.Installers
             Container.BindInterfacesAndSelfTo<ProjectileSpawner>().FromInstance(_projectileSpawner).AsSingle();
         }
 
+        private void InstallPlayerEntity()
+        {
+            // Install player entity - must be done before GameController
+            Container.Bind<GameEntity>()
+                .FromMethod(ctx => ShipFactory.CreateShip(
+                    ctx.Container.Resolve<StartPositionSettings>(),
+                    ctx.Container.Resolve<MovementSettings>(),
+                    ctx.Container.Resolve<HealthSettings>(),
+                    ctx.Container.Resolve<WeaponSettings>(),
+                    ctx.Container.Resolve<SignalBus>(),
+                    ctx.Container.Resolve<IInputProvider>(),
+                    ctx.Container.Resolve<ScreenBounds>()))
+                .AsSingle();
+        }
+
         private void InstallEnemySpawner()
         {
             Assert.IsNotNull(_enemySpawner, "EnemySpawner is not assigned in GameInstaller!");
@@ -176,6 +201,33 @@ namespace Asteroids.Installers
             if (_playerStatsView != null)
             {
                 Container.BindInterfacesAndSelfTo<PlayerStatsView>().FromInstance(_playerStatsView).AsSingle();
+            }
+        }
+
+        private void InstallGameController()
+        {
+            // Bind GameController (non-MonoBehaviour)
+            Container.BindInterfacesAndSelfTo<GameController>().AsSingle();
+        }
+
+        private void InstallStartMenuUI()
+        {
+            // Bind StartMenuViewModel (MVVM pattern)
+            Container.BindInterfacesAndSelfTo<StartMenuViewModel>().AsSingle();
+
+            // Bind StartMenuView if assigned
+            if (_startMenuView != null)
+            {
+                Container.BindInterfacesAndSelfTo<StartMenuView>().FromInstance(_startMenuView).AsSingle();
+            }
+        }
+
+        private void InstallGameUI()
+        {
+            // Bind GameUIView if assigned
+            if (_gameUIView != null)
+            {
+                Container.BindInterfacesAndSelfTo<GameUIView>().FromInstance(_gameUIView).AsSingle();
             }
         }
     }

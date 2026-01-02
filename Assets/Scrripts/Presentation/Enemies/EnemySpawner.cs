@@ -35,11 +35,20 @@ namespace Asteroids.Presentation.Enemies
 
         // List to store all active enemies in one place
         private List<EnemyView> _activeEnemies = new List<EnemyView>();
+        private bool _isSpawningEnabled = false;
 
         /// <summary>
         /// Get all active enemies (similar to List<T>)
         /// </summary>
         public List<EnemyView> ActiveEnemies => _activeEnemies;
+
+        /// <summary>
+        /// Enable or disable enemy spawning
+        /// </summary>
+        public void SetSpawningEnabled(bool enabled)
+        {
+            _isSpawningEnabled = enabled;
+        }
 
         [Inject]
         public void Construct(ScreenBounds screenBounds, DiContainer container, EnemySettings enemySettings)
@@ -67,6 +76,12 @@ namespace Asteroids.Presentation.Enemies
 
         public void Tick()
         {
+            // Don't spawn if spawning is disabled
+            if (!_isSpawningEnabled)
+            {
+                return;
+            }
+
             // Check if we can spawn more enemies (don't exceed max count)
             if (_activeEnemies.Count >= _enemySettings.MaxEnemiesOnMap)
             {

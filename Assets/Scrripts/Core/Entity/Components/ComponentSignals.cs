@@ -121,5 +121,19 @@ namespace Asteroids.Core.Entity.Components
         public int CurrentScore { get; set; }
         public int PointsAdded { get; set; }
     }
+
+    /// <summary>
+    /// Signal fired when game starts
+    /// </summary>
+    public class GameStartedSignal
+    {
+    }
+
+    /// <summary>
+    /// Signal fired when game ends (player lost all lives)
+    /// </summary>
+    public class GameOverSignal
+    {
+    }
 }
 

@@ -18,7 +18,7 @@ namespace Asteroids.Installers
         public override void InstallBindings()
         {
             AssertShipViewPrefab();
-            InstallShipModel();
+            // GameEntity is now installed in GameInstaller to ensure it's available before GameController
             InstallTickableComponents();
             InstallShipView();
         }
@@ -26,20 +26,6 @@ namespace Asteroids.Installers
         private void AssertShipViewPrefab()
         {
             Assert.IsNotNull(_shipViewPrefab, "ShipViewPrefab is not assigned in PlayerInstaller!");
-        }
-
-        private void InstallShipModel()
-        {
-            Container.Bind<GameEntity>()
-                .FromMethod(ctx => ShipFactory.CreateShip(
-                    ctx.Container.Resolve<StartPositionSettings>(),
-                    ctx.Container.Resolve<MovementSettings>(),
-                    ctx.Container.Resolve<HealthSettings>(),
-                    ctx.Container.Resolve<WeaponSettings>(),
-                    ctx.Container.Resolve<SignalBus>(),
-                    ctx.Container.Resolve<IInputProvider>(),
-                    ctx.Container.Resolve<ScreenBounds>()))
-                .AsSingle();
         }
 
         private void InstallTickableComponents()
