@@ -11,10 +11,10 @@ namespace Asteroids.Presentation.UI
     {
         [SerializeField] private RectTransform _joystickBackground;
         [SerializeField] private RectTransform _joystickHandle;
-        [SerializeField] private float _joystickRange = 50f;
 
         private Vector2 _direction = Vector2.zero;
         private bool _isActive = false;
+        private float _joystickRange;
 
         /// <summary>
         /// Normalized direction vector (-1 to 1 for both axes)
@@ -28,10 +28,34 @@ namespace Asteroids.Presentation.UI
 
         private void Awake()
         {
+            CalculateJoystickRange();
+
             if (_joystickHandle != null)
             {
                 _joystickHandle.anchoredPosition = Vector2.zero;
             }
+        }
+
+        private void CalculateJoystickRange()
+        {
+            if (_joystickBackground == null || _joystickHandle == null)
+                return;
+
+            // Get the radius of the background (half of its size)
+            float backgroundRadius = Mathf.Min(
+                _joystickBackground.rect.width,
+                _joystickBackground.rect.height
+            ) * 0.5f;
+
+            // Get the radius of the handle (half of its size)
+            float handleRadius = Mathf.Min(
+                _joystickHandle.rect.width,
+                _joystickHandle.rect.height
+            ) * 0.5f;
+
+            // The range is the distance from center to edge, accounting for handle size
+            // This allows the handle to reach the edge of the background
+            _joystickRange = backgroundRadius - handleRadius;
         }
 
         public void OnPointerDown(PointerEventData eventData)

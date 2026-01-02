@@ -11,6 +11,7 @@ namespace Asteroids.Presentation.UI
     {
         private readonly VirtualJoystickView _joystickView;
         private readonly MobileInputView _mobileInputView;
+        private bool _wasLaserPressedLastFrame = false;
 
         public VirtualJoystickInputProvider(VirtualJoystickView joystickView, MobileInputView mobileInputView)
         {
@@ -55,9 +56,21 @@ namespace Asteroids.Presentation.UI
         public bool GetShootLaserInput()
         {
             if (_mobileInputView == null)
+            {
+                _wasLaserPressedLastFrame = false;
                 return false;
+            }
 
-            return _mobileInputView.IsShootLaserPressed;
+            // Check if button is currently pressed
+            bool isPressed = _mobileInputView.IsShootLaserPressed;
+
+            // Return true only when button state changes from false to true (just pressed)
+            bool justPressed = isPressed && !_wasLaserPressedLastFrame;
+
+            // Update previous state for next frame
+            _wasLaserPressedLastFrame = isPressed;
+
+            return justPressed;
         }
     }
 }

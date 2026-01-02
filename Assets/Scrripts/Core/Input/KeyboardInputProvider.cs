@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Asteroids.Core.PlayerInput
 {
@@ -57,8 +58,8 @@ namespace Asteroids.Core.PlayerInput
             if (IsAnyKeyPressed(_settings.ShootBulletKeys))
                 return true;
 
-            // Check mouse buttons
-            if (IsAnyMouseButtonPressed(_settings.ShootBulletMouseButtons))
+            // Check mouse buttons (ignore if clicking on UI)
+            if (!IsPointerOverUI() && IsAnyMouseButtonPressed(_settings.ShootBulletMouseButtons))
                 return true;
 
             return false;
@@ -70,8 +71,8 @@ namespace Asteroids.Core.PlayerInput
             if (IsAnyKeyDown(_settings.ShootLaserKeys))
                 return true;
 
-            // Check mouse buttons (use GetMouseButtonDown for single shot)
-            if (IsAnyMouseButtonDown(_settings.ShootLaserMouseButtons))
+            // Check mouse buttons (ignore if clicking on UI)
+            if (!IsPointerOverUI() && IsAnyMouseButtonDown(_settings.ShootLaserMouseButtons))
                 return true;
 
             return false;
@@ -140,6 +141,20 @@ namespace Asteroids.Core.PlayerInput
             {
                 if (button >= 0 && button <= 2 && Input.GetMouseButtonDown(button))
                     return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check if pointer (mouse/touch) is over a UI element
+        /// </summary>
+        private bool IsPointerOverUI()
+        {
+            // Check if EventSystem exists and if pointer is over UI
+            if (EventSystem.current != null)
+            {
+                return EventSystem.current.IsPointerOverGameObject();
             }
 
             return false;
