@@ -8,10 +8,6 @@ using Asteroids.Core.Weapons;
 
 namespace Asteroids.Presentation.Player
 {
-    /// <summary>
-    /// Bullet view - MonoBehaviour that represents a bullet in the scene
-    /// Creates GameEntity in Construct method (like enemies do)
-    /// </summary>
     public class BulletView : MonoBehaviour, IInitializable, IDisposable
     {
         public GameEntity Entity { get; private set; }
@@ -24,14 +20,10 @@ namespace Asteroids.Presentation.Player
         [Inject]
         public void Construct(BulletSettings bulletSettings)
         {
-            // Get position and rotation from Unity transform (like enemies do)
-            Vector2 position = new Vector2(transform.position.x, transform.position.y);
+            var position = new Vector2(transform.position.x, transform.position.y);
 
-            // Create bullet entity using BulletFactory (like enemies use their factories)
-            // Use speed and lifetime from settings (like enemies use settings)
             Entity = BulletFactory.CreateBullet(position, bulletSettings.Speed, bulletSettings.Lifetime, _signalBus);
 
-            // Register Entity in container (like enemies do)
             _container.BindInstance(Entity).AsSingle();
             RegisterTickableComponents();
         }
@@ -71,12 +63,11 @@ namespace Asteroids.Presentation.Player
             var movement = Entity.GetComponent<BulletMovement>();
             movement.SetDirection(direction);
 
-            // Reset bullet lifetime elapsed time
             var bulletLifetime = Entity.GetComponent<BulletLifetime>();
             bulletLifetime?.Reset();
         }
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        private void OnCollisionEnter2D(Collision2D _collision)
         {
             OnBulletDestroyed(null);
         }

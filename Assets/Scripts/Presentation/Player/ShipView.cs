@@ -9,10 +9,6 @@ using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.Player
 {
-    /// <summary>
-    /// Ship view - MonoBehaviour that represents the ship in the scene
-    /// Subscribes to component signals directly (no ViewModel needed for game objects)
-    /// </summary>
     public class ShipView : MonoBehaviour, IInitializable, IDisposable
     {
         public GameEntity Entity { get; private set; }
@@ -33,7 +29,6 @@ namespace Asteroids.Presentation.Player
             _signalBus.Subscribe<PhysicsChangedSignal>(OnPhysicsChanged);
             _signalBus.Subscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
 
-            // Initialize invincibility effects
             if (_invincibilityEffects != null)
             {
                 _invincibilityEffects.Initialize();
@@ -46,7 +41,6 @@ namespace Asteroids.Presentation.Player
             _signalBus?.Unsubscribe<PhysicsChangedSignal>(OnPhysicsChanged);
             _signalBus?.Unsubscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
 
-            // Cleanup effects
             _invincibilityEffects?.Dispose();
         }
 
@@ -58,7 +52,6 @@ namespace Asteroids.Presentation.Player
 
         private void OnPhysicsChanged(PhysicsChangedSignal signal)
         {
-            // Can be used for visual effects based on speed
         }
 
         private void OnInvincibilityChanged(InvincibilityChangedSignal signal)
@@ -83,7 +76,6 @@ namespace Asteroids.Presentation.Player
                 return;
             }
 
-            // Get damage handler from entity (handles damage, bounce, and invincibility in Core)
             var damageHandler = Entity?.GetComponent<DamageHandler>();
             if (damageHandler == null)
             {
@@ -91,13 +83,11 @@ namespace Asteroids.Presentation.Player
                 return;
             }
 
-            // Don't process collision if player is invincible
             if (damageHandler.IsInvincible)
             {
                 return;
             }
 
-            // Handle collision (applies bounce, damage, and starts invincibility)
             GameEntity enemyEntity = enemyView.Entity;
             bool damageTaken = damageHandler.HandleCollision(enemyEntity, 1f);
             if (damageTaken)

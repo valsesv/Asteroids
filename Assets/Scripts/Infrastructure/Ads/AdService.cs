@@ -7,10 +7,6 @@ using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Infrastructure.Ads
 {
-    /// <summary>
-    /// Service for managing interstitial ads
-    /// Shows interstitial ad after player loses the game
-    /// </summary>
     public class AdService : IInitializable, IDisposable
     {
         private readonly SignalBus _signalBus;

@@ -8,10 +8,6 @@ using Asteroids.Presentation.Effects;
 
 namespace Asteroids.Presentation.Enemies
 {
-    /// <summary>
-    /// Base enemy view - MonoBehaviour that represents enemy in the scene
-    /// Subscribes to component signals for position/rotation updates
-    /// </summary>
     public abstract class EnemyView : MonoBehaviour, IInitializable, IDisposable
     {
         public GameEntity Entity { get; protected set; }
@@ -46,7 +42,6 @@ namespace Asteroids.Presentation.Enemies
 
         protected virtual void OnTransformChanged(TransformChangedSignal signal)
         {
-            // Update Unity transform from signal
             transform.position = new Vector3(signal.X, signal.Y, 0f);
             transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
         }
@@ -56,17 +51,11 @@ namespace Asteroids.Presentation.Enemies
             _isPlayerInvincible = signal.IsInvincible;
         }
 
-        /// <summary>
-        /// Set spawn position - updates both Unity transform and TransformComponent
-        /// Call this when spawning or reusing enemy from pool
-        /// </summary>
         public void SetSpawnPosition(Vector2 position)
         {
 
-            // Update Unity transform
             transform.position = new Vector3(position.x, position.y, 0f);
 
-            // Update TransformComponent if Entity is already created
             if (Entity == null)
             {
                 return;
@@ -78,7 +67,6 @@ namespace Asteroids.Presentation.Enemies
                 transformComponent.SetPosition(position);
             }
 
-            // Reset ScreenWrapComponent flag when reusing from pool
             var screenWrap = Entity.GetComponent<ScreenWrapComponent>();
             if (screenWrap != null)
             {
@@ -88,59 +76,43 @@ namespace Asteroids.Presentation.Enemies
 
         protected virtual void OnCollisionEnter2D(Collision2D collision)
         {
-            // Check if collision is with a bullet/projectile
             var bulletView = collision.gameObject.GetComponent<BulletView>();
             if (bulletView != null)
             {
-                // All enemies die immediately on bullet hit (no health system)
                 HandleEnemyDeath();
                 return;
             }
 
-            // Check if collision is with the player ship
             var shipView = collision.gameObject.GetComponent<ShipView>();
             if (shipView != null)
             {
-                // Don't destroy enemy if player is invincible
                 if (_isPlayerInvincible)
                 {
                     return;
                 }
 
-                // Enemies are destroyed when colliding with player
                 HandleEnemyDeath();
                 return;
             }
         }
 
-        /// <summary>
-        /// Handle enemy death - override in derived classes for specific behavior
-        /// This method may trigger fragmentation for asteroids
-        /// </summary>
         public virtual void HandleEnemyDeath()
         {
             HandleInstaDeath();
         }
 
-        /// <summary>
-        /// Handle instant death without fragmentation (used by laser)
-        /// Override in derived classes if needed, but should not trigger fragmentation
-        /// </summary>
         public virtual void HandleInstaDeath()
         {
-            // Spawn explosion particle effect at enemy position
             if (_particleEffectSpawner != null)
             {
                 _particleEffectSpawner.SpawnExplosion(transform.position);
             }
 
-            // Return enemy to pool
             if (_enemySpawner != null)
             {
                 _enemySpawner.ReturnEnemy(this);
             }
 
-            // Fire enemy destroyed signal
             if (_signalBus != null && Entity != null)
             {
                 _signalBus.Fire(new EnemyDestroyedSignal { Entity = Entity });

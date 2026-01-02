@@ -5,9 +5,6 @@ using Zenject;
 
 namespace Asteroids.Presentation.Effects
 {
-    /// <summary>
-    /// Spawner for explosion particle effects using object pooling
-    /// </summary>
     public class ParticleEffectSpawner : MonoBehaviour, IInitializable
     {
         [SerializeField] private GameObject _explosionPrefab;
@@ -38,9 +35,6 @@ namespace Asteroids.Presentation.Effects
             return particleSystem;
         }
 
-        /// <summary>
-        /// Spawn explosion effect at given position
-        /// </summary>
         public void SpawnExplosion(Vector2 position)
         {
             if (_explosionPool == null)
@@ -53,19 +47,16 @@ namespace Asteroids.Presentation.Effects
             particleSystem.Clear();
             particleSystem.Play();
 
-            // Return to pool after effect finishes using UniTask
             ReturnParticleSystemAfterDelay(particleSystem).Forget();
         }
 
         private async UniTaskVoid ReturnParticleSystemAfterDelay(ParticleSystem particleSystem)
         {
-            // Wait for particle system to finish playing
             while (particleSystem != null && particleSystem.isPlaying)
             {
                 await UniTask.Yield();
             }
 
-            // Wait a bit more to ensure particles have fully finished
             await UniTask.Delay(System.TimeSpan.FromSeconds(0.1f));
 
             if (particleSystem != null)

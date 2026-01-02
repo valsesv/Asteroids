@@ -3,9 +3,6 @@ using Zenject;
 
 namespace Asteroids.Presentation.Enemies
 {
-    /// <summary>
-    /// Generic factory for creating EnemyView instances
-    /// </summary>
     public class EnemyViewFactory<T> where T : EnemyView
     {
         private readonly DiContainer _container;

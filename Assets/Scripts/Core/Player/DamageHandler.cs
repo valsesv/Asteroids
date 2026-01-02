@@ -90,7 +90,6 @@ namespace Asteroids.Core.Player
             await UniTask.Delay(System.TimeSpan.FromSeconds(_invincibilityDuration));
 
             IsInvincible = false;
-            // Only re-enable control if player is not dead (game is still active)
             if (_shipComponent != null && !_healthComponent.IsDead)
             {
                 _shipComponent.CanControl = true;

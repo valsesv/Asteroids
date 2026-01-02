@@ -9,10 +9,6 @@ using Asteroids.Core.Weapons;
 
 namespace Asteroids.Presentation.Player
 {
-    /// <summary>
-    /// Laser view - MonoBehaviour that represents a laser beam in the scene
-    /// Uses LineRenderer for visualization and custom physics for collision detection
-    /// </summary>
     public class LaserView : MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] private LineRenderer _lineRenderer;
@@ -58,18 +54,14 @@ namespace Asteroids.Presentation.Player
             _direction = signal.Direction;
             _isActive = true;
 
-            // Update LineRenderer
             UpdateLaserVisualization();
             _lineRenderer.enabled = true;
 
-            // Cancel previous if exists
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource = new CancellationTokenSource();
 
-            // Start lifetime management using UniTask (no Update needed)
             DeactivateAfterDuration(_cancellationTokenSource.Token).Forget();
 
-            // Check collisions immediately (one-time hit)
             CheckCollisionsWithEnemies();
         }
 
@@ -95,26 +87,21 @@ namespace Asteroids.Presentation.Player
                 return;
             }
 
-            // Calculate end position using settings
             Vector2 endPosition = _startPosition + _direction * _laserSettings.Range;
 
-            // Set LineRenderer positions
             _lineRenderer.SetPosition(0, new Vector3(_startPosition.x, _startPosition.y, 0f));
             _lineRenderer.SetPosition(1, new Vector3(endPosition.x, endPosition.y, 0f));
         }
 
         private void CheckCollisionsWithEnemies()
         {
-            // Calculate laser box bounds using settings
             Vector2 endPosition = _startPosition + _direction * _laserSettings.Range;
             Vector2 laserCenter = (_startPosition + endPosition) * 0.5f;
             Vector2 laserSize = new Vector2(_laserSettings.Range, _laserSettings.Width);
             float laserAngle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
 
-            // Use OverlapBoxAll to find all colliders in the laser area
             Collider2D[] colliders = Physics2D.OverlapBoxAll(laserCenter, laserSize, laserAngle);
 
-            // Process all colliders and check for enemies
             foreach (var collider in colliders)
             {
                 if (collider == null)
@@ -138,11 +125,7 @@ namespace Asteroids.Presentation.Player
         private void Deactivate()
         {
             _isActive = false;
-
-            if (_lineRenderer != null)
-            {
-                _lineRenderer.enabled = false;
-            }
+            _lineRenderer.enabled = false;
         }
     }
 }

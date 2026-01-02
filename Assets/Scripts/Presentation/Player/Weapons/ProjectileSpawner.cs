@@ -9,9 +9,6 @@ using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.Player
 {
-    /// <summary>
-    /// Manager that handles creation and destruction of bullet views
-    /// </summary>
     public class ProjectileSpawner : MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] private GameObject _bulletPrefab;
@@ -19,9 +16,7 @@ namespace Asteroids.Presentation.Player
 
         private SignalBus _signalBus;
         private DiContainer _container;
-        private TickableManager _tickableManager;
 
-        // Object pools for projectiles
         private ObjectPool<BulletView> _bulletPool;
 
         private ProjectileViewFactory<BulletView> _bulletViewFactory;
@@ -29,11 +24,10 @@ namespace Asteroids.Presentation.Player
         private List<BulletView> _activeBullets = new List<BulletView>();
 
         [Inject]
-        public void Construct(SignalBus signalBus, DiContainer container, TickableManager tickableManager)
+        public void Construct(SignalBus signalBus, DiContainer container)
         {
             _signalBus = signalBus;
             _container = container;
-            _tickableManager = tickableManager;
         }
 
         public void Initialize()
@@ -44,7 +38,6 @@ namespace Asteroids.Presentation.Player
             _bulletViewFactory = new ProjectileViewFactory<BulletView>(_container, _bulletPrefab, _bulletParent);
             _bulletPool = new ObjectPool<BulletView>(() => _bulletViewFactory.Create(Vector2.zero), _bulletParent);
 
-            // Subscribe to signals
             _signalBus.Subscribe<BulletShotSignal>(OnBulletShot);
         }
 
@@ -57,7 +50,6 @@ namespace Asteroids.Presentation.Player
         {
             var bulletView = _bulletPool.Get();
 
-            // Set spawn position and direction (updates both Unity transform and TransformComponent)
             bulletView.SetSpawnParameters(signal.Position, signal.Direction);
 
             _activeBullets.Add(bulletView);

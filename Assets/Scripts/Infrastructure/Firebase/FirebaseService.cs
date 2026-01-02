@@ -8,10 +8,6 @@ using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Infrastructure.Firebase
 {
-    /// <summary>
-    /// Service for initializing and managing Firebase
-    /// Non-MonoBehaviour service following project architecture
-    /// </summary>
     public class FirebaseService : IInitializable, IDisposable
     {
         private readonly SignalBus _signalBus;

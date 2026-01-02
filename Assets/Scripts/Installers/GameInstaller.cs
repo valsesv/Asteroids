@@ -17,9 +17,6 @@ using Asteroids.Core.Game;
 
 namespace Asteroids.Installers
 {
-    /// <summary>
-    /// GameInstaller - installs bindings for the game scene
-    /// </summary>
     public class GameInstaller : MonoInstaller
     {
         private const string PlayerSettingsFileName = "player_settings.json";
@@ -48,7 +45,7 @@ namespace Asteroids.Installers
             InstallSettings();
             InstallInput();
             InstallCommonServices();
-            InstallPlayerEntity(); // Install player entity before GameController
+            InstallPlayerEntity();
             InstallEnemySpawner();
             InstallParticleEffectSpawner();
             InstallLaserView();
@@ -79,7 +76,6 @@ namespace Asteroids.Installers
         {
             var jsonLoader = new JsonLoader();
 
-            // Load player settings
             var playerSettings = jsonLoader.LoadFromStreamingAssets<PlayerSettings>(PlayerSettingsFileName);
             Assert.IsNotNull(playerSettings, "Failed to load player settings from JSON!");
             Assert.IsNotNull(playerSettings.Movement, "Movement settings are null in player settings!");
@@ -94,52 +90,41 @@ namespace Asteroids.Installers
             Assert.IsNotNull(playerSettings.Weapon.Laser, "Laser settings are null in weapon settings!");
             Container.BindInstance(playerSettings.Weapon.Laser);
 
-            // Load enemy settings
             var enemySettings = jsonLoader.LoadFromStreamingAssets<EnemySettings>(EnemySettingsFileName);
             Assert.IsNotNull(enemySettings, "Failed to load enemy settings from JSON!");
             Container.BindInstance(enemySettings);
 
-            // Load score settings
             var scoreSettings = jsonLoader.LoadFromStreamingAssets<ScoreSettings>(ScoreSettingsFileName);
             Assert.IsNotNull(scoreSettings, "Failed to load score settings from JSON!");
             scoreSettings.InitializeRewards();
             Container.BindInstance(scoreSettings);
 
-            // Bind score service
             Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle();
         }
 
         private void InstallInput()
         {
-            // Input Settings - ScriptableObject from Inspector
             Assert.IsNotNull(_inputSettings, "KeyboardInputSettings is not assigned in GameInstaller! Please assign it in Inspector or create a ScriptableObject asset via: Create > Asteroids > Settings > Keyboard Input Settings");
             Container.BindInstance(_inputSettings);
 
-            // Check if we should use mobile input (Editor or Android)
             bool shouldUseMobileInput = Application.isEditor || Application.platform == RuntimePlatform.Android;
             bool isEditor = Application.isEditor;
 
             VirtualJoystickView joystickView = null;
             MobileInputView mobileInputView = null;
 
-            // Always bind keyboard input provider (for Editor and desktop)
             Container.Bind<KeyboardInputProvider>().AsSingle();
 
-            // Instantiate mobile input panel prefab in GameCanvas if needed
             if (shouldUseMobileInput && _mobileInputPanelPrefab != null && _gameCanvas != null)
             {
-                // Instantiate panel prefab as child of GameCanvas
                 GameObject mobileInputInstance = Instantiate(_mobileInputPanelPrefab, _gameCanvas.transform);
 
-                // Find components in the instantiated prefab
                 joystickView = mobileInputInstance.GetComponentInChildren<VirtualJoystickView>();
                 mobileInputView = mobileInputInstance.GetComponentInChildren<MobileInputView>();
             }
 
-            // Choose input provider based on platform
             if (isEditor && joystickView != null && mobileInputView != null)
             {
-                // Editor: Use combined input (both keyboard and mobile)
                 Container.BindInstance(joystickView);
                 Container.BindInstance(mobileInputView);
                 Container.Bind<VirtualJoystickInputProvider>().AsSingle();
@@ -150,7 +135,6 @@ namespace Asteroids.Installers
             }
             else if (shouldUseMobileInput && joystickView != null && mobileInputView != null)
             {
-                // Android: Use only mobile input
                 Container.BindInstance(joystickView);
                 Container.BindInstance(mobileInputView);
                 Container.Bind<IInputProvider>()
@@ -159,7 +143,6 @@ namespace Asteroids.Installers
             }
             else
             {
-                // Desktop: Use only keyboard and mouse
                 Container.Bind<IInputProvider>()
                     .To<KeyboardInputProvider>()
                     .AsSingle();
@@ -168,8 +151,6 @@ namespace Asteroids.Installers
 
         private void InstallCommonServices()
         {
-            // Bind ScreenBounds service (uses main camera)
-            // This is used by both player and enemies, so it's in the common services
             Container.Bind<ScreenBounds>()
                 .FromMethod(ctx => new ScreenBounds(Camera.main))
                 .AsSingle();
@@ -182,7 +163,6 @@ namespace Asteroids.Installers
 
         private void InstallPlayerEntity()
         {
-            // Install player entity - must be done before GameController
             Container.Bind<GameEntity>()
                 .FromMethod(ctx => ShipFactory.CreateShip(
                     ctx.Container.Resolve<StartPositionSettings>(),
@@ -219,10 +199,8 @@ namespace Asteroids.Installers
 
         private void InstallScoreUI()
         {
-            // Bind ScoreViewModel (MVVM pattern)
             Container.BindInterfacesAndSelfTo<ScoreViewModel>().AsSingle();
 
-            // Bind ScoreView if assigned
             if (_scoreView != null)
             {
                 Container.BindInterfacesAndSelfTo<ScoreView>().FromInstance(_scoreView).AsSingle();
@@ -231,17 +209,14 @@ namespace Asteroids.Installers
 
         private void InstallHealthUI()
         {
-            // Bind HealthViewModel (MVVM pattern)
             Container.BindInterfacesAndSelfTo<HealthViewModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<HealthView>().FromInstance(_healthView).AsSingle();
         }
 
         private void InstallPlayerStatsUI()
         {
-            // Bind PlayerStatsViewModel (MVVM pattern)
             Container.BindInterfacesAndSelfTo<PlayerStatsViewModel>().AsSingle();
 
-            // Bind PlayerStatsView if assigned
             if (_playerStatsView != null)
             {
                 Container.BindInterfacesAndSelfTo<PlayerStatsView>().FromInstance(_playerStatsView).AsSingle();
@@ -250,16 +225,13 @@ namespace Asteroids.Installers
 
         private void InstallGameController()
         {
-            // Bind GameController (non-MonoBehaviour)
             Container.BindInterfacesAndSelfTo<GameController>().AsSingle();
         }
 
         private void InstallStartMenuUI()
         {
-            // Bind StartMenuViewModel (MVVM pattern)
             Container.BindInterfacesAndSelfTo<StartMenuViewModel>().AsSingle();
 
-            // Bind StartMenuView if assigned
             if (_startMenuView != null)
             {
                 Container.BindInterfacesAndSelfTo<StartMenuView>().FromInstance(_startMenuView).AsSingle();
@@ -268,7 +240,6 @@ namespace Asteroids.Installers
 
         private void InstallGameUI()
         {
-            // Bind GameUIView if assigned
             if (_gameUIView != null)
             {
                 Container.BindInterfacesAndSelfTo<GameUIView>().FromInstance(_gameUIView).AsSingle();

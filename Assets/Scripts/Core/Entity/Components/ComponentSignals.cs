@@ -52,7 +52,7 @@ namespace Asteroids.Core.Entity.Components
     {
         public Vector2 OriginalPosition { get; set; }
         public Vector2 OriginalVelocity { get; set; }
-        public int FragmentSize { get; set; } // AsteroidSize enum value (0=Large, 1=Medium, 2=Small)
+        public int FragmentSize { get; set; }
         public int FragmentCount { get; set; }
     }
 
@@ -66,7 +66,7 @@ namespace Asteroids.Core.Entity.Components
     {
         public int CurrentCharges { get; set; }
         public int MaxCharges { get; set; }
-        public float RechargeProgress { get; set; } // 0-1, progress to next charge
+        public float RechargeProgress { get; set; }
     }
 
     public class LaserDeactivatedSignal

@@ -7,9 +7,6 @@ using Asteroids.Presentation.Player;
 
 namespace Asteroids.Presentation.Enemies
 {
-    /// <summary>
-    /// UFO view that creates GameEntity using UfoFactory
-    /// </summary>
     public class UfoView : EnemyView
     {
         [Inject]
@@ -19,13 +16,11 @@ namespace Asteroids.Presentation.Enemies
             ShipView shipView,
             EnemySettings enemySettings)
         {
-            // Get position and rotation from Unity transform
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
             var playerTransform = shipView.Entity.GetComponent<TransformComponent>();
 
-            // Create base enemy entity using static UfoFactory (no health needed)
             Entity = UfoFactory.CreateUfo(position, rotation, signalBus, playerTransform, enemySettings, screenBounds);
             RegisterTickableComponents();
             _container.BindInstance(Entity).AsSingle();
@@ -35,7 +30,6 @@ namespace Asteroids.Presentation.Enemies
         {
             base.HandleEnemyDeath();
 
-            // Return UFO to pool
             _enemySpawner.ReturnEnemy(this);
         }
     }

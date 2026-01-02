@@ -15,9 +15,6 @@ namespace Asteroids.Presentation.Player
         private Color _originalColor;
         private bool _isActive;
 
-        /// <summary>
-        /// Initialize effects - cache original sprite color
-        /// </summary>
         public void Initialize()
         {
             Assert.IsNotNull(_particleSystem);
@@ -25,9 +22,6 @@ namespace Asteroids.Presentation.Player
             _originalColor = _spriteRenderer.color;
         }
 
-        /// <summary>
-        /// Start invincibility effects
-        /// </summary>
         public void StartEffects()
         {
             if (_isActive)
@@ -40,9 +34,6 @@ namespace Asteroids.Presentation.Player
             StartFlicker();
         }
 
-        /// <summary>
-        /// Stop invincibility effects
-        /// </summary>
         public void StopEffects()
         {
             if (_isActive == false)
@@ -55,9 +46,6 @@ namespace Asteroids.Presentation.Player
             StopFlicker();
         }
 
-        /// <summary>
-        /// Start sprite flicker animation using DOTween
-        /// </summary>
         private void StartFlicker()
         {
             StopFlicker();
@@ -72,18 +60,12 @@ namespace Asteroids.Presentation.Player
                 .SetTarget(_spriteRenderer);
         }
 
-        /// <summary>
-        /// Stop sprite flicker animation
-        /// </summary>
         private void StopFlicker()
         {
             _flickerTween?.Kill();
             _spriteRenderer.color = _originalColor;
         }
 
-        /// <summary>
-        /// Cleanup on destroy
-        /// </summary>
         public void Dispose()
         {
             StopEffects();

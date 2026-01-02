@@ -4,10 +4,7 @@ using Asteroids.Core.Entity;
 using Asteroids.Core.Player;
 using Asteroids.Presentation.Player;
 using Asteroids.Core.Entity.Components;
-using Asteroids.Core.Enemies;
 using UnityEngine.Assertions;
-using Asteroids.Core.PlayerInput;
-using Asteroids.Core.Weapons;
 
 namespace Asteroids.Installers
 {
@@ -18,7 +15,6 @@ namespace Asteroids.Installers
         public override void InstallBindings()
         {
             AssertShipViewPrefab();
-            // GameEntity is now installed in GameInstaller to ensure it's available before GameController
             InstallTickableComponents();
             InstallShipView();
         }
@@ -30,8 +26,6 @@ namespace Asteroids.Installers
 
         private void InstallTickableComponents()
         {
-            // Bind ITickableComponents as ITickable so they update automatically
-            // These components are created by ShipFactory, so we resolve them from the GameEntity
             Container.Bind<ITickable>()
                 .To<PhysicsComponent>()
                 .FromMethod(ctx => ctx.Container.Resolve<GameEntity>().GetComponent<PhysicsComponent>())
@@ -61,7 +55,6 @@ namespace Asteroids.Installers
         private void InstallShipView()
         {
             Container.Bind<ShipView>().FromInstance(_shipViewPrefab).AsSingle();
-            // ShipView implements IInitializable and IDisposable for signal subscriptions
             Container.BindInterfacesTo<ShipView>().FromInstance(_shipViewPrefab);
         }
     }

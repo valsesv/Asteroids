@@ -3,9 +3,6 @@ using Zenject;
 
 namespace Asteroids.Presentation.Player
 {
-    /// <summary>
-    /// Generic factory for creating bullet views
-    /// </summary>
     public class ProjectileViewFactory<T> where T : BulletView
     {
         private readonly DiContainer _container;

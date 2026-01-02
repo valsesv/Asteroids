@@ -6,9 +6,6 @@ using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Presentation.Enemies
 {
-    /// <summary>
-    /// Asteroid view that creates GameEntity using AsteroidFactory
-    /// </summary>
     public class AsteroidView : EnemyView
     {
         [Inject]
@@ -26,9 +23,6 @@ namespace Asteroids.Presentation.Enemies
             RegisterTickableComponents();
         }
 
-        /// <summary>
-        /// Set movement direction - used when spawning asteroid
-        /// </summary>
         public void SetDirection(Vector2 direction)
         {
             var movement = Entity.GetComponent<AsteroidMovement>();
@@ -38,37 +32,26 @@ namespace Asteroids.Presentation.Enemies
             }
         }
 
-        /// <summary>
-        /// Handle asteroid death - always fragment into Fragment enemies (for bullets)
-        /// </summary>
         public override void HandleEnemyDeath()
         {
             base.HandleEnemyDeath();
 
-            // Get asteroid component
             var asteroidComponent = Entity?.GetComponent<AsteroidComponent>();
             if (asteroidComponent == null)
             {
                 return;
             }
-            // Get position and velocity for fragmentation
             var transformComponent = Entity.GetComponent<TransformComponent>();
             var physicsComponent = Entity.GetComponent<PhysicsComponent>();
 
             Vector2 position = transformComponent?.Position ?? Vector2.zero;
             Vector2 velocity = physicsComponent?.Velocity ?? Vector2.zero;
 
-            // Fragment the asteroid into Fragment enemies
             _enemySpawner.FragmentAsteroid(this, position, velocity, asteroidComponent);
         }
 
-        /// <summary>
-        /// Handle instant death without fragmentation (for laser)
-        /// Laser destroys asteroids completely without creating fragments
-        /// </summary>
         public override void HandleInstaDeath()
         {
-            // Just destroy without fragmentation - call base implementation
             base.HandleInstaDeath();
         }
     }

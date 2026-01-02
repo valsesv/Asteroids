@@ -5,23 +5,14 @@ using Newtonsoft.Json;
 
 namespace Utils.JsonLoader
 {
-    /// <summary>
-    /// Universal JSON file loader for any type
-    /// </summary>
     public class JsonLoader
     {
-        /// <summary>
-        /// Loads and deserializes JSON file from StreamingAssets folder
-        /// </summary>
         public T LoadFromStreamingAssets<T>(string fileName) where T : class
         {
             string path = Path.Combine(Application.streamingAssetsPath, fileName);
             return LoadFromPath<T>(path);
         }
 
-        /// <summary>
-        /// Loads and deserializes JSON file from specified path
-        /// </summary>
         public T LoadFromPath<T>(string path) where T : class
         {
             if (!File.Exists(path))
