@@ -5,10 +5,6 @@ using System;
 
 namespace Asteroids.Core.Score
 {
-    /// <summary>
-    /// Service for managing player score
-    /// Handles score calculation based on enemy type rewards dictionary
-    /// </summary>
     public class ScoreService : IInitializable, IDisposable
     {
         private readonly ScoreSettings _settings;
@@ -37,9 +33,6 @@ namespace Asteroids.Core.Score
             _signalBus?.Unsubscribe<GameStartedSignal>(OnGameStarted);
         }
 
-        /// <summary>
-        /// Handle enemy destroyed - award points based on enemy type
-        /// </summary>
         private void OnEnemyDestroyed(EnemyDestroyedSignal signal)
         {
             if (signal.Entity == null)
@@ -47,14 +40,12 @@ namespace Asteroids.Core.Score
                 return;
             }
 
-            // Get enemy component to determine type
             var enemyComponent = signal.Entity.GetComponent<EnemyComponent>();
             if (enemyComponent == null)
             {
                 return;
             }
 
-            // Get reward from dictionary based on enemy type
             int reward = _settings.GetReward(enemyComponent.Type);
 
             if (reward > 0)
@@ -63,14 +54,10 @@ namespace Asteroids.Core.Score
             }
         }
 
-        /// <summary>
-        /// Add points to current score
-        /// </summary>
         private void AddScore(int points)
         {
             _currentScore += points;
 
-            // Fire signal to notify UI and other systems
             var scoreChangedSignal = new ScoreChangedSignal
             {
                 CurrentScore = _currentScore,
@@ -79,17 +66,11 @@ namespace Asteroids.Core.Score
             _signalBus.Fire(scoreChangedSignal);
         }
 
-        /// <summary>
-        /// Handle game started - reset score when new game begins
-        /// </summary>
         private void OnGameStarted(GameStartedSignal signal)
         {
             ResetScore();
         }
 
-        /// <summary>
-        /// Reset score to zero
-        /// </summary>
         public void ResetScore()
         {
             _currentScore = 0;

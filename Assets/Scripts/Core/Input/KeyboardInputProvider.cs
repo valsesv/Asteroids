@@ -3,10 +3,6 @@ using UnityEngine.EventSystems;
 
 namespace Asteroids.Core.PlayerInput
 {
-    /// <summary>
-    /// Keyboard and mouse input provider for ship movement and shooting
-    /// Supports multiple keys for each action and mouse buttons
-    /// </summary>
     public class KeyboardInputProvider : IInputProvider
     {
         private readonly KeyboardInputSettings _settings;
@@ -20,11 +16,9 @@ namespace Asteroids.Core.PlayerInput
         {
             float input = 0f;
 
-            // Check all forward keys
             if (IsAnyKeyPressed(_settings.MoveUpKeys))
                 input += 1f;
 
-            // Check all backward keys
             if (IsAnyKeyPressed(_settings.MoveDownKeys))
                 input -= 1f;
 
@@ -35,11 +29,9 @@ namespace Asteroids.Core.PlayerInput
         {
             float input = 0f;
 
-            // Check all right rotation keys
             if (IsAnyKeyPressed(_settings.MoveRightKeys))
                 input += 1f;
 
-            // Check all left rotation keys
             if (IsAnyKeyPressed(_settings.MoveLeftKeys))
                 input -= 1f;
 
@@ -48,17 +40,14 @@ namespace Asteroids.Core.PlayerInput
 
         public Vector2 GetDirectionInput()
         {
-            // Keyboard doesn't provide direction input, only forward/rotation
             return Vector2.zero;
         }
 
         public bool GetShootBulletInput()
         {
-            // Check keyboard keys
             if (IsAnyKeyPressed(_settings.ShootBulletKeys))
                 return true;
 
-            // Check mouse buttons (ignore if clicking on UI)
             if (!IsPointerOverUI() && IsAnyMouseButtonPressed(_settings.ShootBulletMouseButtons))
                 return true;
 
@@ -67,20 +56,15 @@ namespace Asteroids.Core.PlayerInput
 
         public bool GetShootLaserInput()
         {
-            // Check keyboard keys (use GetKeyDown for single shot)
             if (IsAnyKeyDown(_settings.ShootLaserKeys))
                 return true;
 
-            // Check mouse buttons (ignore if clicking on UI)
             if (!IsPointerOverUI() && IsAnyMouseButtonDown(_settings.ShootLaserMouseButtons))
                 return true;
 
             return false;
         }
 
-        /// <summary>
-        /// Check if any of the specified keys is currently pressed
-        /// </summary>
         private bool IsAnyKeyPressed(KeyCode[] keys)
         {
             if (keys == null || keys.Length == 0)
@@ -95,9 +79,6 @@ namespace Asteroids.Core.PlayerInput
             return false;
         }
 
-        /// <summary>
-        /// Check if any of the specified keys was pressed this frame
-        /// </summary>
         private bool IsAnyKeyDown(KeyCode[] keys)
         {
             if (keys == null || keys.Length == 0)
@@ -112,9 +93,6 @@ namespace Asteroids.Core.PlayerInput
             return false;
         }
 
-        /// <summary>
-        /// Check if any of the specified mouse buttons is currently pressed
-        /// </summary>
         private bool IsAnyMouseButtonPressed(int[] mouseButtons)
         {
             if (mouseButtons == null || mouseButtons.Length == 0)
@@ -129,9 +107,6 @@ namespace Asteroids.Core.PlayerInput
             return false;
         }
 
-        /// <summary>
-        /// Check if any of the specified mouse buttons was pressed this frame
-        /// </summary>
         private bool IsAnyMouseButtonDown(int[] mouseButtons)
         {
             if (mouseButtons == null || mouseButtons.Length == 0)
@@ -146,12 +121,8 @@ namespace Asteroids.Core.PlayerInput
             return false;
         }
 
-        /// <summary>
-        /// Check if pointer (mouse/touch) is over a UI element
-        /// </summary>
         private bool IsPointerOverUI()
         {
-            // Check if EventSystem exists and if pointer is over UI
             if (EventSystem.current != null)
             {
                 return EventSystem.current.IsPointerOverGameObject();

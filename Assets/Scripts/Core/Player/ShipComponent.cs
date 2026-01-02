@@ -2,10 +2,6 @@ using Asteroids.Core.Entity;
 
 namespace Asteroids.Core.Player
 {
-    /// <summary>
-    /// Component that identifies an entity as a ship
-    /// Contains common ship data and behavior
-    /// </summary>
     public class ShipComponent : IComponent
     {
         private GameEntity _entity;
@@ -23,15 +19,12 @@ namespace Asteroids.Core.Player
 
                 _canControl = value;
 
-                // Sync weapon shooting with control state
-                if (_entity != null)
+                if (_entity == null)
                 {
-                    var weaponShooting = _entity.GetComponent<WeaponShooting>();
-                    if (weaponShooting != null)
-                    {
-                        weaponShooting.CanShooting = value;
-                    }
+                    return;
                 }
+                var weaponShooting = _entity.GetComponent<WeaponShooting>();
+               weaponShooting.CanShooting = value;
             }
         }
 

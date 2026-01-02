@@ -28,10 +28,10 @@ namespace Asteroids.Core.PlayerInput
 
         [Header("Shooting - Mouse")]
         [Tooltip("Mouse buttons for shooting bullets (0=Left, 1=Right, 2=Middle). Empty array disables mouse for bullets.")]
-        public int[] ShootBulletMouseButtons = { 0 }; // Left Mouse Button
+        public int[] ShootBulletMouseButtons = { 0 };
 
         [Tooltip("Mouse buttons for shooting laser (0=Left, 1=Right, 2=Middle). Empty array disables mouse for laser.")]
-        public int[] ShootLaserMouseButtons = { 1 }; // Right Mouse Button
+        public int[] ShootLaserMouseButtons = { 1 };
     }
 }
 
