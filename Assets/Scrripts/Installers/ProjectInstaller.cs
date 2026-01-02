@@ -1,4 +1,5 @@
 using Zenject;
+using Asteroids.Infrastructure.Firebase;
 
 namespace Asteroids.Installers
 {
@@ -9,7 +10,12 @@ namespace Asteroids.Installers
     {
         public override void InstallBindings()
         {
-            
+            InstallFirebase();
+        }
+
+        private void InstallFirebase()
+        {
+            Container.BindInterfacesAndSelfTo<FirebaseService>().AsSingle();
         }
     }
 }
