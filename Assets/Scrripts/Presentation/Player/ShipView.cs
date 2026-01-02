@@ -91,6 +91,12 @@ namespace Asteroids.Presentation.Player
                 return;
             }
 
+            // Don't process collision if player is invincible
+            if (damageHandler.IsInvincible)
+            {
+                return;
+            }
+
             // Handle collision (applies bounce, damage, and starts invincibility)
             GameEntity enemyEntity = enemyView.Entity;
             bool damageTaken = damageHandler.HandleCollision(enemyEntity, 1f);

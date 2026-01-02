@@ -1,6 +1,7 @@
 using Zenject;
 using Asteroids.Core.Enemies;
 using Asteroids.Core.Entity.Components;
+using System;
 
 namespace Asteroids.Core.Score
 {
@@ -8,7 +9,7 @@ namespace Asteroids.Core.Score
     /// Service for managing player score
     /// Handles score calculation based on enemy type rewards dictionary
     /// </summary>
-    public class ScoreService : IInitializable
+    public class ScoreService : IInitializable, IDisposable
     {
         private readonly ScoreSettings _settings;
         private readonly SignalBus _signalBus;
@@ -27,6 +28,13 @@ namespace Asteroids.Core.Score
         {
             _currentScore = 0;
             _signalBus.Subscribe<EnemyDestroyedSignal>(OnEnemyDestroyed);
+            _signalBus.Subscribe<GameStartedSignal>(OnGameStarted);
+        }
+
+        public void Dispose()
+        {
+            _signalBus?.Unsubscribe<EnemyDestroyedSignal>(OnEnemyDestroyed);
+            _signalBus?.Unsubscribe<GameStartedSignal>(OnGameStarted);
         }
 
         /// <summary>
@@ -69,6 +77,14 @@ namespace Asteroids.Core.Score
                 PointsAdded = points
             };
             _signalBus.Fire(scoreChangedSignal);
+        }
+
+        /// <summary>
+        /// Handle game started - reset score when new game begins
+        /// </summary>
+        private void OnGameStarted(GameStartedSignal signal)
+        {
+            ResetScore();
         }
 
         /// <summary>

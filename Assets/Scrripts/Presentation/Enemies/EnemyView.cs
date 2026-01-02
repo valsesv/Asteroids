@@ -22,14 +22,18 @@ namespace Asteroids.Presentation.Enemies
         [Inject] protected DiContainer _container;
         [Inject(Optional = true)] protected ParticleEffectSpawner _particleEffectSpawner;
 
+        private bool _isPlayerInvincible;
+
         public virtual void Initialize()
         {
             _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
+            _signalBus.Subscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
         }
 
         public void Dispose()
         {
             _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
+            _signalBus?.Unsubscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
         }
 
         protected virtual void RegisterTickableComponents()
@@ -45,6 +49,11 @@ namespace Asteroids.Presentation.Enemies
             // Update Unity transform from signal
             transform.position = new Vector3(signal.X, signal.Y, 0f);
             transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
+        }
+
+        private void OnInvincibilityChanged(InvincibilityChangedSignal signal)
+        {
+            _isPlayerInvincible = signal.IsInvincible;
         }
 
         /// <summary>
@@ -92,6 +101,12 @@ namespace Asteroids.Presentation.Enemies
             var shipView = collision.gameObject.GetComponent<ShipView>();
             if (shipView != null)
             {
+                // Don't destroy enemy if player is invincible
+                if (_isPlayerInvincible)
+                {
+                    return;
+                }
+
                 // Enemies are destroyed when colliding with player
                 HandleEnemyDeath();
                 return;
