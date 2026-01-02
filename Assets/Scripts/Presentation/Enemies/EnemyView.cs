@@ -32,28 +32,8 @@ namespace Asteroids.Presentation.Enemies
             _signalBus?.Unsubscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
         }
 
-        protected virtual void RegisterTickableComponents()
-        {
-            foreach (var tickableComponent in Entity.GetTickableComponents())
-            {
-                _tickableManager.Add(tickableComponent);
-            }
-        }
-
-        protected virtual void OnTransformChanged(TransformChangedSignal signal)
-        {
-            transform.position = new Vector3(signal.X, signal.Y, 0f);
-            transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
-        }
-
-        private void OnInvincibilityChanged(InvincibilityChangedSignal signal)
-        {
-            _isPlayerInvincible = signal.IsInvincible;
-        }
-
         public void SetSpawnPosition(Vector2 position)
         {
-
             transform.position = new Vector3(position.x, position.y, 0f);
 
             if (Entity == null)
@@ -71,6 +51,29 @@ namespace Asteroids.Presentation.Enemies
             if (screenWrap != null)
             {
                 screenWrap.Reset();
+            }
+        }
+
+        public virtual void HandleEnemyDeath()
+        {
+            HandleInstaDeath();
+        }
+
+        public virtual void HandleInstaDeath()
+        {
+            if (_particleEffectSpawner != null)
+            {
+                _particleEffectSpawner.SpawnExplosion(transform.position);
+            }
+
+            if (_enemySpawner != null)
+            {
+                _enemySpawner.ReturnEnemy(this);
+            }
+
+            if (_signalBus != null && Entity != null)
+            {
+                _signalBus.Fire(new EnemyDestroyedSignal { Entity = Entity });
             }
         }
 
@@ -96,27 +99,23 @@ namespace Asteroids.Presentation.Enemies
             }
         }
 
-        public virtual void HandleEnemyDeath()
+        protected virtual void OnTransformChanged(TransformChangedSignal signal)
         {
-            HandleInstaDeath();
+            transform.position = new Vector3(signal.X, signal.Y, 0f);
+            transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
         }
 
-        public virtual void HandleInstaDeath()
+        protected virtual void RegisterTickableComponents()
         {
-            if (_particleEffectSpawner != null)
+            foreach (var tickableComponent in Entity.GetTickableComponents())
             {
-                _particleEffectSpawner.SpawnExplosion(transform.position);
+                _tickableManager.Add(tickableComponent);
             }
+        }
 
-            if (_enemySpawner != null)
-            {
-                _enemySpawner.ReturnEnemy(this);
-            }
-
-            if (_signalBus != null && Entity != null)
-            {
-                _signalBus.Fire(new EnemyDestroyedSignal { Entity = Entity });
-            }
+        private void OnInvincibilityChanged(InvincibilityChangedSignal signal)
+        {
+            _isPlayerInvincible = signal.IsInvincible;
         }
     }
 }

@@ -26,44 +26,17 @@ namespace Asteroids.Presentation.Player
         public void Initialize()
         {
             _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
-            _signalBus.Subscribe<PhysicsChangedSignal>(OnPhysicsChanged);
             _signalBus.Subscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
 
-            if (_invincibilityEffects != null)
-            {
-                _invincibilityEffects.Initialize();
-            }
+            _invincibilityEffects.Initialize();
         }
 
         public void Dispose()
         {
             _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
-            _signalBus?.Unsubscribe<PhysicsChangedSignal>(OnPhysicsChanged);
             _signalBus?.Unsubscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
 
             _invincibilityEffects?.Dispose();
-        }
-
-        private void OnTransformChanged(TransformChangedSignal signal)
-        {
-            transform.position = new Vector3(signal.X, signal.Y, 0f);
-            transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
-        }
-
-        private void OnPhysicsChanged(PhysicsChangedSignal signal)
-        {
-        }
-
-        private void OnInvincibilityChanged(InvincibilityChangedSignal signal)
-        {
-            if (signal.IsInvincible)
-            {
-                _invincibilityEffects.StartEffects();
-            }
-            else
-            {
-                _invincibilityEffects.StopEffects();
-            }
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -95,6 +68,24 @@ namespace Asteroids.Presentation.Player
                 var healthComponent = Entity?.GetComponent<HealthComponent>();
                 Debug.Log($"[ShipView] Player took damage! Health: {healthComponent?.CurrentHealth}/{healthComponent?.MaxHealth}");
             }
+        }
+
+        private void OnInvincibilityChanged(InvincibilityChangedSignal signal)
+        {
+            if (signal.IsInvincible)
+            {
+                _invincibilityEffects.StartEffects();
+            }
+            else
+            {
+                _invincibilityEffects.StopEffects();
+            }
+        }
+
+        private void OnTransformChanged(TransformChangedSignal signal)
+        {
+            transform.position = new Vector3(signal.X, signal.Y, 0f);
+            transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
         }
     }
 }

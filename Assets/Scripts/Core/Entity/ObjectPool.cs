@@ -44,6 +44,8 @@ namespace Asteroids.Core.Entity
             return obj;
         }
 
+        public List<T> ActiveObjects => _activeObjects;
+
         public void Return(T obj)
         {
             if (obj == null)
@@ -57,7 +59,6 @@ namespace Asteroids.Core.Entity
                 _inactiveObjects.Push(obj);
             }
         }
-        public List<T> ActiveObjects => _activeObjects;
 
         public void PreWarm(int count)
         {

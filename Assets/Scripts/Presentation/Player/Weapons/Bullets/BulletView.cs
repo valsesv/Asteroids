@@ -28,29 +28,15 @@ namespace Asteroids.Presentation.Player
             RegisterTickableComponents();
         }
 
-        private void RegisterTickableComponents()
-        {
-            foreach (var tickableComponent in Entity.GetTickableComponents())
-            {
-                _tickableManager.Add(tickableComponent);
-            }
-        }
         public void Initialize()
         {
             _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
             _signalBus.Subscribe<BulletDestroyedSignal>(OnBulletDestroyed);
         }
-
         public void Dispose()
         {
             _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
             _signalBus?.Unsubscribe<BulletDestroyedSignal>(OnBulletDestroyed);
-        }
-
-        private void OnTransformChanged(TransformChangedSignal signal)
-        {
-            transform.position = new Vector3(signal.X, signal.Y, 0f);
-            transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
         }
 
         public void SetSpawnParameters(Vector2 position, Vector2 direction)
@@ -67,14 +53,28 @@ namespace Asteroids.Presentation.Player
             bulletLifetime?.Reset();
         }
 
+        private void OnBulletDestroyed(BulletDestroyedSignal signal)
+        {
+            _projectileSpawner.ReturnBullet(this);
+        }
+
         private void OnCollisionEnter2D(Collision2D _collision)
         {
             OnBulletDestroyed(null);
         }
 
-        private void OnBulletDestroyed(BulletDestroyedSignal signal)
+        private void OnTransformChanged(TransformChangedSignal signal)
         {
-            _projectileSpawner.ReturnBullet(this);
+            transform.position = new Vector3(signal.X, signal.Y, 0f);
+            transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
+        }
+
+        private void RegisterTickableComponents()
+        {
+            foreach (var tickableComponent in Entity.GetTickableComponents())
+            {
+                _tickableManager.Add(tickableComponent);
+            }
         }
     }
 }

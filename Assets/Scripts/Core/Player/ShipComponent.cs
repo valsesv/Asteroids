@@ -24,7 +24,7 @@ namespace Asteroids.Core.Player
                     return;
                 }
                 var weaponShooting = _entity.GetComponent<WeaponShooting>();
-               weaponShooting.CanShooting = value;
+                weaponShooting.CanShooting = value;
             }
         }
 

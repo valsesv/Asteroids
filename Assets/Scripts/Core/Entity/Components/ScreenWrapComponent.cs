@@ -1,6 +1,4 @@
 using UnityEngine;
-using Zenject;
-
 namespace Asteroids.Core.Entity.Components
 {
     public class ScreenWrapComponent : ITickableComponent
@@ -13,6 +11,11 @@ namespace Asteroids.Core.Entity.Components
         {
             _transform = transform;
             _screenBounds = screenBounds;
+        }
+
+        public void Reset()
+        {
+            _isInGameArea = false;
         }
 
         public void Tick()
@@ -86,11 +89,6 @@ namespace Asteroids.Core.Entity.Components
             }
 
             return false;
-        }
-
-        public void Reset()
-        {
-            _isInGameArea = false;
         }
     }
 }

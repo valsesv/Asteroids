@@ -6,7 +6,6 @@ namespace Asteroids.Core.Entity.Components
     public class PhysicsComponent : ITickableComponent
     {
         private readonly PhysicsChangedSignal _signal = new PhysicsChangedSignal();
-
         private readonly TransformComponent _transform;
         private readonly SignalBus _signalBus;
         private readonly float _frictionCoefficient;
@@ -24,9 +23,14 @@ namespace Asteroids.Core.Entity.Components
             _frictionCoefficient = frictionCoefficient;
         }
 
-        public void SetVelocity(Vector2 velocity)
+        public void Tick()
         {
-            Velocity = velocity;
+            if (_frictionCoefficient < 1f)
+            {
+                Velocity *= Mathf.Pow(_frictionCoefficient, Time.deltaTime);
+            }
+
+            _transform.Move(Velocity * Time.deltaTime);
             FireSignal();
         }
 
@@ -45,6 +49,12 @@ namespace Asteroids.Core.Entity.Components
             }
         }
 
+        public void ApplyFriction(float frictionCoefficient, float deltaTime)
+        {
+            Velocity *= Mathf.Pow(frictionCoefficient, deltaTime);
+            FireSignal();
+        }
+
         public void ApplyImpulse(Vector2 impulse)
         {
             if (Mass > 0)
@@ -52,12 +62,6 @@ namespace Asteroids.Core.Entity.Components
                 Velocity += impulse / Mass;
                 FireSignal();
             }
-        }
-
-        public void ApplyFriction(float frictionCoefficient, float deltaTime)
-        {
-            Velocity *= Mathf.Pow(frictionCoefficient, deltaTime);
-            FireSignal();
         }
 
         public void ClampSpeed(float maxSpeed)
@@ -68,14 +72,9 @@ namespace Asteroids.Core.Entity.Components
             }
         }
 
-        public void Tick()
+        public void SetVelocity(Vector2 velocity)
         {
-            if (_frictionCoefficient < 1f)
-            {
-                Velocity *= Mathf.Pow(_frictionCoefficient, Time.deltaTime);
-            }
-
-            _transform.Move(Velocity * Time.deltaTime);
+            Velocity = velocity;
             FireSignal();
         }
 
