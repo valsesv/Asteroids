@@ -12,7 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0af055ff0750642f282ce6418fadd810, type: 3}
   m_Name: KeyboardInputSettings
   m_EditorClassIdentifier: 
-  MoveUp: 119
-  MoveDown: 115
-  MoveLeft: 97
-  MoveRight: 100
+  MoveUpKeys:
+  - 119
+  - 273
+  MoveDownKeys:
+  - 115
+  - 274
+  MoveLeftKeys:
+  - 97
+  - 276
+  MoveRightKeys:
+  - 100
+  - 275
+  ShootBulletKeys:
+  - 32
+  ShootLaserKeys:
+  - 304
+  - 303
+  ShootBulletMouseButtons:
+  - 0
+  ShootLaserMouseButtons:
+  - 1
