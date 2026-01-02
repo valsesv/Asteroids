@@ -124,9 +124,13 @@ namespace Asteroids.Installers
 
             // Check if we should use mobile input (Editor or Android)
             bool shouldUseMobileInput = Application.isEditor || Application.platform == RuntimePlatform.Android;
+            bool isEditor = Application.isEditor;
 
             VirtualJoystickView joystickView = null;
             MobileInputView mobileInputView = null;
+
+            // Always bind keyboard input provider (for Editor and desktop)
+            Container.Bind<KeyboardInputProvider>().AsSingle();
 
             // Instantiate mobile input panel prefab in GameCanvas if needed
             if (shouldUseMobileInput && _mobileInputPanelPrefab != null && _gameCanvas != null)
@@ -139,10 +143,21 @@ namespace Asteroids.Installers
                 mobileInputView = mobileInputInstance.GetComponentInChildren<MobileInputView>();
             }
 
-            // Choose input provider based on platform and available views
-            if (shouldUseMobileInput && joystickView != null && mobileInputView != null)
+            // Choose input provider based on platform
+            if (isEditor && joystickView != null && mobileInputView != null)
             {
-                // Mobile input with virtual joystick
+                // Editor: Use combined input (both keyboard and mobile)
+                Container.BindInstance(joystickView);
+                Container.BindInstance(mobileInputView);
+                Container.Bind<VirtualJoystickInputProvider>().AsSingle();
+
+                Container.Bind<IInputProvider>()
+                    .To<CombinedInputProvider>()
+                    .AsSingle();
+            }
+            else if (shouldUseMobileInput && joystickView != null && mobileInputView != null)
+            {
+                // Android: Use only mobile input
                 Container.BindInstance(joystickView);
                 Container.BindInstance(mobileInputView);
                 Container.Bind<IInputProvider>()
@@ -151,7 +166,7 @@ namespace Asteroids.Installers
             }
             else
             {
-                // Desktop input with keyboard and mouse
+                // Desktop: Use only keyboard and mouse
                 Container.Bind<IInputProvider>()
                     .To<KeyboardInputProvider>()
                     .AsSingle();
