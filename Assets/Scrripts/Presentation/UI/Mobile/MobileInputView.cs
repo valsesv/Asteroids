@@ -15,8 +15,6 @@ namespace Asteroids.Presentation.UI
 
         private bool _isShootBulletPressed = false;
         private bool _isShootLaserPressed = false;
-        private bool _wasShootLaserPressedLastFrame = false;
-        private bool _laserPressedThisFrame = false;
 
         /// <summary>
         /// Whether bullet shoot button is currently pressed
@@ -24,10 +22,9 @@ namespace Asteroids.Presentation.UI
         public bool IsShootBulletPressed => _isShootBulletPressed;
 
         /// <summary>
-        /// Whether laser shoot button was pressed this frame (for single shot)
-        /// Returns true only on the frame when button is first pressed
+        /// Whether laser shoot button is currently pressed
         /// </summary>
-        public bool IsShootLaserPressed => _laserPressedThisFrame;
+        public bool IsShootLaserPressed => _isShootLaserPressed;
 
         private void Awake()
         {
@@ -79,23 +76,11 @@ namespace Asteroids.Presentation.UI
         private void OnShootLaserDown()
         {
             _isShootLaserPressed = true;
-            // Set flag for this frame only if it wasn't pressed last frame
-            if (!_wasShootLaserPressedLastFrame)
-            {
-                _laserPressedThisFrame = true;
-            }
         }
 
         private void OnShootLaserUp()
         {
             _isShootLaserPressed = false;
-        }
-
-        private void LateUpdate()
-        {
-            // Reset laser press flag after reading
-            _laserPressedThisFrame = false;
-            _wasShootLaserPressedLastFrame = _isShootLaserPressed;
         }
 
         /// <summary>
@@ -105,8 +90,6 @@ namespace Asteroids.Presentation.UI
         {
             _isShootBulletPressed = false;
             _isShootLaserPressed = false;
-            _wasShootLaserPressedLastFrame = false;
-            _laserPressedThisFrame = false;
         }
     }
 }
