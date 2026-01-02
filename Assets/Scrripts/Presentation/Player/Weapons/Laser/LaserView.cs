@@ -3,7 +3,6 @@ using UnityEngine;
 using Zenject;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Presentation.Enemies;
-using Asteroids.Core.Player;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using Asteroids.Core.Weapons;
@@ -19,7 +18,6 @@ namespace Asteroids.Presentation.Player
         [SerializeField] private LineRenderer _lineRenderer;
 
         private SignalBus _signalBus;
-        private EnemySpawner _enemySpawner;
         private LaserSettings _laserSettings;
         private CancellationTokenSource _cancellationTokenSource;
 
@@ -28,10 +26,9 @@ namespace Asteroids.Presentation.Player
         private bool _isActive;
 
         [Inject]
-        public void Construct(SignalBus signalBus, EnemySpawner enemySpawner, LaserSettings laserSettings)
+        public void Construct(SignalBus signalBus, LaserSettings laserSettings)
         {
             _signalBus = signalBus;
-            _enemySpawner = enemySpawner;
             _laserSettings = laserSettings;
         }
 
@@ -108,97 +105,34 @@ namespace Asteroids.Presentation.Player
 
         private void CheckCollisionsWithEnemies()
         {
-            if (_enemySpawner == null || _enemySpawner.ActiveEnemies == null)
-            {
-                return;
-            }
-
-            // Calculate laser rectangle bounds using settings
+            // Calculate laser box bounds using settings
             Vector2 endPosition = _startPosition + _direction * _laserSettings.Range;
             Vector2 laserCenter = (_startPosition + endPosition) * 0.5f;
-            float laserLength = _laserSettings.Range;
-            float laserWidth = _laserSettings.Width;
+            Vector2 laserSize = new Vector2(_laserSettings.Range, _laserSettings.Width);
             float laserAngle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
 
-            // Check collision with each active enemy
-            for (int i = _enemySpawner.ActiveEnemies.Count - 1; i >= 0; i--)
+            // Use OverlapBoxAll to find all colliders in the laser area
+            Collider2D[] colliders = Physics2D.OverlapBoxAll(laserCenter, laserSize, laserAngle);
+
+            // Process all colliders and check for enemies
+            foreach (var collider in colliders)
             {
-                var enemy = _enemySpawner.ActiveEnemies[i];
-                if (enemy == null || enemy.Entity == null)
+                if (collider == null)
                 {
                     continue;
                 }
 
-                var transformComponent = enemy.Entity.GetComponent<TransformComponent>();
-                if (transformComponent == null)
+                var enemy = collider.GetComponent<EnemyView>();
+                if (enemy == null)
                 {
-                    continue;
+                    enemy = collider.GetComponentInParent<EnemyView>();
                 }
 
-                Vector2 enemyPosition = transformComponent.Position;
-                float enemyRadius = GetEnemyRadius(enemy);
-
-                // Check if enemy is inside laser rectangle
-                if (IsPointInRotatedRectangle(enemyPosition, laserCenter, laserLength, laserWidth, laserAngle, enemyRadius))
+                if (enemy != null && enemy.Entity != null)
                 {
-                    // Destroy enemy
-                    HandleEnemyHit(enemy);
+                    enemy.HandleInstaDeath();
                 }
             }
-        }
-
-        private float GetEnemyRadius(EnemyView enemy)
-        {
-            // Get enemy radius from collider or use default
-            var collider = enemy.GetComponent<CircleCollider2D>();
-            if (collider != null)
-            {
-                return collider.radius;
-            }
-
-            // Default radius based on enemy type
-            return 0.5f;
-        }
-
-        /// <summary>
-        /// Check if a point (with radius) is inside a rotated rectangle
-        /// </summary>
-        private bool IsPointInRotatedRectangle(Vector2 point, Vector2 rectCenter, float rectLength, float rectWidth, float rectAngle, float pointRadius)
-        {
-            // Transform point to rectangle's local space (rotate around rectangle center)
-            Vector2 localPoint = point - rectCenter;
-            float angleRad = -rectAngle * Mathf.Deg2Rad;
-            float cos = Mathf.Cos(angleRad);
-            float sin = Mathf.Sin(angleRad);
-
-            // Rotate point to rectangle's local coordinate system
-            Vector2 rotatedPoint = new Vector2(
-                localPoint.x * cos - localPoint.y * sin,
-                localPoint.x * sin + localPoint.y * cos
-            );
-
-            // Check if point (with radius) is inside rectangle bounds
-            // Rectangle extends from -length/2 to +length/2 along X axis
-            // and from -width/2 to +width/2 along Y axis
-            float halfLength = rectLength * 0.5f;
-            float halfWidth = rectWidth * 0.5f;
-
-            // Expand rectangle bounds by point radius
-            bool insideX = rotatedPoint.x >= -halfLength - pointRadius && rotatedPoint.x <= halfLength + pointRadius;
-            bool insideY = rotatedPoint.y >= -halfWidth - pointRadius && rotatedPoint.y <= halfWidth + pointRadius;
-
-            return insideX && insideY;
-        }
-
-        private void HandleEnemyHit(EnemyView enemy)
-        {
-            if (enemy == null || enemy.Entity == null)
-            {
-                return;
-            }
-
-            // Destroy enemy instantly without fragmentation (laser destroys everything completely)
-            enemy.HandleInstaDeath();
         }
 
         private void Deactivate()
