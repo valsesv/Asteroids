@@ -2,7 +2,8 @@
     "Movement": {
         "Acceleration": 10.0,
         "MaxSpeed": 5.0,
-        "Friction": 0.2
+        "Friction": 0.2,
+        "RotationSpeed": 180.0
     },
     "StartPosition": {
         "Position": {

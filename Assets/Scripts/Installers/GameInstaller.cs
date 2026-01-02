@@ -155,6 +155,8 @@ namespace Asteroids.Installers
                 .FromMethod(ctx => new ScreenBounds(Camera.main))
                 .AsSingle();
 
+            Container.Bind<EnemyFactory>().AsSingle();
+
             Container.Bind<ShipView>().FromInstance(_shipViewPrefab).AsSingle();
 
             Assert.IsNotNull(_projectileSpawner, "ProjectileSpawner is not assigned in GameInstaller!");

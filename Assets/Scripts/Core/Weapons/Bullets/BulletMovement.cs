@@ -5,10 +5,6 @@ using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Core.Player
 {
-    /// <summary>
-    /// Component that handles bullet movement
-    /// Sets initial velocity in given direction with constant speed (no friction)
-    /// </summary>
     public class BulletMovement : IComponent
     {
         private readonly PhysicsComponent _physics;
@@ -16,15 +12,11 @@ namespace Asteroids.Core.Player
         private readonly float _speed;
 
         public BulletMovement(
-            GameEntity entity,
             PhysicsComponent physics,
-            float speed,
-            SignalBus signalBus)
+            float speed)
         {
             _physics = physics;
             _speed = speed;
-            
-            // Set initial velocity
             _physics.SetVelocity(_direction * _speed);
             _physics.ClampSpeed(_speed);
         }

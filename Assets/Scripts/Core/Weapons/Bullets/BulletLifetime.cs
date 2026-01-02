@@ -5,9 +5,6 @@ using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Core.Player
 {
-    /// <summary>
-    /// Component that handles bullet lifetime and auto-destruction
-    /// </summary>
     public class BulletLifetime : ITickableComponent
     {
         private readonly BulletComponent _bulletComponent;
@@ -28,14 +25,10 @@ namespace Asteroids.Core.Player
 
             if (_elapsedTime >= _bulletComponent.Lifetime)
             {
-                // Fire signal to destroy bullet
                 _signalBus?.Fire(new BulletDestroyedSignal { Entity = _entity });
             }
         }
 
-        /// <summary>
-        /// Reset elapsed time when bullet is reused from pool
-        /// </summary>
         public void Reset()
         {
             _elapsedTime = 0f;

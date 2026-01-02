@@ -2,9 +2,6 @@ using Asteroids.Core.Entity;
 
 namespace Asteroids.Core.Player
 {
-    /// <summary>
-    /// Component that identifies an entity as a bullet
-    /// </summary>
     public class BulletComponent : IComponent
     {
         public float Lifetime { get; set; }

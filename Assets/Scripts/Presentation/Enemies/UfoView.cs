@@ -14,14 +14,15 @@ namespace Asteroids.Presentation.Enemies
             SignalBus signalBus,
             ScreenBounds screenBounds,
             ShipView shipView,
-            EnemySettings enemySettings)
+            EnemySettings enemySettings,
+            EnemyFactory enemyFactory)
         {
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
             var playerTransform = shipView.Entity.GetComponent<TransformComponent>();
 
-            Entity = UfoFactory.CreateUfo(position, rotation, signalBus, playerTransform, enemySettings, screenBounds);
+            Entity = enemyFactory.CreateUfo(position, rotation, signalBus, playerTransform, enemySettings, screenBounds);
             RegisterTickableComponents();
             _container.BindInstance(Entity).AsSingle();
         }

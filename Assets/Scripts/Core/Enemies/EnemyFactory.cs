@@ -5,9 +5,9 @@ using Zenject;
 
 namespace Asteroids.Core.Enemies
 {
-    public static class EnemyFactory
+    public class EnemyFactory
     {
-        public static GameEntity CreateEnemy(
+        public GameEntity CreateEnemy(
             EnemyType type,
             Vector2 position,
             float rotation,
@@ -26,6 +26,61 @@ namespace Asteroids.Core.Enemies
             var transformComponent = entity.GetComponent<TransformComponent>();
             var screenWrap = new ScreenWrapComponent(transformComponent, screenBounds);
             entity.AddComponent(screenWrap);
+
+            return entity;
+        }
+
+        public GameEntity CreateAsteroid(
+            Vector2 position,
+            float rotation,
+            SignalBus signalBus,
+            float speed,
+            ScreenBounds screenBounds)
+        {
+            var entity = CreateEnemy(EnemyType.Asteroid, position, rotation, signalBus, screenBounds);
+
+            var asteroidComponent = new AsteroidComponent();
+            entity.AddComponent(asteroidComponent);
+
+            var movement = new AsteroidMovement(entity, speed);
+            entity.AddComponent(movement);
+
+            return entity;
+        }
+
+        public GameEntity CreateFragment(
+            Vector2 position,
+            float rotation,
+            SignalBus signalBus,
+            float speed,
+            ScreenBounds screenBounds)
+        {
+            var entity = CreateEnemy(EnemyType.Fragment, position, rotation, signalBus, screenBounds);
+
+            var fragmentComponent = new FragmentComponent();
+            entity.AddComponent(fragmentComponent);
+
+            var movement = new AsteroidMovement(entity, speed);
+            entity.AddComponent(movement);
+
+            return entity;
+        }
+
+        public GameEntity CreateUfo(
+            Vector2 position,
+            float rotation,
+            SignalBus signalBus,
+            TransformComponent playerTransform,
+            EnemySettings enemySettings,
+            ScreenBounds screenBounds)
+        {
+            var entity = CreateEnemy(EnemyType.Ufo, position, rotation, signalBus, screenBounds);
+
+            var ufoComponent = new UfoComponent();
+            entity.AddComponent(ufoComponent);
+
+            var movement = new UfoMovement(entity, playerTransform, enemySettings.UfoSpeed);
+            entity.AddComponent(movement);
 
             return entity;
         }
