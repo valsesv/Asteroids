@@ -1,5 +1,6 @@
 using Zenject;
 using Asteroids.Infrastructure.Firebase;
+using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Installers
 {
@@ -10,7 +11,17 @@ namespace Asteroids.Installers
     {
         public override void InstallBindings()
         {
+            InstallSignalBus();
             InstallFirebase();
+        }
+
+        private void InstallSignalBus()
+        {
+            SignalBusInstaller.Install(Container);
+
+            // Declare signals that are used in ProjectContext (Firebase, Ads, etc.)
+            Container.DeclareSignal<GameStartedSignal>();
+            Container.DeclareSignal<GameOverSignal>();
         }
 
         private void InstallFirebase()
