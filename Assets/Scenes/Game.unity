@@ -2094,9 +2094,9 @@ RectTransform:
   - {fileID: 97588600}
   m_Father: {fileID: 1541450052}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 215.79492, y: 164.70636}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 215.79492, y: -164.70636}
   m_SizeDelta: {x: 431.58984, y: 329.41272}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1898704492
@@ -2126,11 +2126,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
+    m_Left: 20
     m_Right: 0
     m_Top: 20
     m_Bottom: 0
-  m_ChildAlignment: 6
+  m_ChildAlignment: 0
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
@@ -2445,6 +2445,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1764726786}
     - target: {fileID: 2124988984619475679, guid: 104650bb7e4a04556bcbdcac3ce5a146, type: 3}
+      propertyPath: _gameCanvas
+      value: 
+      objectReference: {fileID: 1419175474}
+    - target: {fileID: 2124988984619475679, guid: 104650bb7e4a04556bcbdcac3ce5a146, type: 3}
       propertyPath: _gameUIView
       value: 
       objectReference: {fileID: 1674454275}
@@ -2476,6 +2480,14 @@ PrefabInstance:
       propertyPath: _particleEffectSpawner
       value: 
       objectReference: {fileID: 345916860}
+    - target: {fileID: 2124988984619475679, guid: 104650bb7e4a04556bcbdcac3ce5a146, type: 3}
+      propertyPath: _mobileInputPanelPrefab
+      value: 
+      objectReference: {fileID: 3615102080541563813, guid: 48de76743c7de48b1a4fe322093cb259, type: 3}
+    - target: {fileID: 2124988984619475679, guid: 104650bb7e4a04556bcbdcac3ce5a146, type: 3}
+      propertyPath: _mobileInputCanvasPrefab
+      value: 
+      objectReference: {fileID: 3615102080541563813, guid: 48de76743c7de48b1a4fe322093cb259, type: 3}
     - target: {fileID: 3294242265455809717, guid: 104650bb7e4a04556bcbdcac3ce5a146, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

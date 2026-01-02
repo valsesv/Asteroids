@@ -38,6 +38,10 @@ namespace Asteroids.Installers
         [SerializeField] private StartMenuView _startMenuView;
         [SerializeField] private GameUIView _gameUIView;
 
+        [Header("Mobile Input (Optional)")]
+        [SerializeField] private GameObject _mobileInputPanelPrefab;
+        [SerializeField] private Canvas _gameCanvas;
+
         public override void InstallBindings()
         {
             InstallSignalBus();
@@ -118,8 +122,40 @@ namespace Asteroids.Installers
             Assert.IsNotNull(_inputSettings, "KeyboardInputSettings is not assigned in GameInstaller! Please assign it in Inspector or create a ScriptableObject asset via: Create > Asteroids > Settings > Keyboard Input Settings");
             Container.BindInstance(_inputSettings);
 
-            // Input Provider
-            Container.Bind<IInputProvider>().To<KeyboardInputProvider>().AsSingle();
+            // Check if we should use mobile input (Editor or Android)
+            bool shouldUseMobileInput = Application.isEditor || Application.platform == RuntimePlatform.Android;
+
+            VirtualJoystickView joystickView = null;
+            MobileInputView mobileInputView = null;
+
+            // Instantiate mobile input panel prefab in GameCanvas if needed
+            if (shouldUseMobileInput && _mobileInputPanelPrefab != null && _gameCanvas != null)
+            {
+                // Instantiate panel prefab as child of GameCanvas
+                GameObject mobileInputInstance = Instantiate(_mobileInputPanelPrefab, _gameCanvas.transform);
+
+                // Find components in the instantiated prefab
+                joystickView = mobileInputInstance.GetComponentInChildren<VirtualJoystickView>();
+                mobileInputView = mobileInputInstance.GetComponentInChildren<MobileInputView>();
+            }
+
+            // Choose input provider based on platform and available views
+            if (shouldUseMobileInput && joystickView != null && mobileInputView != null)
+            {
+                // Mobile input with virtual joystick
+                Container.BindInstance(joystickView);
+                Container.BindInstance(mobileInputView);
+                Container.Bind<IInputProvider>()
+                    .To<VirtualJoystickInputProvider>()
+                    .AsSingle();
+            }
+            else
+            {
+                // Desktop input with keyboard and mouse
+                Container.Bind<IInputProvider>()
+                    .To<KeyboardInputProvider>()
+                    .AsSingle();
+            }
         }
 
         private void InstallCommonServices()
