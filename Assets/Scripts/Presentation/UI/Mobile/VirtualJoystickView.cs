@@ -1,12 +1,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.UI
 {
-    /// <summary>
-    /// Virtual joystick for mobile input
-    /// Supports drag and touch input
-    /// </summary>
     public class VirtualJoystickView : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
     {
         [SerializeField] private RectTransform _joystickBackground;
@@ -16,45 +13,31 @@ namespace Asteroids.Presentation.UI
         private bool _isActive = false;
         private float _joystickRange;
 
-        /// <summary>
-        /// Normalized direction vector (-1 to 1 for both axes)
-        /// </summary>
         public Vector2 Direction => _direction;
 
-        /// <summary>
-        /// Whether joystick is currently being used
-        /// </summary>
         public bool IsActive => _isActive;
 
         private void Awake()
         {
-            CalculateJoystickRange();
+            Assert.IsNotNull(_joystickBackground, "JoystickBackground is not assigned in VirtualJoystickView!");
+            Assert.IsNotNull(_joystickHandle, "JoystickHandle is not assigned in VirtualJoystickView!");
 
-            if (_joystickHandle != null)
-            {
-                _joystickHandle.anchoredPosition = Vector2.zero;
-            }
+            CalculateJoystickRange();
+            _joystickHandle.anchoredPosition = Vector2.zero;
         }
 
         private void CalculateJoystickRange()
         {
-            if (_joystickBackground == null || _joystickHandle == null)
-                return;
-
-            // Get the radius of the background (half of its size)
             float backgroundRadius = Mathf.Min(
                 _joystickBackground.rect.width,
                 _joystickBackground.rect.height
             ) * 0.5f;
 
-            // Get the radius of the handle (half of its size)
             float handleRadius = Mathf.Min(
                 _joystickHandle.rect.width,
                 _joystickHandle.rect.height
             ) * 0.5f;
 
-            // The range is the distance from center to edge, accounting for handle size
-            // This allows the handle to reach the edge of the background
             _joystickRange = backgroundRadius - handleRadius;
         }
 
@@ -66,16 +49,11 @@ namespace Asteroids.Presentation.UI
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (_joystickBackground == null || _joystickHandle == null)
-                return;
-
-            // Get canvas camera (null for Screen Space Overlay)
             Canvas canvas = _joystickBackground.GetComponentInParent<Canvas>();
             Camera cam = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay
                 ? canvas.worldCamera
                 : null;
 
-            // Convert screen position to local position in joystick background
             Vector2 localPoint;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 _joystickBackground,
@@ -83,11 +61,9 @@ namespace Asteroids.Presentation.UI
                 cam,
                 out localPoint);
 
-            // Clamp to joystick range
             _direction = Vector2.ClampMagnitude(localPoint, _joystickRange);
-            _direction /= _joystickRange; // Normalize to -1..1
+            _direction /= _joystickRange;
 
-            // Update handle position
             _joystickHandle.anchoredPosition = _direction * _joystickRange;
         }
 
@@ -95,25 +71,14 @@ namespace Asteroids.Presentation.UI
         {
             _isActive = false;
             _direction = Vector2.zero;
-
-            if (_joystickHandle != null)
-            {
-                _joystickHandle.anchoredPosition = Vector2.zero;
-            }
+            _joystickHandle.anchoredPosition = Vector2.zero;
         }
 
-        /// <summary>
-        /// Reset joystick to center position
-        /// </summary>
         public void Reset()
         {
             _isActive = false;
             _direction = Vector2.zero;
-
-            if (_joystickHandle != null)
-            {
-                _joystickHandle.anchoredPosition = Vector2.zero;
-            }
+            _joystickHandle.anchoredPosition = Vector2.zero;
         }
     }
 }

@@ -3,10 +3,6 @@ using Asteroids.Core.PlayerInput;
 
 namespace Asteroids.Presentation.UI
 {
-    /// <summary>
-    /// Combined input provider that uses both keyboard/mouse and mobile input
-    /// Useful for Editor where both input methods should be available
-    /// </summary>
     public class CombinedInputProvider : IInputProvider
     {
         private readonly KeyboardInputProvider _keyboardProvider;
@@ -22,30 +18,24 @@ namespace Asteroids.Presentation.UI
 
         public float GetForwardInput()
         {
-            // Use keyboard input if available, otherwise use mobile
             float keyboardInput = _keyboardProvider?.GetForwardInput() ?? 0f;
             float mobileInput = _mobileProvider?.GetForwardInput() ?? 0f;
 
-            // Combine inputs (take the one with larger magnitude)
             return Mathf.Abs(keyboardInput) > Mathf.Abs(mobileInput) ? keyboardInput : mobileInput;
         }
 
         public float GetRotationInput()
         {
-            // Use keyboard input if available, otherwise use mobile
             float keyboardInput = _keyboardProvider?.GetRotationInput() ?? 0f;
             float mobileInput = _mobileProvider?.GetRotationInput() ?? 0f;
 
-            // Combine inputs (take the one with larger magnitude)
             return Mathf.Abs(keyboardInput) > Mathf.Abs(mobileInput) ? keyboardInput : mobileInput;
         }
 
         public Vector2 GetDirectionInput()
         {
-            // Prefer mobile direction input if available, otherwise use keyboard
             Vector2 mobileInput = _mobileProvider?.GetDirectionInput() ?? Vector2.zero;
 
-            // If mobile input is active, use it; otherwise return zero (keyboard doesn't provide direction)
             if (mobileInput.magnitude > 0.01f)
                 return mobileInput;
 
@@ -54,7 +44,6 @@ namespace Asteroids.Presentation.UI
 
         public bool GetShootBulletInput()
         {
-            // Check both inputs - if either is pressed, return true
             bool keyboardInput = _keyboardProvider?.GetShootBulletInput() ?? false;
             bool mobileInput = _mobileProvider?.GetShootBulletInput() ?? false;
 
@@ -63,7 +52,6 @@ namespace Asteroids.Presentation.UI
 
         public bool GetShootLaserInput()
         {
-            // Check both inputs - if either is pressed, return true
             bool keyboardInput = _keyboardProvider?.GetShootLaserInput() ?? false;
             bool mobileInput = _mobileProvider?.GetShootLaserInput() ?? false;
 

@@ -6,6 +6,7 @@ using Asteroids.Presentation.Enemies;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using Asteroids.Core.Weapons;
+using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.Player
 {
@@ -30,6 +31,8 @@ namespace Asteroids.Presentation.Player
 
         public void Initialize()
         {
+            Assert.IsNotNull(_lineRenderer, "LineRenderer is not assigned in LaserPresentation!");
+
             _signalBus.Subscribe<LaserShotSignal>(OnLaserShot);
             _signalBus.Subscribe<LaserDeactivatedSignal>(OnLaserDeactivated);
 
@@ -82,7 +85,7 @@ namespace Asteroids.Presentation.Player
 
         private void UpdateLaserVisualization()
         {
-            if (_lineRenderer == null || !_isActive)
+            if (!_isActive)
             {
                 return;
             }

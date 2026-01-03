@@ -37,6 +37,7 @@ namespace Asteroids.Installers
 
         public override void InstallBindings()
         {
+            AssertRequiredFields();
             InstallSignals();
             InstallSettings();
             InstallInput();
@@ -52,6 +53,21 @@ namespace Asteroids.Installers
             InstallGameController();
             InstallStartMenuUI();
             InstallGameUI();
+        }
+
+        private void AssertRequiredFields()
+        {
+            Assert.IsNotNull(_inputSettings, "KeyboardInputSettings is not assigned in GameInstaller!");
+            Assert.IsNotNull(_shipPresentationPrefab, "ShipPresentationPrefab is not assigned in GameInstaller!");
+            Assert.IsNotNull(_enemySpawner, "EnemySpawner is not assigned in GameInstaller!");
+            Assert.IsNotNull(_projectileSpawner, "ProjectileSpawner is not assigned in GameInstaller!");
+            Assert.IsNotNull(_particleEffectSpawner, "ParticleEffectSpawner is not assigned in GameInstaller!");
+            Assert.IsNotNull(_laserPresentation, "LaserPresentation is not assigned in GameInstaller!");
+            Assert.IsNotNull(_scoreView, "ScoreView is not assigned in GameInstaller!");
+            Assert.IsNotNull(_healthView, "HealthView is not assigned in GameInstaller!");
+            Assert.IsNotNull(_playerStatsView, "PlayerStatsView is not assigned in GameInstaller!");
+            Assert.IsNotNull(_startMenuView, "StartMenuView is not assigned in GameInstaller!");
+            Assert.IsNotNull(_gameUIView, "GameUIView is not assigned in GameInstaller!");
         }
 
         private void InstallSignals()
@@ -89,7 +105,6 @@ namespace Asteroids.Installers
 
         private void InstallInput()
         {
-            Assert.IsNotNull(_inputSettings, "KeyboardInputSettings is not assigned in GameInstaller! Please assign it in Inspector or create a ScriptableObject asset via: Create > Asteroids > Settings > Keyboard Input Settings");
             Container.BindInstance(_inputSettings);
 
             var inputSetup = new InputProviderSetup();
@@ -141,8 +156,6 @@ namespace Asteroids.Installers
             Container.Bind<EnemyFactory>().AsSingle();
 
             Container.Bind<ShipPresentation>().FromInstance(_shipPresentationPrefab).AsSingle();
-
-            Assert.IsNotNull(_projectileSpawner, "ProjectileSpawner is not assigned in GameInstaller!");
             Container.BindInterfacesAndSelfTo<ProjectileSpawner>().FromInstance(_projectileSpawner).AsSingle();
         }
 
@@ -169,34 +182,23 @@ namespace Asteroids.Installers
 
         private void InstallEnemySpawner()
         {
-            Assert.IsNotNull(_enemySpawner, "EnemySpawner is not assigned in GameInstaller!");
             Container.BindInterfacesAndSelfTo<EnemySpawner>().FromInstance(_enemySpawner).AsSingle();
         }
 
         private void InstallParticleEffectSpawner()
         {
-            if (_particleEffectSpawner != null)
-            {
-                Container.BindInterfacesAndSelfTo<ParticleEffectSpawner>().FromInstance(_particleEffectSpawner).AsSingle();
-            }
+            Container.BindInterfacesAndSelfTo<ParticleEffectSpawner>().FromInstance(_particleEffectSpawner).AsSingle();
         }
 
         private void InstallLaserView()
         {
-            if (_laserPresentation != null)
-            {
-                Container.BindInterfacesAndSelfTo<LaserPresentation>().FromInstance(_laserPresentation).AsSingle();
-            }
+            Container.BindInterfacesAndSelfTo<LaserPresentation>().FromInstance(_laserPresentation).AsSingle();
         }
 
         private void InstallScoreUI()
         {
             Container.BindInterfacesAndSelfTo<ScoreViewModel>().AsSingle();
-
-            if (_scoreView != null)
-            {
-                Container.BindInterfacesAndSelfTo<ScoreView>().FromInstance(_scoreView).AsSingle();
-            }
+            Container.BindInterfacesAndSelfTo<ScoreView>().FromInstance(_scoreView).AsSingle();
         }
 
         private void InstallHealthUI()
@@ -208,11 +210,7 @@ namespace Asteroids.Installers
         private void InstallPlayerStatsUI()
         {
             Container.BindInterfacesAndSelfTo<PlayerStatsViewModel>().AsSingle();
-
-            if (_playerStatsView != null)
-            {
-                Container.BindInterfacesAndSelfTo<PlayerStatsView>().FromInstance(_playerStatsView).AsSingle();
-            }
+            Container.BindInterfacesAndSelfTo<PlayerStatsView>().FromInstance(_playerStatsView).AsSingle();
         }
 
         private void InstallGameController()
@@ -223,19 +221,12 @@ namespace Asteroids.Installers
         private void InstallStartMenuUI()
         {
             Container.BindInterfacesAndSelfTo<StartMenuViewModel>().AsSingle();
-
-            if (_startMenuView != null)
-            {
-                Container.BindInterfacesAndSelfTo<StartMenuView>().FromInstance(_startMenuView).AsSingle();
-            }
+            Container.BindInterfacesAndSelfTo<StartMenuView>().FromInstance(_startMenuView).AsSingle();
         }
 
         private void InstallGameUI()
         {
-            if (_gameUIView != null)
-            {
-                Container.BindInterfacesAndSelfTo<GameUIView>().FromInstance(_gameUIView).AsSingle();
-            }
+            Container.BindInterfacesAndSelfTo<GameUIView>().FromInstance(_gameUIView).AsSingle();
         }
     }
 }

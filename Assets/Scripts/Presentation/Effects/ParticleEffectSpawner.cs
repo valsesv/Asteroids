@@ -2,6 +2,7 @@ using UnityEngine;
 using Asteroids.Core.Entity;
 using Cysharp.Threading.Tasks;
 using Zenject;
+using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.Effects
 {
@@ -14,14 +15,14 @@ namespace Asteroids.Presentation.Effects
 
         public void Initialize()
         {
-            if (_explosionPrefab != null && _particleParent != null)
-            {
-                _explosionPool = new ObjectPool<ParticleSystem>(
-                    () => CreateParticleSystem(),
-                    _particleParent,
-                    initialSize: 10
-                );
-            }
+            Assert.IsNotNull(_explosionPrefab, "ExplosionPrefab is not assigned in ParticleEffectSpawner!");
+            Assert.IsNotNull(_particleParent, "ParticleParent is not assigned in ParticleEffectSpawner!");
+
+            _explosionPool = new ObjectPool<ParticleSystem>(
+                () => CreateParticleSystem(),
+                _particleParent,
+                initialSize: 10
+            );
         }
 
         private ParticleSystem CreateParticleSystem()
@@ -37,11 +38,6 @@ namespace Asteroids.Presentation.Effects
 
         public void SpawnExplosion(Vector2 position)
         {
-            if (_explosionPool == null)
-            {
-                return;
-            }
-
             var particleSystem = _explosionPool.Get();
             particleSystem.transform.position = new Vector3(position.x, position.y, 0f);
             particleSystem.Clear();

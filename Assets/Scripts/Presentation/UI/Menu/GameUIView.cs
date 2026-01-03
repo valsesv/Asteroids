@@ -2,14 +2,10 @@ using System;
 using UnityEngine;
 using Zenject;
 using Asteroids.Core.Entity.Components;
+using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.UI
 {
-    /// <summary>
-    /// View for managing game UI visibility (health, stats, score) and menu panel
-    /// Shows game UI when game starts, hides when game over
-    /// Shows menu panel when game over, hides when game starts
-    /// </summary>
     public class GameUIView : MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] private GameObject _gameUIPanel;
@@ -25,11 +21,12 @@ namespace Asteroids.Presentation.UI
 
         public void Initialize()
         {
-            // Subscribe to game state signals
+            Assert.IsNotNull(_gameUIPanel, "GameUIPanel is not assigned in GameUIView!");
+            Assert.IsNotNull(_menuPanel, "MenuPanel is not assigned in GameUIView!");
+
             _signalBus.Subscribe<GameStartedSignal>(OnGameStarted);
             _signalBus.Subscribe<GameOverSignal>(OnGameOver);
 
-            // Initially hide game UI and show menu (game hasn't started yet)
             SetGameUIVisible(false);
             SetMenuVisible(true);
         }
@@ -54,18 +51,12 @@ namespace Asteroids.Presentation.UI
 
         private void SetGameUIVisible(bool isVisible)
         {
-            if (_gameUIPanel != null)
-            {
-                _gameUIPanel.SetActive(isVisible);
-            }
+            _gameUIPanel.SetActive(isVisible);
         }
 
         private void SetMenuVisible(bool isVisible)
         {
-            if (_menuPanel != null)
-            {
-                _menuPanel.SetActive(isVisible);
-            }
+            _menuPanel.SetActive(isVisible);
         }
     }
 }

@@ -25,6 +25,8 @@ namespace Asteroids.Presentation.Player
 
         public void Initialize()
         {
+            Assert.IsNotNull(_invincibilityEffects, "InvincibilityEffects is not assigned in ShipPresentation!");
+
             _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
             _signalBus.Subscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
 

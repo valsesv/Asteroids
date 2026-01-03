@@ -1,16 +1,11 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using Zenject;
+using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.UI
 {
-    /// <summary>
-    /// View for start menu display (MVVM pattern)
-    /// MonoBehaviour that binds to StartMenuViewModel
-    /// Handles user interactions (clicks) - visibility is managed by GameUIView
-    /// </summary>
     public class StartMenuView : MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] private Button _startButton;
@@ -25,19 +20,13 @@ namespace Asteroids.Presentation.UI
 
         public void Initialize()
         {
-            // Setup start button
-            if (_startButton != null)
-            {
-                _startButton.onClick.AddListener(OnStartButtonClicked);
-            }
+            Assert.IsNotNull(_startButton, "StartButton is not assigned in StartMenuView!");
+            _startButton.onClick.AddListener(OnStartButtonClicked);
         }
 
         public void Dispose()
         {
-            if (_startButton != null)
-            {
-                _startButton.onClick.RemoveListener(OnStartButtonClicked);
-            }
+            _startButton.onClick.RemoveListener(OnStartButtonClicked);
         }
 
         private void OnStartButtonClicked()

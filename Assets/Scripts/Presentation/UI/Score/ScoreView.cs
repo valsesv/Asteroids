@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using TMPro;
 using Zenject;
+using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.UI
 {
@@ -24,11 +25,7 @@ namespace Asteroids.Presentation.UI
 
         public void Initialize()
         {
-            if (_scoreText == null)
-            {
-                Debug.LogError("ScoreText is not assigned in ScoreView!");
-                return;
-            }
+            Assert.IsNotNull(_scoreText, "ScoreText is not assigned in ScoreView!");
 
             // Subscribe to ViewModel changes
             _viewModel.OnScoreChanged += UpdateScoreDisplay;
@@ -47,10 +44,7 @@ namespace Asteroids.Presentation.UI
 
         private void UpdateScoreDisplay(int score)
         {
-            if (_scoreText != null)
-            {
-                _scoreText.text = string.Format(_scoreFormat, score);
-            }
+            _scoreText.text = string.Format(_scoreFormat, score);
         }
     }
 }

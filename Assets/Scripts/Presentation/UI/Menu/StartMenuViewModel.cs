@@ -5,10 +5,6 @@ using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Presentation.UI
 {
-    /// <summary>
-    /// ViewModel for start menu display (MVVM pattern)
-    /// Non-MonoBehaviour class that manages start menu state for UI
-    /// </summary>
     public class StartMenuViewModel : IInitializable, IDisposable
     {
         private readonly SignalBus _signalBus;
@@ -39,11 +35,9 @@ namespace Asteroids.Presentation.UI
 
         public void Initialize()
         {
-            // Subscribe to game state signals
             _signalBus.Subscribe<GameStartedSignal>(OnGameStarted);
             _signalBus.Subscribe<GameOverSignal>(OnGameOver);
 
-            // Initialize visibility based on current game state
             IsVisible = _gameController.CurrentState != GameController.GameState.Playing;
         }
 
@@ -53,9 +47,6 @@ namespace Asteroids.Presentation.UI
             _signalBus?.Unsubscribe<GameOverSignal>(OnGameOver);
         }
 
-        /// <summary>
-        /// Called when user clicks to start the game
-        /// </summary>
         public void OnStartClicked()
         {
             _gameController.StartGame();

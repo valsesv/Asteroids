@@ -3,6 +3,7 @@ using UnityEngine;
 using Zenject;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Enemies;
+using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.Enemies
 {
@@ -48,6 +49,13 @@ namespace Asteroids.Presentation.Enemies
 
         public void Initialize()
         {
+            Assert.IsNotNull(_asteroidParent, "AsteroidParent is not assigned in EnemySpawner!");
+            Assert.IsNotNull(_ufoParent, "UfoParent is not assigned in EnemySpawner!");
+            Assert.IsNotNull(_fragmentParent, "FragmentParent is not assigned in EnemySpawner!");
+            Assert.IsNotNull(_asteroidPrefab, "AsteroidPrefab is not assigned in EnemySpawner!");
+            Assert.IsNotNull(_ufoPrefab, "UfoPrefab is not assigned in EnemySpawner!");
+            Assert.IsNotNull(_fragmentPrefab, "FragmentPrefab is not assigned in EnemySpawner!");
+
             _lastSpawnTime = Time.time;
 
             _asteroidFactory = new EnemyPresentationFactory<AsteroidPresentation>(_container, _asteroidPrefab);

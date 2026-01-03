@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using Zenject;
 using Asteroids.Core.Player;
+using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.UI
 {
@@ -34,11 +35,7 @@ namespace Asteroids.Presentation.UI
 
         public void Initialize()
         {
-            if (_heartPrefab == null)
-            {
-                Debug.LogError("HeartPrefab is not assigned in HealthView! Please assign heart prefab in Inspector.");
-                return;
-            }
+            Assert.IsNotNull(_heartPrefab, "HeartPrefab is not assigned in HealthView!");
 
             // Subscribe to ViewModel changes
             _viewModel.OnHealthChanged += OnHealthChanged;
@@ -102,12 +99,6 @@ namespace Asteroids.Presentation.UI
         /// </summary>
         private void CreateHeart()
         {
-            if (_heartPrefab == null || _container == null)
-            {
-                Debug.LogError("Cannot create heart: HeartPrefab or Container is null!");
-                return;
-            }
-
             // Instantiate heart prefab as child of this GameObject
             Image heartInstance = _container.InstantiatePrefabForComponent<Image>(_heartPrefab, transform);
             ResetHeart(heartInstance);
