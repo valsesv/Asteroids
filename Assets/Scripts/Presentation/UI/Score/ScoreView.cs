@@ -6,10 +6,6 @@ using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.UI
 {
-    /// <summary>
-    /// View for displaying score in UI (MVVM pattern)
-    /// MonoBehaviour that binds to ScoreViewModel
-    /// </summary>
     public class ScoreView : MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] private TextMeshProUGUI _scoreText;
@@ -27,19 +23,14 @@ namespace Asteroids.Presentation.UI
         {
             Assert.IsNotNull(_scoreText, "ScoreText is not assigned in ScoreView!");
 
-            // Subscribe to ViewModel changes
             _viewModel.OnScoreChanged += UpdateScoreDisplay;
 
-            // Initialize display with current score
             UpdateScoreDisplay(_viewModel.CurrentScore);
         }
 
         public void Dispose()
         {
-            if (_viewModel != null)
-            {
-                _viewModel.OnScoreChanged -= UpdateScoreDisplay;
-            }
+            _viewModel.OnScoreChanged -= UpdateScoreDisplay;
         }
 
         private void UpdateScoreDisplay(int score)

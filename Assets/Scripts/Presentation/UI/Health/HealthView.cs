@@ -9,11 +9,6 @@ using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.UI
 {
-    /// <summary>
-    /// View for displaying player health as heart sprites (MVVM pattern)
-    /// MonoBehaviour that binds to HealthViewModel
-    /// Creates heart instances from prefab and uses Horizontal Layout Group for positioning
-    /// </summary>
     public class HealthView : MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] private Image _heartPrefab;
@@ -37,10 +32,8 @@ namespace Asteroids.Presentation.UI
         {
             Assert.IsNotNull(_heartPrefab, "HeartPrefab is not assigned in HealthView!");
 
-            // Subscribe to ViewModel changes
             _viewModel.OnHealthChanged += OnHealthChanged;
 
-            // Create all hearts based on max health from settings
             int maxHealthCount = Mathf.RoundToInt(_healthSettings.MaxHealth);
             for (int i = 0; i < maxHealthCount; i++)
             {
@@ -50,7 +43,6 @@ namespace Asteroids.Presentation.UI
 
         public void Dispose()
         {
-            // Kill all active tweens
             foreach (var tween in _activeTweens.Values)
             {
                 tween?.Kill();
@@ -69,15 +61,10 @@ namespace Asteroids.Presentation.UI
             UpdateHealthDisplay(currentHealth);
         }
 
-        /// <summary>
-        /// Update heart display based on current health
-        /// Only changes state of hearts that need to change
-        /// </summary>
         private void UpdateHealthDisplay(float currentHealth)
         {
             int healthCount = Mathf.RoundToInt(currentHealth);
 
-            // Update all hearts - only change state of those that need to change
             for (int i = 0; i < _heartImages.Count; i++)
             {
                 bool shouldBeVisible = i < healthCount;
@@ -94,12 +81,8 @@ namespace Asteroids.Presentation.UI
             }
         }
 
-        /// <summary>
-        /// Create a single heart instance from prefab
-        /// </summary>
         private void CreateHeart()
         {
-            // Instantiate heart prefab as child of this GameObject
             Image heartInstance = _container.InstantiatePrefabForComponent<Image>(_heartPrefab, transform);
             ResetHeart(heartInstance);
 
@@ -113,13 +96,11 @@ namespace Asteroids.Presentation.UI
                 return;
             }
 
-            // Kill existing tween for this heart if any
             if (_activeTweens.TryGetValue(heartImage, out var existingTween))
             {
                 existingTween?.Kill();
             }
 
-            // Create fade out tween
             var tween = DOTween.To(() => heartImage.color, x => heartImage.color = x, new Color(heartImage.color.r, heartImage.color.g, heartImage.color.b, 0f), _fadeOutDuration)
                 .SetEase(Ease.OutQuad)
                 .OnComplete(() =>
@@ -138,14 +119,12 @@ namespace Asteroids.Presentation.UI
                 return;
             }
 
-            // Kill existing tween for this heart if any
             if (_activeTweens.TryGetValue(heartImage, out var existingTween))
             {
                 existingTween?.Kill();
                 _activeTweens.Remove(heartImage);
             }
 
-            // Reset heart to full visibility and activate
             heartImage.color = new Color(1f, 1f, 1f, 1f);
             heartImage.gameObject.SetActive(true);
         }

@@ -5,10 +5,6 @@ using Asteroids.Core.Player;
 
 namespace Asteroids.Presentation.UI
 {
-    /// <summary>
-    /// ViewModel for health display (MVVM pattern)
-    /// Non-MonoBehaviour class that manages health state for UI
-    /// </summary>
     public class HealthViewModel : IInitializable, IDisposable
     {
         private readonly SignalBus _signalBus;
@@ -39,11 +35,8 @@ namespace Asteroids.Presentation.UI
 
         public void Initialize()
         {
-            // Subscribe to health changes first
             _signalBus.Subscribe<HealthChangedSignal>(OnHealthChangedSignal);
 
-            // Initialize current health from settings (starts at max health)
-            // This will trigger OnHealthChanged event so View gets initial value
             CurrentHealth = _healthSettings.MaxHealth;
         }
 

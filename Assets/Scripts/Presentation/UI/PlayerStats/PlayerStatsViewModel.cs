@@ -5,10 +5,6 @@ using Asteroids.Core.Weapons;
 
 namespace Asteroids.Presentation.UI
 {
-    /// <summary>
-    /// ViewModel for player stats display (MVVM pattern)
-    /// Non-MonoBehaviour class that manages player stats state for UI
-    /// </summary>
     public class PlayerStatsViewModel : IInitializable, IDisposable
     {
         private readonly SignalBus _signalBus;
@@ -127,12 +123,10 @@ namespace Asteroids.Presentation.UI
 
         public void Initialize()
         {
-            // Initialize laser charges from settings
             LaserMaxCharges = _laserSettings.MaxCharges;
             LaserCharges = _laserSettings.MaxCharges;
-            _laserRechargeProgress = 0f; // No need to charge initially
+            _laserRechargeProgress = 0f;
 
-            // Subscribe to all relevant signals
             _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
             _signalBus.Subscribe<PhysicsChangedSignal>(OnPhysicsChanged);
             _signalBus.Subscribe<LaserChargesChangedSignal>(OnLaserChargesChanged);

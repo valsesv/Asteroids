@@ -5,10 +5,6 @@ using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Presentation.UI
 {
-    /// <summary>
-    /// ViewModel for score display (MVVM pattern)
-    /// Non-MonoBehaviour class that manages score state for UI
-    /// </summary>
     public class ScoreViewModel : IInitializable, IDisposable
     {
         private readonly SignalBus _signalBus;
@@ -38,10 +34,8 @@ namespace Asteroids.Presentation.UI
 
         public void Initialize()
         {
-            // Subscribe to score changes
             _signalBus.Subscribe<ScoreChangedSignal>(OnScoreChangedSignal);
 
-            // Initialize with current score from service
             CurrentScore = _scoreService.CurrentScore;
         }
 
