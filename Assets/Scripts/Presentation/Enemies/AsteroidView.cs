@@ -33,9 +33,9 @@ namespace Asteroids.Presentation.Enemies
             }
         }
 
-        public override void HandleEnemyDeath()
+        public override void GetDamage()
         {
-            base.HandleEnemyDeath();
+            base.GetDamage();
 
             var asteroidComponent = Entity?.GetComponent<AsteroidComponent>();
             if (asteroidComponent == null)

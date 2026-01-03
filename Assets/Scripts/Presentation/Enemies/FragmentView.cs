@@ -33,9 +33,9 @@ namespace Asteroids.Presentation.Enemies
             movement.SetDirection(direction);
         }
 
-        public override void HandleEnemyDeath()
+        public override void GetDamage()
         {
-            base.HandleEnemyDeath();
+            base.GetDamage();
 
             _enemySpawner.ReturnEnemy(this);
         }

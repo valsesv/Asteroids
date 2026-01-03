@@ -27,9 +27,9 @@ namespace Asteroids.Presentation.Enemies
             _container.BindInstance(Entity).AsSingle();
         }
 
-        public override void HandleEnemyDeath()
+        public override void GetDamage()
         {
-            base.HandleEnemyDeath();
+            base.GetDamage();
 
             _enemySpawner.ReturnEnemy(this);
         }

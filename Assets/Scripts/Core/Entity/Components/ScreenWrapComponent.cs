@@ -13,6 +13,8 @@ namespace Asteroids.Core.Entity.Components
             _screenBounds = screenBounds;
         }
 
+        public bool IsInGameArea => _isInGameArea;
+
         public void Reset()
         {
             _isInGameArea = false;

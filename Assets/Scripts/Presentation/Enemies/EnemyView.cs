@@ -42,25 +42,24 @@ namespace Asteroids.Presentation.Enemies
             }
 
             var transformComponent = Entity.GetComponent<TransformComponent>();
-            if (transformComponent != null)
-            {
-                transformComponent.SetPosition(position);
-            }
+            transformComponent.SetPosition(position);
 
             var screenWrap = Entity.GetComponent<ScreenWrapComponent>();
-            if (screenWrap != null)
-            {
-                screenWrap.Reset();
-            }
+            screenWrap.Reset();
         }
 
-        public virtual void HandleEnemyDeath()
+        public virtual void GetDamage()
         {
             HandleInstaDeath();
         }
 
         public virtual void HandleInstaDeath()
         {
+            if (!IsEnemyInGameArea())
+            {
+                return;
+            }
+
             if (_particleEffectSpawner != null)
             {
                 _particleEffectSpawner.SpawnExplosion(transform.position);
@@ -82,21 +81,33 @@ namespace Asteroids.Presentation.Enemies
             var bulletView = collision.gameObject.GetComponent<BulletView>();
             if (bulletView != null)
             {
-                HandleEnemyDeath();
+                GetDamage();
                 return;
             }
 
             var shipView = collision.gameObject.GetComponent<ShipView>();
-            if (shipView != null)
+            if (shipView == null)
             {
-                if (_isPlayerInvincible)
-                {
-                    return;
-                }
-
-                HandleEnemyDeath();
                 return;
             }
+            if (_isPlayerInvincible)
+            {
+                return;
+            }
+
+            GetDamage();
+            return;
+        }
+
+        private bool IsEnemyInGameArea()
+        {
+            if (Entity == null)
+            {
+                return false;
+            }
+
+            var screenWrap = Entity.GetComponent<ScreenWrapComponent>();
+            return screenWrap != null && screenWrap.IsInGameArea;
         }
 
         protected virtual void OnTransformChanged(TransformChangedSignal signal)
