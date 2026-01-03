@@ -6,7 +6,6 @@ using Asteroids.Core.Enemies;
 using Asteroids.Core.Score;
 using Asteroids.Core.Weapons;
 using UnityEngine.Assertions;
-using Utils.JsonLoader;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Presentation.Player;
@@ -14,15 +13,12 @@ using Asteroids.Presentation.Enemies;
 using Asteroids.Presentation.Effects;
 using Asteroids.Presentation.UI;
 using Asteroids.Core.Game;
+using Asteroids.Infrastructure;
 
 namespace Asteroids.Installers
 {
     public class GameInstaller : MonoInstaller
     {
-        private const string PlayerSettingsFileName = "player_settings.json";
-        private const string EnemySettingsFileName = "enemy_settings.json";
-        private const string ScoreSettingsFileName = "score_settings.json";
-
         [SerializeField] private KeyboardInputSettings _inputSettings;
         [SerializeField] private ShipPresentation _shipPresentationPrefab;
         [SerializeField] private EnemySpawner _enemySpawner;
@@ -75,29 +71,18 @@ namespace Asteroids.Installers
 
         private void InstallSettings()
         {
-            var jsonLoader = new JsonLoader();
+            var settingsLoader = new GameSettingsLoader();
+            var loadedSettings = settingsLoader.LoadSettings();
 
-            var playerSettings = jsonLoader.LoadFromStreamingAssets<PlayerSettings>(PlayerSettingsFileName);
-            Assert.IsNotNull(playerSettings, "Failed to load player settings from JSON!");
-            Assert.IsNotNull(playerSettings.Movement, "Movement settings are null in player settings!");
-            Assert.IsNotNull(playerSettings.StartPosition, "Start position settings are null in player settings!");
-            Assert.IsNotNull(playerSettings.Health, "Health settings are null in player settings!");
-            Assert.IsNotNull(playerSettings.Weapon, "Weapon settings are null in player settings!");
-            Container.BindInstance(playerSettings.Movement);
-            Container.BindInstance(playerSettings.StartPosition);
-            Container.BindInstance(playerSettings.Health);
-            Container.BindInstance(playerSettings.Weapon);
-            Container.BindInstance(playerSettings.Weapon.Bullet);
-            Assert.IsNotNull(playerSettings.Weapon.Laser, "Laser settings are null in weapon settings!");
-            Container.BindInstance(playerSettings.Weapon.Laser);
+            Container.BindInstance(loadedSettings.PlayerSettings.Movement);
+            Container.BindInstance(loadedSettings.PlayerSettings.StartPosition);
+            Container.BindInstance(loadedSettings.PlayerSettings.Health);
+            Container.BindInstance(loadedSettings.PlayerSettings.Weapon);
+            Container.BindInstance(loadedSettings.PlayerSettings.Weapon.Bullet);
+            Container.BindInstance(loadedSettings.PlayerSettings.Weapon.Laser);
 
-            var enemySettings = jsonLoader.LoadFromStreamingAssets<EnemySettings>(EnemySettingsFileName);
-            Assert.IsNotNull(enemySettings, "Failed to load enemy settings from JSON!");
-            Container.BindInstance(enemySettings);
-
-            var scoreSettings = jsonLoader.LoadFromStreamingAssets<ScoreSettings>(ScoreSettingsFileName);
-            Assert.IsNotNull(scoreSettings, "Failed to load score settings from JSON!");
-            Container.BindInstance(scoreSettings);
+            Container.BindInstance(loadedSettings.EnemySettings);
+            Container.BindInstance(loadedSettings.ScoreSettings);
 
             Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle();
         }
@@ -107,45 +92,43 @@ namespace Asteroids.Installers
             Assert.IsNotNull(_inputSettings, "KeyboardInputSettings is not assigned in GameInstaller! Please assign it in Inspector or create a ScriptableObject asset via: Create > Asteroids > Settings > Keyboard Input Settings");
             Container.BindInstance(_inputSettings);
 
-            bool shouldUseMobileInput = Application.isEditor || Application.platform == RuntimePlatform.Android;
-            bool isEditor = Application.isEditor;
-
-            VirtualJoystickView joystickView = null;
-            MobileInputView mobileInputView = null;
+            var inputSetup = new InputProviderSetup();
+            var setupResult = inputSetup.Setup(_mobileInputPanelPrefab, _gameCanvas);
 
             Container.Bind<KeyboardInputProvider>().AsSingle();
 
-            if (shouldUseMobileInput && _mobileInputPanelPrefab != null && _gameCanvas != null)
+            if (setupResult.JoystickView != null)
             {
-                GameObject mobileInputInstance = Instantiate(_mobileInputPanelPrefab, _gameCanvas.transform);
-
-                joystickView = mobileInputInstance.GetComponentInChildren<VirtualJoystickView>();
-                mobileInputView = mobileInputInstance.GetComponentInChildren<MobileInputView>();
+                Container.BindInstance(setupResult.JoystickView);
             }
 
-            if (isEditor && joystickView != null && mobileInputView != null)
+            if (setupResult.MobileInputView != null)
             {
-                Container.BindInstance(joystickView);
-                Container.BindInstance(mobileInputView);
-                Container.Bind<VirtualJoystickInputProvider>().AsSingle();
+                Container.BindInstance(setupResult.MobileInputView);
+            }
 
-                Container.Bind<IInputProvider>()
-                    .To<CombinedInputProvider>()
-                    .AsSingle();
-            }
-            else if (shouldUseMobileInput && joystickView != null && mobileInputView != null)
+            switch (setupResult.ProviderType)
             {
-                Container.BindInstance(joystickView);
-                Container.BindInstance(mobileInputView);
-                Container.Bind<IInputProvider>()
-                    .To<VirtualJoystickInputProvider>()
-                    .AsSingle();
-            }
-            else
-            {
-                Container.Bind<IInputProvider>()
-                    .To<KeyboardInputProvider>()
-                    .AsSingle();
+                case InputProviderType.Combined:
+                    Container.Bind<VirtualJoystickInputProvider>().AsSingle();
+                    Container.Bind<IInputProvider>()
+                        .To<CombinedInputProvider>()
+                        .AsSingle();
+                    break;
+
+                case InputProviderType.VirtualJoystick:
+                    Container.Bind<VirtualJoystickInputProvider>().AsSingle();
+                    Container.Bind<IInputProvider>()
+                        .To<VirtualJoystickInputProvider>()
+                        .AsSingle();
+                    break;
+
+                case InputProviderType.Keyboard:
+                default:
+                    Container.Bind<IInputProvider>()
+                        .To<KeyboardInputProvider>()
+                        .AsSingle();
+                    break;
             }
         }
 
