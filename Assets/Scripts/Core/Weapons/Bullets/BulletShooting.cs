@@ -8,7 +8,7 @@ namespace Asteroids.Core.Player
 {
     public class BulletShootingLogic
     {
-        private readonly TransformComponent _transform;
+        private TransformComponent _transform;
         private readonly IInputProvider _inputProvider;
         private readonly BulletSettings _bulletSettings;
         private readonly SignalBus _signalBus;
@@ -16,15 +16,18 @@ namespace Asteroids.Core.Player
         private float _lastShotTime;
 
         public BulletShootingLogic(
-            TransformComponent transform,
             IInputProvider inputProvider,
             BulletSettings bulletSettings,
             SignalBus signalBus)
         {
-            _transform = transform;
             _inputProvider = inputProvider;
             _bulletSettings = bulletSettings;
             _signalBus = signalBus;
+        }
+
+        public void Init(TransformComponent transform)
+        {
+            _transform = transform;
         }
 
         public void TryShoot()

@@ -45,6 +45,7 @@ namespace Asteroids.Installers
             InstallSettings();
             InstallInput();
             InstallCommonServices();
+            InstallWeaponShooting();
             InstallPlayerEntity();
             InstallEnemySpawner();
             InstallParticleEffectSpawner();
@@ -162,6 +163,12 @@ namespace Asteroids.Installers
             Container.BindInterfacesAndSelfTo<ProjectileSpawner>().FromInstance(_projectileSpawner).AsSingle();
         }
 
+        private void InstallWeaponShooting()
+        {
+            Container.Bind<BulletShootingLogic>().AsSingle();
+            Container.Bind<LaserShootingLogic>().AsSingle();
+        }
+
         private void InstallPlayerEntity()
         {
             Container.Bind<GameEntity>()
@@ -172,7 +179,8 @@ namespace Asteroids.Installers
                     ctx.Container.Resolve<WeaponSettings>(),
                     ctx.Container.Resolve<SignalBus>(),
                     ctx.Container.Resolve<IInputProvider>(),
-                    ctx.Container.Resolve<ScreenBounds>()))
+                    ctx.Container.Resolve<ScreenBounds>(),
+                    ctx.Container))
                 .AsSingle();
         }
 

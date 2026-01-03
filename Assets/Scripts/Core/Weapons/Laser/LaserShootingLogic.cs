@@ -7,21 +7,23 @@ namespace Asteroids.Core.Player
 {
     public class LaserShootingLogic
     {
-        private readonly TransformComponent _transform;
+        private TransformComponent _transform;
+        private LaserComponent _laserComponent;
         private readonly IInputProvider _inputProvider;
-        private readonly LaserComponent _laserComponent;
         private readonly SignalBus _signalBus;
 
         public LaserShootingLogic(
-            TransformComponent transform,
             IInputProvider inputProvider,
-            LaserComponent laserComponent,
             SignalBus signalBus)
         {
-            _transform = transform;
             _inputProvider = inputProvider;
-            _laserComponent = laserComponent;
             _signalBus = signalBus;
+        }
+
+        public void Init(TransformComponent transform, LaserComponent laserComponent)
+        {
+            _transform = transform;
+            _laserComponent = laserComponent;
         }
 
         public void TryShoot()
