@@ -53,12 +53,12 @@ namespace Asteroids.Presentation.Player
             bulletLifetime?.Reset();
         }
 
-        private void OnBulletDestroyed(BulletDestroyedSignal signal)
+        private void OnBulletDestroyed(BulletDestroyedSignal _)
         {
             _projectileSpawner.ReturnBullet(this);
         }
 
-        private void OnCollisionEnter2D(Collision2D _collision)
+        private void OnCollisionEnter2D(Collision2D _)
         {
             OnBulletDestroyed(null);
         }

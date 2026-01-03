@@ -81,7 +81,7 @@ namespace Asteroids.Infrastructure.Ads
             }
         }
 
-        private void OnGameOver(GameOverSignal signal)
+        private void OnGameOver(GameOverSignal _)
         {
             ShowAd();
         }
@@ -121,26 +121,26 @@ namespace Asteroids.Infrastructure.Ads
             _currentInterstitial.OnAdFailedToShow += HandleAdFailedToShow;
         }
 
-        private void HandleAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+        private void HandleAdFailedToLoad(object _, AdFailedToLoadEventArgs args)
         {
             Debug.LogWarning($"[AdService] Failed to load ad: {args.Message}");
             _isLoading = false;
             _isAdReady = false;
         }
 
-        private void HandleAdShown(object sender, EventArgs args)
+        private void HandleAdShown(object _, EventArgs __)
         {
             Debug.Log("[AdService] Ad shown");
         }
 
-        private void HandleAdDismissed(object sender, EventArgs args)
+        private void HandleAdDismissed(object _, EventArgs __)
         {
             _isAdReady = false;
             CleanupAd();
             LoadAd();
         }
 
-        private void HandleAdFailedToShow(object sender, AdFailureEventArgs args)
+        private void HandleAdFailedToShow(object _, AdFailureEventArgs args)
         {
             Debug.LogWarning($"[AdService] Failed to show ad: {args.Message}");
             _isAdReady = false;

@@ -40,13 +40,13 @@ namespace Asteroids.Presentation.UI
             _signalBus?.Unsubscribe<GameOverSignal>(OnGameOver);
         }
 
-        private void OnGameStarted(GameStartedSignal signal)
+        private void OnGameStarted(GameStartedSignal _)
         {
             SetGameUIVisible(true);
             SetMenuVisible(false);
         }
 
-        private void OnGameOver(GameOverSignal signal)
+        private void OnGameOver(GameOverSignal _)
         {
             SetGameUIVisible(false);
             SetMenuVisible(true);

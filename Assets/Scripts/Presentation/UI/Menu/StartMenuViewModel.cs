@@ -61,12 +61,12 @@ namespace Asteroids.Presentation.UI
             _gameController.StartGame();
         }
 
-        private void OnGameStarted(GameStartedSignal signal)
+        private void OnGameStarted(GameStartedSignal _)
         {
             IsVisible = false;
         }
 
-        private void OnGameOver(GameOverSignal signal)
+        private void OnGameOver(GameOverSignal _)
         {
             IsVisible = true;
         }

@@ -88,7 +88,7 @@ namespace Asteroids.Core.Score
             _signalBus.Fire(scoreChangedSignal);
         }
 
-        private void OnGameStarted(GameStartedSignal signal)
+        private void OnGameStarted(GameStartedSignal _)
         {
             ResetScore();
         }

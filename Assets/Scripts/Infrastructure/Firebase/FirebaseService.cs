@@ -46,7 +46,7 @@ namespace Asteroids.Infrastructure.Firebase
             }
         }
 
-        private void OnGameStarted(GameStartedSignal signal)
+        private void OnGameStarted(GameStartedSignal _)
         {
             if (_isInitialized)
             {

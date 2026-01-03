@@ -75,7 +75,7 @@ namespace Asteroids.Presentation.Player
             }
         }
 
-        private void OnLaserDeactivated(LaserDeactivatedSignal signal)
+        private void OnLaserDeactivated(LaserDeactivatedSignal _)
         {
             Deactivate();
         }

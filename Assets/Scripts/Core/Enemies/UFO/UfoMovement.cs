@@ -46,13 +46,13 @@ namespace Asteroids.Core.Enemies
             _physics.ClampSpeed(_speed);
         }
 
-        private void OnGameOver(GameOverSignal signal)
+        private void OnGameOver(GameOverSignal _)
         {
             _isGameActive = false;
             _physics.SetVelocity(Vector2.zero);
         }
 
-        private void OnGameStarted(GameStartedSignal signal)
+        private void OnGameStarted(GameStartedSignal _)
         {
             _isGameActive = true;
         }
