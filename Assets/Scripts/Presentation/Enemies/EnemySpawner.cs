@@ -12,7 +12,7 @@ namespace Asteroids.Presentation.Enemies
     public class EnemySpawner : MonoBehaviour, IInitializable, ITickable
     {
         public List<EnemyPresentation> ActiveEnemies => _activeEnemies;
-        public event Action<GameEntity> OnEnemyDestroyed;
+        public event Action<EnemyType> OnEnemyDestroyed;
 
         [SerializeField] private Transform _asteroidParent;
         [SerializeField] private Transform _ufoParent;
@@ -34,11 +34,6 @@ namespace Asteroids.Presentation.Enemies
         private List<EnemyPresentation> _activeEnemies = new List<EnemyPresentation>();
         private float _lastSpawnTime;
         private bool _isSpawningEnabled = false;
-
-        public void SetSpawningEnabled(bool enabled)
-        {
-            _isSpawningEnabled = enabled;
-        }
 
         [Inject]
         public void Construct(ScreenBounds screenBounds, DiContainer container, EnemySettings enemySettings)
@@ -87,6 +82,53 @@ namespace Asteroids.Presentation.Enemies
             }
         }
 
+        public void SetSpawningEnabled(bool enabled)
+        {
+            _isSpawningEnabled = enabled;
+        }
+
+        public void DestroyEnemy(EnemyPresentation enemy)
+        {
+            ReturnEnemy(enemy);
+            var enemyType = enemy.Entity.GetComponent<EnemyComponent>().Type;
+            OnEnemyDestroyed?.Invoke(enemyType);
+        }
+
+        public void ClearAllEnemies()
+        {
+            var enemiesToReturn = new List<EnemyPresentation>(_activeEnemies);
+
+            foreach (var enemy in enemiesToReturn)
+            {
+                ReturnEnemy(enemy);
+            }
+        }
+
+        public void FragmentAsteroid(AsteroidPresentation originalAsteroid, Vector2 position, Vector2 originalVelocity, AsteroidComponent asteroidComponent)
+        {
+            if (originalAsteroid == null || asteroidComponent == null)
+            {
+                return;
+            }
+
+            int fragmentCount = _enemySettings.AsteroidFragmentCount;
+
+            for (int i = 0; i < fragmentCount; i++)
+            {
+                var fragment = _fragmentPool.Get();
+
+                fragment.SetSpawnPosition(position);
+
+                float angleOffset = (i - fragmentCount / 2f + 0.5f) * 45f * Mathf.Deg2Rad;
+                Vector2 backwardDirection = -originalVelocity.normalized;
+                Vector2 fragmentDirection = RotateVector(backwardDirection, angleOffset);
+
+                fragment.SetDirection(fragmentDirection);
+
+                _activeEnemies.Add(fragment);
+            }
+        }
+
         private void SpawnRandomEnemy()
         {
             Vector2 spawnPosition = GetRandomSpawnPosition();
@@ -118,23 +160,11 @@ namespace Asteroids.Presentation.Enemies
             _activeEnemies.Add(enemy);
         }
 
-        private Vector2 GetRandomPointInsideGameArea()
-        {
-            float x = Random.Range(_screenBounds.Left, _screenBounds.Right);
-            float y = Random.Range(_screenBounds.Bottom, _screenBounds.Top);
-            return new Vector2(x, y);
-        }
-
-        public void ReturnEnemy(EnemyPresentation enemy)
+        private void ReturnEnemy(EnemyPresentation enemy)
         {
             if (enemy == null)
             {
                 return;
-            }
-
-            if (enemy.Entity != null)
-            {
-                OnEnemyDestroyed?.Invoke(enemy.Entity);
             }
 
             _activeEnemies.Remove(enemy);
@@ -153,41 +183,41 @@ namespace Asteroids.Presentation.Enemies
             }
         }
 
-        public void ClearAllEnemies()
+        private Vector2 GetRandomSpawnPosition()
         {
-            var enemiesToReturn = new List<EnemyPresentation>(_activeEnemies);
+            int side = Random.Range(0, 4);
+            float x, y;
 
-            foreach (var enemy in enemiesToReturn)
+            float safeDistance = _enemySettings.SpawnDistance;
+
+            switch (side)
             {
-                ReturnEnemy(enemy);
+                case 0:
+                    x = Random.Range(_screenBounds.Left - safeDistance, _screenBounds.Right + safeDistance);
+                    y = _screenBounds.Top + safeDistance;
+                    break;
+                case 1:
+                    x = Random.Range(_screenBounds.Left - safeDistance, _screenBounds.Right + safeDistance);
+                    y = _screenBounds.Bottom - safeDistance;
+                    break;
+                case 2:
+                    x = _screenBounds.Left - safeDistance;
+                    y = Random.Range(_screenBounds.Bottom - safeDistance, _screenBounds.Top + safeDistance);
+                    break;
+                default:
+                    x = _screenBounds.Right + safeDistance;
+                    y = Random.Range(_screenBounds.Bottom - safeDistance, _screenBounds.Top + safeDistance);
+                    break;
             }
+
+            return new Vector2(x, y);
         }
 
-        public void FragmentAsteroid(AsteroidPresentation originalAsteroid, Vector2 position, Vector2 originalVelocity, AsteroidComponent asteroidComponent)
+        private Vector2 GetRandomPointInsideGameArea()
         {
-            if (originalAsteroid == null || asteroidComponent == null)
-            {
-                return;
-            }
-
-            ReturnEnemy(originalAsteroid);
-
-            int fragmentCount = _enemySettings.AsteroidFragmentCount;
-
-            for (int i = 0; i < fragmentCount; i++)
-            {
-                var fragment = _fragmentPool.Get();
-
-                fragment.SetSpawnPosition(position);
-
-                float angleOffset = (i - fragmentCount / 2f + 0.5f) * 45f * Mathf.Deg2Rad;
-                Vector2 backwardDirection = -originalVelocity.normalized;
-                Vector2 fragmentDirection = RotateVector(backwardDirection, angleOffset);
-
-                fragment.SetDirection(fragmentDirection);
-
-                _activeEnemies.Add(fragment);
-            }
+            float x = Random.Range(_screenBounds.Left, _screenBounds.Right);
+            float y = Random.Range(_screenBounds.Bottom, _screenBounds.Top);
+            return new Vector2(x, y);
         }
 
         private Vector2 RotateVector(Vector2 vector, float angle)
@@ -198,36 +228,6 @@ namespace Asteroids.Presentation.Enemies
                 vector.x * cos - vector.y * sin,
                 vector.x * sin + vector.y * cos
             );
-        }
-
-        private Vector2 GetRandomSpawnPosition()
-        {
-            int side = Random.Range(0, 4);
-            float x, y;
-
-            float safeDistance = _enemySettings.SpawnDistance;
-
-            switch (side)
-            {
-                case 0: // Top - spawn above screen
-                    x = Random.Range(_screenBounds.Left - safeDistance, _screenBounds.Right + safeDistance);
-                    y = _screenBounds.Top + safeDistance;
-                    break;
-                case 1: // Bottom - spawn below screen
-                    x = Random.Range(_screenBounds.Left - safeDistance, _screenBounds.Right + safeDistance);
-                    y = _screenBounds.Bottom - safeDistance;
-                    break;
-                case 2: // Left - spawn to the left of screen
-                    x = _screenBounds.Left - safeDistance;
-                    y = Random.Range(_screenBounds.Bottom - safeDistance, _screenBounds.Top + safeDistance);
-                    break;
-                default: // Right - spawn to the right of screen
-                    x = _screenBounds.Right + safeDistance;
-                    y = Random.Range(_screenBounds.Bottom - safeDistance, _screenBounds.Top + safeDistance);
-                    break;
-            }
-
-            return new Vector2(x, y);
         }
     }
 }

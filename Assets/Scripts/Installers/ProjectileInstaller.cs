@@ -5,7 +5,7 @@ using Asteroids.Core.Entity.Components;
 using UnityEngine.Assertions;
 
 namespace Asteroids.Installers
-{       
+{
     public class ProjectileInstaller : MonoInstaller
     {
         [SerializeField] private BulletPresentation _bulletPresentationPrefab;

@@ -28,27 +28,16 @@ namespace Asteroids.Presentation.Enemies
 
         private void LateUpdate()
         {
-            if (_transformComponent != null)
-            {
-                transform.position = new Vector3(_transformComponent.Position.x, _transformComponent.Position.y, 0f);
-                transform.rotation = Quaternion.Euler(0f, 0f, _transformComponent.Rotation);
-            }
+            transform.position = new Vector3(_transformComponent.Position.x, _transformComponent.Position.y, 0f);
+            transform.rotation = Quaternion.Euler(0f, 0f, _transformComponent.Rotation);
         }
 
         public void SetSpawnPosition(Vector2 position)
         {
             transform.position = new Vector3(position.x, position.y, 0f);
 
-            if (Entity == null)
-            {
-                return;
-            }
-
-            var transformComponent = Entity.GetComponent<TransformComponent>();
-            transformComponent.SetPosition(position);
-
-            var screenWrap = Entity.GetComponent<ScreenWrapComponent>();
-            screenWrap.Reset();
+            _transformComponent.SetPosition(position);
+            _screenWrapComponent.Reset();
         }
 
         public virtual void GetDamage()
@@ -64,7 +53,7 @@ namespace Asteroids.Presentation.Enemies
             }
 
             _particleEffectSpawner.SpawnExplosion(transform.position);
-            _enemySpawner.ReturnEnemy(this);
+            _enemySpawner.DestroyEnemy(this);
         }
 
         protected virtual void OnCollisionEnter2D(Collision2D collision)

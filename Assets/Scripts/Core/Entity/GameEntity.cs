@@ -25,12 +25,34 @@ namespace Asteroids.Core.Entity
             {
                 return component as T;
             }
+
+            foreach (var comp in _components.Values)
+            {
+                if (comp is T result)
+                {
+                    return result;
+                }
+            }
+
             return null;
         }
 
         public bool HasComponent<T>() where T : class, IComponent
         {
-            return _components.ContainsKey(typeof(T));
+            if (_components.ContainsKey(typeof(T)))
+            {
+                return true;
+            }
+
+            foreach (var component in _components.Values)
+            {
+                if (component is T)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void RemoveComponent<T>() where T : class, IComponent

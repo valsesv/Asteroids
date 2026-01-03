@@ -10,7 +10,6 @@ namespace Asteroids.Core.Score
 {
     public class ScoreService : IInitializable, IDisposable
     {
-        public int CurrentScore => _currentScore;
         public event Action<int> OnScoreChanged;
 
         private readonly ScoreSettings _settings;
@@ -18,7 +17,7 @@ namespace Asteroids.Core.Score
         private readonly EnemySpawner _enemySpawner;
 
         private Dictionary<EnemyType, int> _enemyRewards;
-        private int _currentScore;
+        public int CurrentScore { get; private set; }
 
         public ScoreService(ScoreSettings settings, SignalBus signalBus, EnemySpawner enemySpawner)
         {
@@ -30,39 +29,22 @@ namespace Asteroids.Core.Score
         public void Initialize()
         {
             InitializeRewards();
-            _currentScore = 0;
+            CurrentScore = 0;
             _enemySpawner.OnEnemyDestroyed += OnEnemyDestroyed;
             _signalBus.Subscribe<GameStartedSignal>(OnGameStarted);
         }
 
         public void Dispose()
         {
-            if (_enemySpawner != null)
-            {
-                _enemySpawner.OnEnemyDestroyed -= OnEnemyDestroyed;
-            }
+            _enemySpawner.OnEnemyDestroyed -= OnEnemyDestroyed;
             _signalBus?.Unsubscribe<GameStartedSignal>(OnGameStarted);
         }
 
-        private void OnEnemyDestroyed(GameEntity entity)
+        private void OnEnemyDestroyed(EnemyType enemyType)
         {
-            if (entity == null)
-            {
-                return;
-            }
+            int reward = GetReward(enemyType);
 
-            var enemyComponent = entity.GetComponent<EnemyComponent>();
-            if (enemyComponent == null)
-            {
-                return;
-            }
-
-            int reward = GetReward(enemyComponent.Type);
-
-            if (reward > 0)
-            {
-                AddScore(reward);
-            }
+            AddScore(reward);
         }
 
         private void InitializeRewards()
@@ -86,8 +68,8 @@ namespace Asteroids.Core.Score
 
         private void AddScore(int points)
         {
-            _currentScore += points;
-            OnScoreChanged?.Invoke(_currentScore);
+            CurrentScore += points;
+            OnScoreChanged?.Invoke(CurrentScore);
         }
 
         private void OnGameStarted(GameStartedSignal _)
@@ -97,8 +79,8 @@ namespace Asteroids.Core.Score
 
         public void ResetScore()
         {
-            _currentScore = 0;
-            OnScoreChanged?.Invoke(_currentScore);
+            CurrentScore = 0;
+            OnScoreChanged?.Invoke(CurrentScore);
         }
     }
 }
