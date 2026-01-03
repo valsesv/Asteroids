@@ -15,7 +15,7 @@ namespace Asteroids.Core.Player
             entity.AddComponent(bulletComponent);
 
             var transform = entity.GetComponent<TransformComponent>();
-            var physicsComponent = new PhysicsComponent(transform, signalBus, mass: 0.1f, frictionCoefficient: 1f);
+            var physicsComponent = new PhysicsComponent(transform, mass: 0.1f, frictionCoefficient: 1f);
             entity.AddComponent(physicsComponent);
 
             var movement = new BulletMovement(physicsComponent, speed);

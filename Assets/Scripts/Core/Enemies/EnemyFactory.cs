@@ -20,7 +20,7 @@ namespace Asteroids.Core.Enemies
             entity.AddComponent(enemyComponent);
 
             var transform = entity.GetComponent<TransformComponent>();
-            var physicsComponent = new PhysicsComponent(transform, signalBus, mass: 1f, frictionCoefficient: 1f);
+            var physicsComponent = new PhysicsComponent(transform, mass: 1f, frictionCoefficient: 1f);
             entity.AddComponent(physicsComponent);
 
             var transformComponent = entity.GetComponent<TransformComponent>();

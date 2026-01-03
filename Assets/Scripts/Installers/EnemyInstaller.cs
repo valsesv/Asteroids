@@ -24,8 +24,6 @@ namespace Asteroids.Installers
 
         private void InstallSignals()
         {
-            Container.DeclareSignal<TransformChangedSignal>();
-            Container.DeclareSignal<PhysicsChangedSignal>();
         }
 
         private void InstallEnemyView()

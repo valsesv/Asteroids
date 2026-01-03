@@ -5,6 +5,7 @@ using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Presentation.Player;
 using Asteroids.Presentation.Effects;
+using Asteroids.Core.Player;
 
 namespace Asteroids.Presentation.Enemies
 {
@@ -20,16 +21,32 @@ namespace Asteroids.Presentation.Enemies
 
         private bool _isPlayerInvincible;
 
+        private TransformComponent _transformComponent;
+        private GameEntity _playerEntity;
+
         public virtual void Initialize()
         {
-            _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
+            _transformComponent = Entity?.GetComponent<TransformComponent>();
             _signalBus.Subscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
         }
 
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
             _signalBus?.Unsubscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
+        }
+
+        public void SetPlayerEntity(GameEntity playerEntity)
+        {
+            _playerEntity = playerEntity;
+        }
+
+        private void LateUpdate()
+        {
+            if (_transformComponent != null)
+            {
+                transform.position = new Vector3(_transformComponent.Position.x, _transformComponent.Position.y, 0f);
+                transform.rotation = Quaternion.Euler(0f, 0f, _transformComponent.Rotation);
+            }
         }
 
         public void SetSpawnPosition(Vector2 position)
@@ -110,11 +127,6 @@ namespace Asteroids.Presentation.Enemies
             return screenWrap != null && screenWrap.IsInGameArea;
         }
 
-        protected virtual void OnTransformChanged(TransformChangedSignal signal)
-        {
-            transform.position = new Vector3(signal.X, signal.Y, 0f);
-            transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
-        }
 
         protected virtual void RegisterTickableComponents()
         {
@@ -127,6 +139,18 @@ namespace Asteroids.Presentation.Enemies
         private void OnInvincibilityChanged(InvincibilityChangedSignal signal)
         {
             _isPlayerInvincible = signal.IsInvincible;
+        }
+
+        private void Update()
+        {
+            if (_playerEntity != null)
+            {
+                var damageHandler = _playerEntity.GetComponent<DamageHandler>();
+                if (damageHandler != null)
+                {
+                    _isPlayerInvincible = damageHandler.IsInvincible;
+                }
+            }
         }
     }
 }

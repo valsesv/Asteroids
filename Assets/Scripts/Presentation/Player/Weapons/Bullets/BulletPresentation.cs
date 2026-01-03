@@ -28,15 +28,25 @@ namespace Asteroids.Presentation.Player
             RegisterTickableComponents();
         }
 
+        private TransformComponent _transformComponent;
+
         public void Initialize()
         {
-            _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
+            _transformComponent = Entity?.GetComponent<TransformComponent>();
             _signalBus.Subscribe<BulletDestroyedSignal>(OnBulletDestroyed);
         }
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
             _signalBus?.Unsubscribe<BulletDestroyedSignal>(OnBulletDestroyed);
+        }
+
+        private void LateUpdate()
+        {
+            if (_transformComponent != null)
+            {
+                transform.position = new Vector3(_transformComponent.Position.x, _transformComponent.Position.y, 0f);
+                transform.rotation = Quaternion.Euler(0f, 0f, _transformComponent.Rotation);
+            }
         }
 
         public void SetSpawnParameters(Vector2 position, Vector2 direction)
@@ -63,11 +73,6 @@ namespace Asteroids.Presentation.Player
             OnBulletDestroyed(null);
         }
 
-        private void OnTransformChanged(TransformChangedSignal signal)
-        {
-            transform.position = new Vector3(signal.X, signal.Y, 0f);
-            transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
-        }
 
         private void RegisterTickableComponents()
         {

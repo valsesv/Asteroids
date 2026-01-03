@@ -24,7 +24,7 @@ namespace Asteroids.Core.Player
             entity.AddComponent(shipComponent);
 
             var transform = entity.GetComponent<TransformComponent>();
-            var physicsComponent = new PhysicsComponent(transform, signalBus, frictionCoefficient: movementSettings.Friction);
+            var physicsComponent = new PhysicsComponent(transform, frictionCoefficient: movementSettings.Friction);
             entity.AddComponent(physicsComponent);
 
             var shipMovement = new ShipMovement(entity, movementSettings, inputProvider, physicsComponent, signalBus);
@@ -39,7 +39,7 @@ namespace Asteroids.Core.Player
             var screenWrap = new ScreenWrapComponent(transform, screenBounds);
             entity.AddComponent(screenWrap);
 
-            var laserComponent = new LaserComponent(weaponSettings.Laser, signalBus);
+            var laserComponent = new LaserComponent(weaponSettings.Laser);
             entity.AddComponent(laserComponent);
 
             var weaponShooting = container.Instantiate<WeaponShooting>(new object[] { entity });

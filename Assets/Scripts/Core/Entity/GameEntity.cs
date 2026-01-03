@@ -12,7 +12,7 @@ namespace Asteroids.Core.Entity
 
         public GameEntity(Vector2 position = default, float rotation = 0f, SignalBus signalBus = null)
         {
-            AddComponent(new TransformComponent(position, rotation, signalBus));
+            AddComponent(new TransformComponent(position, rotation));
         }
 
         public void AddComponent<T>(T component) where T : class, IComponent

@@ -17,6 +17,10 @@ namespace Asteroids.Presentation.Player
 
         [Inject] private SignalBus _signalBus;
 
+        private TransformComponent _transformComponent;
+        private DamageHandler _damageHandler;
+        private bool _lastInvincibilityState;
+
         [Inject]
         public void Construct(GameEntity entity)
         {
@@ -27,7 +31,10 @@ namespace Asteroids.Presentation.Player
         {
             Assert.IsNotNull(_invincibilityEffects, "InvincibilityEffects is not assigned in ShipPresentation!");
 
-            _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
+            _transformComponent = Entity?.GetComponent<TransformComponent>();
+            _damageHandler = Entity?.GetComponent<DamageHandler>();
+            _lastInvincibilityState = _damageHandler?.IsInvincible ?? false;
+
             _signalBus.Subscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
 
             _invincibilityEffects.Initialize();
@@ -35,10 +42,18 @@ namespace Asteroids.Presentation.Player
 
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
             _signalBus?.Unsubscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
 
             _invincibilityEffects?.Dispose();
+        }
+
+        private void LateUpdate()
+        {
+            if (_transformComponent != null)
+            {
+                transform.position = new Vector3(_transformComponent.Position.x, _transformComponent.Position.y, 0f);
+                transform.rotation = Quaternion.Euler(0f, 0f, _transformComponent.Rotation);
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -84,10 +99,24 @@ namespace Asteroids.Presentation.Player
             }
         }
 
-        private void OnTransformChanged(TransformChangedSignal signal)
+        private void Update()
         {
-            transform.position = new Vector3(signal.X, signal.Y, 0f);
-            transform.rotation = Quaternion.Euler(0f, 0f, signal.Rotation);
+            if (_damageHandler != null)
+            {
+                bool currentInvincibility = _damageHandler.IsInvincible;
+                if (currentInvincibility != _lastInvincibilityState)
+                {
+                    _lastInvincibilityState = currentInvincibility;
+                    if (currentInvincibility)
+                    {
+                        _invincibilityEffects.StartEffects();
+                    }
+                    else
+                    {
+                        _invincibilityEffects.StopEffects();
+                    }
+                }
+            }
         }
     }
 }

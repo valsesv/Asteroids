@@ -1,14 +1,21 @@
 using System;
+using UnityEngine;
 using Zenject;
+using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
+using Asteroids.Core.Player;
 using Asteroids.Core.Weapons;
 
 namespace Asteroids.Presentation.UI
 {
-    public class PlayerStatsViewModel : IInitializable, IDisposable
+    public class PlayerStatsViewModel : IInitializable, IDisposable, ITickable
     {
-        private readonly SignalBus _signalBus;
+        private readonly GameEntity _playerEntity;
         private readonly LaserSettings _laserSettings;
+
+        private TransformComponent _transformComponent;
+        private PhysicsComponent _physicsComponent;
+        private LaserComponent _laserComponent;
 
         private float _positionX;
         private float _positionY;
@@ -115,48 +122,83 @@ namespace Asteroids.Presentation.UI
 
         public event Action OnStatsChanged;
 
-        public PlayerStatsViewModel(SignalBus signalBus, LaserSettings laserSettings)
+        public PlayerStatsViewModel(GameEntity playerEntity, LaserSettings laserSettings)
         {
-            _signalBus = signalBus;
+            _playerEntity = playerEntity;
             _laserSettings = laserSettings;
         }
 
         public void Initialize()
         {
+            _transformComponent = _playerEntity?.GetComponent<TransformComponent>();
+            _physicsComponent = _playerEntity?.GetComponent<PhysicsComponent>();
+            _laserComponent = _playerEntity?.GetComponent<LaserComponent>();
+
             LaserMaxCharges = _laserSettings.MaxCharges;
             LaserCharges = _laserSettings.MaxCharges;
             _laserRechargeProgress = 0f;
-
-            _signalBus.Subscribe<TransformChangedSignal>(OnTransformChanged);
-            _signalBus.Subscribe<PhysicsChangedSignal>(OnPhysicsChanged);
-            _signalBus.Subscribe<LaserChargesChangedSignal>(OnLaserChargesChanged);
         }
 
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<TransformChangedSignal>(OnTransformChanged);
-            _signalBus?.Unsubscribe<PhysicsChangedSignal>(OnPhysicsChanged);
-            _signalBus?.Unsubscribe<LaserChargesChangedSignal>(OnLaserChargesChanged);
         }
 
-        private void OnTransformChanged(TransformChangedSignal signal)
+        public void Tick()
         {
-            PositionX = signal.X;
-            PositionY = signal.Y;
-            Rotation = signal.Rotation;
-        }
+            bool changed = false;
 
-        private void OnPhysicsChanged(PhysicsChangedSignal signal)
-        {
-            Speed = signal.Speed;
-        }
+            if (_transformComponent != null)
+            {
+                if (Mathf.Abs(_positionX - _transformComponent.Position.x) > 0.01f)
+                {
+                    PositionX = _transformComponent.Position.x;
+                    changed = true;
+                }
+                if (Mathf.Abs(_positionY - _transformComponent.Position.y) > 0.01f)
+                {
+                    PositionY = _transformComponent.Position.y;
+                    changed = true;
+                }
+                if (Mathf.Abs(_rotation - _transformComponent.Rotation) > 0.1f)
+                {
+                    Rotation = _transformComponent.Rotation;
+                    changed = true;
+                }
+            }
 
-        private void OnLaserChargesChanged(LaserChargesChangedSignal signal)
-        {
-            LaserCharges = signal.CurrentCharges;
-            LaserMaxCharges = signal.MaxCharges;
-            _laserRechargeProgress = signal.RechargeProgress;
-            OnStatsChanged?.Invoke();
+            if (_physicsComponent != null)
+            {
+                float currentSpeed = _physicsComponent.Velocity.magnitude;
+                if (Mathf.Abs(_speed - currentSpeed) > 0.01f)
+                {
+                    Speed = currentSpeed;
+                    changed = true;
+                }
+            }
+
+            if (_laserComponent != null)
+            {
+                if (_laserCharges != _laserComponent.CurrentCharges)
+                {
+                    LaserCharges = _laserComponent.CurrentCharges;
+                    changed = true;
+                }
+                if (_laserMaxCharges != _laserComponent.MaxCharges)
+                {
+                    LaserMaxCharges = _laserComponent.MaxCharges;
+                    changed = true;
+                }
+                if (Mathf.Abs(_laserRechargeProgress - _laserComponent.RechargeProgress) > 0.01f)
+                {
+                    _laserRechargeProgress = _laserComponent.RechargeProgress;
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                OnStatsChanged?.Invoke();
+            }
         }
     }
 }
