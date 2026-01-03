@@ -5,7 +5,7 @@ namespace Asteroids.Core.Player
     public class ShipComponent : IComponent
     {
         private GameEntity _entity;
-        private bool _canControl = true;
+        private bool _canControl;
 
         public bool CanControl
         {
@@ -31,7 +31,6 @@ namespace Asteroids.Core.Player
         public ShipComponent(GameEntity entity)
         {
             _entity = entity;
-            CanControl = true;
         }
     }
 }

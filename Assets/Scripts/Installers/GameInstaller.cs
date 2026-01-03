@@ -96,7 +96,6 @@ namespace Asteroids.Installers
 
             var scoreSettings = jsonLoader.LoadFromStreamingAssets<ScoreSettings>(ScoreSettingsFileName);
             Assert.IsNotNull(scoreSettings, "Failed to load score settings from JSON!");
-            scoreSettings.InitializeRewards();
             Container.BindInstance(scoreSettings);
 
             Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle();

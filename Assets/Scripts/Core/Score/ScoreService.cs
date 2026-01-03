@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Zenject;
 using Asteroids.Core.Enemies;
 using Asteroids.Core.Entity.Components;
@@ -10,6 +11,7 @@ namespace Asteroids.Core.Score
         private readonly ScoreSettings _settings;
         private readonly SignalBus _signalBus;
 
+        private Dictionary<EnemyType, int> _enemyRewards;
         private int _currentScore;
 
         public int CurrentScore => _currentScore;
@@ -22,6 +24,7 @@ namespace Asteroids.Core.Score
 
         public void Initialize()
         {
+            InitializeRewards();
             _currentScore = 0;
             _signalBus.Subscribe<EnemyDestroyedSignal>(OnEnemyDestroyed);
             _signalBus.Subscribe<GameStartedSignal>(OnGameStarted);
@@ -46,12 +49,31 @@ namespace Asteroids.Core.Score
                 return;
             }
 
-            int reward = _settings.GetReward(enemyComponent.Type);
+            int reward = GetReward(enemyComponent.Type);
 
             if (reward > 0)
             {
                 AddScore(reward);
             }
+        }
+
+        private void InitializeRewards()
+        {
+            _enemyRewards = new Dictionary<EnemyType, int>
+            {
+                [EnemyType.Asteroid] = _settings.AsteroidReward,
+                [EnemyType.Ufo] = _settings.UfoReward,
+                [EnemyType.Fragment] = _settings.FragmentReward
+            };
+        }
+
+        private int GetReward(EnemyType enemyType)
+        {
+            if (_enemyRewards.TryGetValue(enemyType, out int reward))
+            {
+                return reward;
+            }
+            return 0;
         }
 
         private void AddScore(int points)
