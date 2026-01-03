@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using Asteroids.Core.Entity.Components;
-using Zenject;
 using Asteroids.Core.Entity;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -12,18 +11,16 @@ namespace Asteroids.Core.Player
         private readonly HealthComponent _healthComponent;
         private readonly ShipComponent _shipComponent;
         private readonly GameEntity _entity;
-        private readonly SignalBus _signalBus;
         private readonly float _invincibilityDuration;
         private readonly float _bounceForce;
 
         public bool IsInvincible { get; private set; }
 
-        public DamageHandler(HealthComponent healthComponent, GameEntity entity, SignalBus signalBus, float invincibilityDuration, float bounceForce)
+        public DamageHandler(HealthComponent healthComponent, GameEntity entity, float invincibilityDuration, float bounceForce)
         {
             _healthComponent = healthComponent;
             _shipComponent = entity.GetComponent<ShipComponent>();
             _entity = entity;
-            _signalBus = signalBus;
             _invincibilityDuration = invincibilityDuration;
             _bounceForce = bounceForce;
         }

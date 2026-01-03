@@ -1,5 +1,4 @@
 using UnityEngine;
-using Zenject;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
 

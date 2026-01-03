@@ -12,7 +12,6 @@ namespace Asteroids.Presentation.Player
     {
         public GameEntity Entity { get; private set; }
 
-        [Inject] private SignalBus _signalBus;
         [Inject] private DiContainer _container;
         [Inject] private TickableManager _tickableManager;
         [Inject] private ProjectileSpawner _projectileSpawner;
@@ -25,7 +24,7 @@ namespace Asteroids.Presentation.Player
         {
             var position = new Vector2(transform.position.x, transform.position.y);
 
-            Entity = BulletFactory.CreateBullet(position, bulletSettings.Speed, bulletSettings.Lifetime, _signalBus);
+            Entity = BulletFactory.CreateBullet(position, bulletSettings.Speed, bulletSettings.Lifetime);
 
             _container.BindInstance(Entity).AsSingle();
             RegisterTickableComponents();

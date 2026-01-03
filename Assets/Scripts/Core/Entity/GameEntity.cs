@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Asteroids.Core.Entity.Components;
-using Zenject;
 
 namespace Asteroids.Core.Entity
 {
@@ -10,7 +9,7 @@ namespace Asteroids.Core.Entity
     {
         private readonly Dictionary<Type, IComponent> _components = new Dictionary<Type, IComponent>();
 
-        public GameEntity(Vector2 position = default, float rotation = 0f, SignalBus signalBus = null)
+        public GameEntity(Vector2 position = default, float rotation = 0f)
         {
             AddComponent(new TransformComponent(position, rotation));
         }

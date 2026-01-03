@@ -1,5 +1,4 @@
 using UnityEngine;
-using Zenject;
 using Asteroids.Core.PlayerInput;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
@@ -14,7 +13,7 @@ namespace Asteroids.Core.Player
         private readonly PhysicsComponent _physics;
         private readonly TransformComponent _transform;
 
-        public ShipMovement(GameEntity entity, MovementSettings settings, IInputProvider inputProvider, PhysicsComponent physics, SignalBus signalBus)
+        public ShipMovement(GameEntity entity, MovementSettings settings, IInputProvider inputProvider, PhysicsComponent physics)
         {
             _shipComponent = entity.GetComponent<ShipComponent>();
             _movementSettings = settings;

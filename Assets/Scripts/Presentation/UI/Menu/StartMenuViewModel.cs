@@ -1,7 +1,6 @@
 using System;
 using Zenject;
 using Asteroids.Core.Game;
-using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Presentation.UI
 {

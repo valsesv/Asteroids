@@ -9,7 +9,6 @@ namespace Asteroids.Presentation.Enemies
     {
         [Inject]
         public void Construct(
-            SignalBus signalBus,
             ScreenBounds screenBounds,
             EnemySettings enemySettings,
             EnemyFactory enemyFactory)
@@ -17,7 +16,7 @@ namespace Asteroids.Presentation.Enemies
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
-            Entity = enemyFactory.CreateFragment(position, rotation, signalBus, enemySettings.FragmentSpeed, screenBounds);
+            Entity = enemyFactory.CreateFragment(position, rotation, enemySettings.FragmentSpeed, screenBounds);
 
             _container.BindInstance(Entity).AsSingle();
             RegisterTickableComponents();

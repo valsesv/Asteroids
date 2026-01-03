@@ -13,12 +13,11 @@ namespace Asteroids.Core.Player
             MovementSettings movementSettings,
             HealthSettings healthSettings,
             WeaponSettings weaponSettings,
-            SignalBus signalBus,
             IInputProvider inputProvider,
             ScreenBounds screenBounds,
             DiContainer container)
         {
-            var entity = new GameEntity(startPositionSettings.Position, startPositionSettings.Rotation, signalBus);
+            var entity = new GameEntity(startPositionSettings.Position, startPositionSettings.Rotation);
 
             var shipComponent = new ShipComponent(entity);
             entity.AddComponent(shipComponent);
@@ -27,13 +26,13 @@ namespace Asteroids.Core.Player
             var physicsComponent = new PhysicsComponent(transform, frictionCoefficient: movementSettings.Friction);
             entity.AddComponent(physicsComponent);
 
-            var shipMovement = new ShipMovement(entity, movementSettings, inputProvider, physicsComponent, signalBus);
+            var shipMovement = new ShipMovement(entity, movementSettings, inputProvider, physicsComponent);
             entity.AddComponent(shipMovement);
 
             var healthComponent = new HealthComponent(healthSettings.MaxHealth);
             entity.AddComponent(healthComponent);
 
-            var damageHandler = new DamageHandler(healthComponent, entity, signalBus, healthSettings.InvincibilityDuration, healthSettings.BounceForce);
+            var damageHandler = new DamageHandler(healthComponent, entity, healthSettings.InvincibilityDuration, healthSettings.BounceForce);
             entity.AddComponent(damageHandler);
 
             var screenWrap = new ScreenWrapComponent(transform, screenBounds);

@@ -1,15 +1,14 @@
 using UnityEngine;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
-using Zenject;
 
 namespace Asteroids.Core.Player
 {
     public static class BulletFactory
     {
-        public static GameEntity CreateBullet(Vector2 position, float speed, float lifetime, SignalBus signalBus)
+        public static GameEntity CreateBullet(Vector2 position, float speed, float lifetime)
         {
-            var entity = new GameEntity(position, 0f, signalBus);
+            var entity = new GameEntity(position, 0f);
 
             var bulletComponent = new BulletComponent(speed, lifetime);
             entity.AddComponent(bulletComponent);

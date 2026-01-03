@@ -11,7 +11,6 @@ namespace Asteroids.Presentation.Enemies
         {
         [Inject]
         public void Construct(
-            SignalBus signalBus,
             ScreenBounds screenBounds,
             ShipPresentation shipPresentation,
             EnemySettings enemySettings,
@@ -22,7 +21,7 @@ namespace Asteroids.Presentation.Enemies
 
             var playerTransform = shipPresentation.Entity.GetComponent<TransformComponent>();
 
-            Entity = enemyFactory.CreateUfo(position, rotation, signalBus, playerTransform, enemySettings, screenBounds);
+            Entity = enemyFactory.CreateUfo(position, rotation, playerTransform, enemySettings, screenBounds);
             RegisterTickableComponents();
             _container.BindInstance(Entity).AsSingle();
         }

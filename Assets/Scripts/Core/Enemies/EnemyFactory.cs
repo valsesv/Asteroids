@@ -1,7 +1,6 @@
 using UnityEngine;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
-using Zenject;
 
 namespace Asteroids.Core.Enemies
 {
@@ -11,10 +10,9 @@ namespace Asteroids.Core.Enemies
             EnemyType type,
             Vector2 position,
             float rotation,
-            SignalBus signalBus,
             ScreenBounds screenBounds)
         {
-            var entity = new GameEntity(position, rotation, signalBus);
+            var entity = new GameEntity(position, rotation);
 
             var enemyComponent = new EnemyComponent(type);
             entity.AddComponent(enemyComponent);
@@ -33,11 +31,10 @@ namespace Asteroids.Core.Enemies
         public GameEntity CreateAsteroid(
             Vector2 position,
             float rotation,
-            SignalBus signalBus,
             float speed,
             ScreenBounds screenBounds)
         {
-            var entity = CreateEnemy(EnemyType.Asteroid, position, rotation, signalBus, screenBounds);
+            var entity = CreateEnemy(EnemyType.Asteroid, position, rotation, screenBounds);
 
             var asteroidComponent = new AsteroidComponent();
             entity.AddComponent(asteroidComponent);
@@ -51,11 +48,10 @@ namespace Asteroids.Core.Enemies
         public GameEntity CreateFragment(
             Vector2 position,
             float rotation,
-            SignalBus signalBus,
             float speed,
             ScreenBounds screenBounds)
         {
-            var entity = CreateEnemy(EnemyType.Fragment, position, rotation, signalBus, screenBounds);
+            var entity = CreateEnemy(EnemyType.Fragment, position, rotation, screenBounds);
 
             var fragmentComponent = new FragmentComponent();
             entity.AddComponent(fragmentComponent);
@@ -69,12 +65,11 @@ namespace Asteroids.Core.Enemies
         public GameEntity CreateUfo(
             Vector2 position,
             float rotation,
-            SignalBus signalBus,
             TransformComponent playerTransform,
             EnemySettings enemySettings,
             ScreenBounds screenBounds)
         {
-            var entity = CreateEnemy(EnemyType.Ufo, position, rotation, signalBus, screenBounds);
+            var entity = CreateEnemy(EnemyType.Ufo, position, rotation, screenBounds);
 
             var ufoComponent = new UfoComponent();
             entity.AddComponent(ufoComponent);
