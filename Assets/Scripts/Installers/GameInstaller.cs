@@ -76,12 +76,6 @@ namespace Asteroids.Installers
             Container.DeclareSignal<GameOverSignal>();
             Container.DeclareSignal<EnemyDestroyedSignal>();
             Container.DeclareSignal<ScoreChangedSignal>();
-            Container.DeclareSignal<HealthChangedSignal>();
-            Container.DeclareSignal<InvincibilityChangedSignal>();
-            Container.DeclareSignal<BulletShotSignal>();
-            Container.DeclareSignal<BulletDestroyedSignal>();
-            Container.DeclareSignal<LaserShotSignal>();
-            Container.DeclareSignal<LaserDeactivatedSignal>();
         }
 
         private void InstallSettings()

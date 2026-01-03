@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-using Zenject;
 using Asteroids.Core.PlayerInput;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Weapons;
@@ -11,18 +11,17 @@ namespace Asteroids.Core.Player
         private TransformComponent _transform;
         private readonly IInputProvider _inputProvider;
         private readonly BulletSettings _bulletSettings;
-        private readonly SignalBus _signalBus;
 
         private float _lastShotTime;
 
+        public event Action<Vector2, Vector2> OnBulletShot;
+
         public BulletShootingLogic(
             IInputProvider inputProvider,
-            BulletSettings bulletSettings,
-            SignalBus signalBus)
+            BulletSettings bulletSettings)
         {
             _inputProvider = inputProvider;
             _bulletSettings = bulletSettings;
-            _signalBus = signalBus;
         }
 
         public void Init(TransformComponent transform)
@@ -50,11 +49,7 @@ namespace Asteroids.Core.Player
 
             Vector2 bulletPosition = _transform.Position + direction * 1f;
 
-            _signalBus?.Fire(new BulletShotSignal
-            {
-                Position = bulletPosition,
-                Direction = direction
-            });
+            OnBulletShot?.Invoke(bulletPosition, direction);
 
             _lastShotTime = Time.time;
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using Asteroids.Core.Entity;
-using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Player;
 using UnityEngine.Assertions;
 
@@ -14,8 +13,8 @@ namespace Asteroids.Presentation.Player
         [SerializeField] private GameObject _bulletPrefab;
         [SerializeField] private Transform _bulletParent;
 
-        private SignalBus _signalBus;
         private DiContainer _container;
+        private BulletShootingLogic _bulletShootingLogic;
 
         private ObjectPool<BulletPresentation> _bulletPool;
 
@@ -24,10 +23,10 @@ namespace Asteroids.Presentation.Player
         private List<BulletPresentation> _activeBullets = new List<BulletPresentation>();
 
         [Inject]
-        public void Construct(SignalBus signalBus, DiContainer container)
+        public void Construct(DiContainer container, BulletShootingLogic bulletShootingLogic)
         {
-            _signalBus = signalBus;
             _container = container;
+            _bulletShootingLogic = bulletShootingLogic;
         }
 
         public void Initialize()
@@ -38,19 +37,18 @@ namespace Asteroids.Presentation.Player
             _bulletPresentationFactory = new ProjectilePresentationFactory<BulletPresentation>(_container, _bulletPrefab, _bulletParent);
             _bulletPool = new ObjectPool<BulletPresentation>(() => _bulletPresentationFactory.Create(Vector2.zero), _bulletParent);
 
-            _signalBus.Subscribe<BulletShotSignal>(OnBulletShot);
+            _bulletShootingLogic.OnBulletShot += OnBulletShot;
         }
 
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<BulletShotSignal>(OnBulletShot);
+            _bulletShootingLogic.OnBulletShot -= OnBulletShot;
         }
 
-        private void OnBulletShot(BulletShotSignal signal)
+        private void OnBulletShot(Vector2 position, Vector2 direction)
         {
             var bulletPresentation = _bulletPool.Get();
-
-            bulletPresentation.SetSpawnParameters(signal.Position, signal.Direction);
+            bulletPresentation.SetSpawnParameters(position, direction);
 
             _activeBullets.Add(bulletPresentation);
         }

@@ -15,8 +15,6 @@ namespace Asteroids.Presentation.Player
 
         [SerializeField] private InvincibilityEffects _invincibilityEffects;
 
-        [Inject] private SignalBus _signalBus;
-
         private TransformComponent _transformComponent;
         private DamageHandler _damageHandler;
         private bool _lastInvincibilityState;
@@ -35,15 +33,11 @@ namespace Asteroids.Presentation.Player
             _damageHandler = Entity?.GetComponent<DamageHandler>();
             _lastInvincibilityState = _damageHandler?.IsInvincible ?? false;
 
-            _signalBus.Subscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
-
             _invincibilityEffects.Initialize();
         }
 
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
-
             _invincibilityEffects?.Dispose();
         }
 
@@ -84,18 +78,6 @@ namespace Asteroids.Presentation.Player
             {
                 var healthComponent = Entity?.GetComponent<HealthComponent>();
                 Debug.Log($"[ShipPresentation] Player took damage! Health: {healthComponent?.CurrentHealth}/{healthComponent?.MaxHealth}");
-            }
-        }
-
-        private void OnInvincibilityChanged(InvincibilityChangedSignal signal)
-        {
-            if (signal.IsInvincible)
-            {
-                _invincibilityEffects.StartEffects();
-            }
-            else
-            {
-                _invincibilityEffects.StopEffects();
             }
         }
 

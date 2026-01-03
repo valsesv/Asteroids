@@ -2,52 +2,35 @@ using System;
 using Zenject;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Player;
+using Asteroids.Core.Entity;
 
 namespace Asteroids.Presentation.UI
 {
-    public class HealthViewModel : IInitializable, IDisposable
+    public class HealthViewModel : ITickable
     {
-        private readonly SignalBus _signalBus;
+        private readonly GameEntity _playerEntity;
         private readonly HealthSettings _healthSettings;
+        private HealthComponent _healthComponent;
 
-        private float _currentHealth;
-
-        public float CurrentHealth
-        {
-            get => _currentHealth;
-            private set
-            {
-                if (_currentHealth != value)
-                {
-                    _currentHealth = value;
-                    OnHealthChanged?.Invoke(_currentHealth);
-                }
-            }
-        }
+        public float CurrentHealth { get; private set; }
 
         public event Action<float> OnHealthChanged;
 
-        public HealthViewModel(SignalBus signalBus, HealthSettings healthSettings)
+        public HealthViewModel(GameEntity playerEntity, HealthSettings healthSettings)
         {
-            _signalBus = signalBus;
+            _playerEntity = playerEntity;
             _healthSettings = healthSettings;
-        }
-
-        public void Initialize()
-        {
-            _signalBus.Subscribe<HealthChangedSignal>(OnHealthChangedSignal);
-
+            _healthComponent = _playerEntity?.GetComponent<HealthComponent>();
             CurrentHealth = _healthSettings.MaxHealth;
         }
 
-        public void Dispose()
+        public void Tick()
         {
-            _signalBus?.Unsubscribe<HealthChangedSignal>(OnHealthChangedSignal);
-        }
-
-        private void OnHealthChangedSignal(HealthChangedSignal signal)
-        {
-            CurrentHealth = signal.CurrentHealth;
+            if (_healthComponent != null && CurrentHealth != _healthComponent.CurrentHealth)
+            {
+                CurrentHealth = _healthComponent.CurrentHealth;
+                OnHealthChanged?.Invoke(CurrentHealth);
+            }
         }
     }
 }

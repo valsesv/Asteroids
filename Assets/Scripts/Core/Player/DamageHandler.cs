@@ -43,7 +43,11 @@ namespace Asteroids.Core.Player
             ApplyBounce(enemyEntity);
 
             _healthComponent.TakeDamage(damage);
-            StartInvincibility().Forget();
+
+            if (!_healthComponent.IsDead)
+            {
+                StartInvincibility().Forget();
+            }
 
             return true;
         }
@@ -81,12 +85,6 @@ namespace Asteroids.Core.Player
                 _shipComponent.CanControl = false;
             }
 
-            var invincibilitySignal = new InvincibilityChangedSignal
-            {
-                IsInvincible = true
-            };
-            _signalBus.Fire(invincibilitySignal);
-
             await UniTask.Delay(System.TimeSpan.FromSeconds(_invincibilityDuration));
 
             IsInvincible = false;
@@ -94,9 +92,6 @@ namespace Asteroids.Core.Player
             {
                 _shipComponent.CanControl = true;
             }
-
-            invincibilitySignal.IsInvincible = false;
-            _signalBus.Fire(invincibilitySignal);
         }
     }
 }

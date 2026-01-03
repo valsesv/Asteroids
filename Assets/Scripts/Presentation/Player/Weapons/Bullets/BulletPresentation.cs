@@ -29,15 +29,30 @@ namespace Asteroids.Presentation.Player
         }
 
         private TransformComponent _transformComponent;
+        private BulletLifetime _bulletLifetime;
 
         public void Initialize()
         {
             _transformComponent = Entity?.GetComponent<TransformComponent>();
-            _signalBus.Subscribe<BulletDestroyedSignal>(OnBulletDestroyed);
+            _bulletLifetime = Entity?.GetComponent<BulletLifetime>();
+
+            if (_bulletLifetime != null)
+            {
+                _bulletLifetime.OnExpired += OnBulletExpired;
+            }
         }
+
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<BulletDestroyedSignal>(OnBulletDestroyed);
+            if (_bulletLifetime != null)
+            {
+                _bulletLifetime.OnExpired -= OnBulletExpired;
+            }
+        }
+
+        private void OnBulletExpired()
+        {
+            _projectileSpawner.ReturnBullet(this);
         }
 
         private void LateUpdate()
@@ -63,16 +78,10 @@ namespace Asteroids.Presentation.Player
             bulletLifetime?.Reset();
         }
 
-        private void OnBulletDestroyed(BulletDestroyedSignal _)
+        private void OnCollisionEnter2D(Collision2D _)
         {
             _projectileSpawner.ReturnBullet(this);
         }
-
-        private void OnCollisionEnter2D(Collision2D _)
-        {
-            OnBulletDestroyed(null);
-        }
-
 
         private void RegisterTickableComponents()
         {

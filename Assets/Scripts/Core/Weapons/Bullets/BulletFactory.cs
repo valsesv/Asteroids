@@ -21,7 +21,7 @@ namespace Asteroids.Core.Player
             var movement = new BulletMovement(physicsComponent, speed);
             entity.AddComponent(movement);
 
-            var bulletLifetime = new BulletLifetime(entity, signalBus);
+            var bulletLifetime = new BulletLifetime(entity);
             entity.AddComponent(bulletLifetime);
 
             return entity;

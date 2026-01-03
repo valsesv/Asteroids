@@ -15,7 +15,6 @@ namespace Asteroids.Core.Game
         private readonly StartPositionSettings _startPositionSettings;
 
         private GameState _currentState = GameState.WaitingToStart;
-        private bool _isPlayerDead = false;
 
         public GameState CurrentState => _currentState;
         public bool IsGameActive => _currentState == GameState.Playing;
@@ -36,13 +35,12 @@ namespace Asteroids.Core.Game
         public void Initialize()
         {
             SetGameState(GameState.WaitingToStart);
-
-            _signalBus.Subscribe<HealthChangedSignal>(OnHealthChanged);
+            _signalBus.Subscribe<GameOverSignal>(OnGameOver);
         }
 
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<HealthChangedSignal>(OnHealthChanged);
+            _signalBus?.Unsubscribe<GameOverSignal>(OnGameOver);
         }
 
         public void StartGame()
@@ -59,18 +57,7 @@ namespace Asteroids.Core.Game
             _signalBus.Fire<GameStartedSignal>();
         }
 
-        private void OnHealthChanged(HealthChangedSignal signal)
-        {
-            if (signal.CurrentHealth > 0f || _isPlayerDead)
-            {
-                return;
-            }
-    
-            _isPlayerDead = true;
-            FinishGame();
-        }
-
-        private void FinishGame()
+        private void OnGameOver(GameOverSignal _)
         {
             if (_currentState != GameState.Playing)
             {
@@ -82,13 +69,10 @@ namespace Asteroids.Core.Game
 
             StopAllEnemies();
             SetGameState(GameState.GameOver);
-            _signalBus.Fire<GameOverSignal>();
         }
 
         private void ResetPlayer()
         {
-            _isPlayerDead = false;
-
             var transformComponent = _playerEntity.GetComponent<TransformComponent>();
             transformComponent.SetPosition(_startPositionSettings.Position);
             transformComponent.SetRotation(_startPositionSettings.Rotation);

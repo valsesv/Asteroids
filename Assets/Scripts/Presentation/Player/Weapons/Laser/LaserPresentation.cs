@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
 using Zenject;
-using Asteroids.Core.Entity.Components;
 using Asteroids.Presentation.Enemies;
+using Asteroids.Core.Player;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using Asteroids.Core.Weapons;
@@ -14,8 +14,8 @@ namespace Asteroids.Presentation.Player
     {
         [SerializeField] private LineRenderer _lineRenderer;
 
-        private SignalBus _signalBus;
         private LaserSettings _laserSettings;
+        private LaserShootingLogic _laserShootingLogic;
         private CancellationTokenSource _cancellationTokenSource;
 
         private Vector2 _startPosition;
@@ -23,18 +23,17 @@ namespace Asteroids.Presentation.Player
         private bool _isActive;
 
         [Inject]
-        public void Construct(SignalBus signalBus, LaserSettings laserSettings)
+        public void Construct(LaserSettings laserSettings, LaserShootingLogic laserShootingLogic)
         {
-            _signalBus = signalBus;
             _laserSettings = laserSettings;
+            _laserShootingLogic = laserShootingLogic;
         }
 
         public void Initialize()
         {
             Assert.IsNotNull(_lineRenderer, "LineRenderer is not assigned in LaserPresentation!");
 
-            _signalBus.Subscribe<LaserShotSignal>(OnLaserShot);
-            _signalBus.Subscribe<LaserDeactivatedSignal>(OnLaserDeactivated);
+            _laserShootingLogic.OnLaserShot += OnLaserShot;
 
             _lineRenderer.startWidth = _laserSettings.Width;
             _lineRenderer.endWidth = _laserSettings.Width;
@@ -45,16 +44,18 @@ namespace Asteroids.Presentation.Player
 
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<LaserShotSignal>(OnLaserShot);
-            _signalBus?.Unsubscribe<LaserDeactivatedSignal>(OnLaserDeactivated);
+            if (_laserShootingLogic != null)
+            {
+                _laserShootingLogic.OnLaserShot -= OnLaserShot;
+            }
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
         }
 
-        private void OnLaserShot(LaserShotSignal signal)
+        private void OnLaserShot(Vector2 startPosition, Vector2 direction)
         {
-            _startPosition = signal.StartPosition;
-            _direction = signal.Direction;
+            _startPosition = startPosition;
+            _direction = direction;
             _isActive = true;
 
             UpdateLaserVisualization();
@@ -74,13 +75,8 @@ namespace Asteroids.Presentation.Player
 
             if (!cancellationToken.IsCancellationRequested)
             {
-                _signalBus?.Fire(new LaserDeactivatedSignal());
+                Deactivate();
             }
-        }
-
-        private void OnLaserDeactivated(LaserDeactivatedSignal _)
-        {
-            Deactivate();
         }
 
         private void UpdateLaserVisualization()

@@ -9,7 +9,7 @@ using Asteroids.Core.Player;
 
 namespace Asteroids.Presentation.Enemies
 {
-    public abstract class EnemyPresentation : MonoBehaviour, IInitializable, IDisposable
+    public abstract class EnemyPresentation : MonoBehaviour, IInitializable
     {
         public GameEntity Entity { get; protected set; }
 
@@ -27,12 +27,6 @@ namespace Asteroids.Presentation.Enemies
         public virtual void Initialize()
         {
             _transformComponent = Entity?.GetComponent<TransformComponent>();
-            _signalBus.Subscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
-        }
-
-        public void Dispose()
-        {
-            _signalBus?.Unsubscribe<InvincibilityChangedSignal>(OnInvincibilityChanged);
         }
 
         public void SetPlayerEntity(GameEntity playerEntity)
@@ -127,18 +121,12 @@ namespace Asteroids.Presentation.Enemies
             return screenWrap != null && screenWrap.IsInGameArea;
         }
 
-
         protected virtual void RegisterTickableComponents()
         {
             foreach (var tickableComponent in Entity.GetTickableComponents())
             {
                 _tickableManager.Add(tickableComponent);
             }
-        }
-
-        private void OnInvincibilityChanged(InvincibilityChangedSignal signal)
-        {
-            _isPlayerInvincible = signal.IsInvincible;
         }
 
         private void Update()

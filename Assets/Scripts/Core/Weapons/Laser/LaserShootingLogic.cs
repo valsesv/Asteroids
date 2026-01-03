@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-using Zenject;
 using Asteroids.Core.PlayerInput;
 using Asteroids.Core.Entity.Components;
 
@@ -10,14 +10,12 @@ namespace Asteroids.Core.Player
         private TransformComponent _transform;
         private LaserComponent _laserComponent;
         private readonly IInputProvider _inputProvider;
-        private readonly SignalBus _signalBus;
 
-        public LaserShootingLogic(
-            IInputProvider inputProvider,
-            SignalBus signalBus)
+        public event Action<Vector2, Vector2> OnLaserShot;
+
+        public LaserShootingLogic(IInputProvider inputProvider)
         {
             _inputProvider = inputProvider;
-            _signalBus = signalBus;
         }
 
         public void Init(TransformComponent transform, LaserComponent laserComponent)
@@ -48,11 +46,7 @@ namespace Asteroids.Core.Player
 
             Vector2 startPosition = _transform.Position + direction * 1f;
 
-            _signalBus?.Fire(new LaserShotSignal
-            {
-                StartPosition = startPosition,
-                Direction = direction
-            });
+            OnLaserShot?.Invoke(startPosition, direction);
         }
     }
 }
