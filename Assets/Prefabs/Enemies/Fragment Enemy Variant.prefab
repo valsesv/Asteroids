@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: _enemyViewPrefab
       value: 
       objectReference: {fileID: -2775183085077640742}
+    - target: {fileID: 1798924184592279106, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
+      propertyPath: _enemyPresentationPrefab
+      value: 
+      objectReference: {fileID: -2775183085077640742}
     - target: {fileID: 3311982111889348165, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_Color.b
       value: 0.30588233
@@ -164,4 +168,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b1bfa6ac1a3a439f85949f760a6d08f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _direction: {x: 1, y: 0}

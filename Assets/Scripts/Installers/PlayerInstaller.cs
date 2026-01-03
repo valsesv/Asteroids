@@ -10,7 +10,7 @@ namespace Asteroids.Installers
 {
     public class PlayerInstaller : MonoInstaller
     {
-        [SerializeField] private ShipView _shipViewPrefab;
+        [SerializeField] private ShipPresentation _shipPresentationPrefab;
 
         public override void InstallBindings()
         {
@@ -21,7 +21,7 @@ namespace Asteroids.Installers
 
         private void AssertShipViewPrefab()
         {
-            Assert.IsNotNull(_shipViewPrefab, "ShipViewPrefab is not assigned in PlayerInstaller!");
+            Assert.IsNotNull(_shipPresentationPrefab, "ShipPresentationPrefab is not assigned in PlayerInstaller!");
         }
 
         private void InstallTickableComponents()
@@ -54,8 +54,8 @@ namespace Asteroids.Installers
 
         private void InstallShipView()
         {
-            Container.Bind<ShipView>().FromInstance(_shipViewPrefab).AsSingle();
-            Container.BindInterfacesTo<ShipView>().FromInstance(_shipViewPrefab);
+            Container.Bind<ShipPresentation>().FromInstance(_shipPresentationPrefab).AsSingle();
+            Container.BindInterfacesTo<ShipPresentation>().FromInstance(_shipPresentationPrefab);
         }
     }
 }

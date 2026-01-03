@@ -8,7 +8,7 @@ using Asteroids.Core.Weapons;
 
 namespace Asteroids.Presentation.Player
 {
-    public class BulletView : MonoBehaviour, IInitializable, IDisposable
+    public class BulletPresentation : MonoBehaviour, IInitializable, IDisposable
     {
         public GameEntity Entity { get; private set; }
 

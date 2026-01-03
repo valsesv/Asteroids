@@ -17,11 +17,11 @@ namespace Asteroids.Presentation.Player
         private SignalBus _signalBus;
         private DiContainer _container;
 
-        private ObjectPool<BulletView> _bulletPool;
+        private ObjectPool<BulletPresentation> _bulletPool;
 
-        private ProjectileViewFactory<BulletView> _bulletViewFactory;
+        private ProjectilePresentationFactory<BulletPresentation> _bulletPresentationFactory;
 
-        private List<BulletView> _activeBullets = new List<BulletView>();
+        private List<BulletPresentation> _activeBullets = new List<BulletPresentation>();
 
         [Inject]
         public void Construct(SignalBus signalBus, DiContainer container)
@@ -35,8 +35,8 @@ namespace Asteroids.Presentation.Player
             Assert.IsNotNull(_bulletPrefab, "BulletPrefab is not assigned in ProjectileSpawner!");
             Assert.IsNotNull(_bulletParent, "BulletParent is not assigned in ProjectileSpawner!");
 
-            _bulletViewFactory = new ProjectileViewFactory<BulletView>(_container, _bulletPrefab, _bulletParent);
-            _bulletPool = new ObjectPool<BulletView>(() => _bulletViewFactory.Create(Vector2.zero), _bulletParent);
+            _bulletPresentationFactory = new ProjectilePresentationFactory<BulletPresentation>(_container, _bulletPrefab, _bulletParent);
+            _bulletPool = new ObjectPool<BulletPresentation>(() => _bulletPresentationFactory.Create(Vector2.zero), _bulletParent);
 
             _signalBus.Subscribe<BulletShotSignal>(OnBulletShot);
         }
@@ -48,17 +48,17 @@ namespace Asteroids.Presentation.Player
 
         private void OnBulletShot(BulletShotSignal signal)
         {
-            var bulletView = _bulletPool.Get();
+            var bulletPresentation = _bulletPool.Get();
 
-            bulletView.SetSpawnParameters(signal.Position, signal.Direction);
+            bulletPresentation.SetSpawnParameters(signal.Position, signal.Direction);
 
-            _activeBullets.Add(bulletView);
+            _activeBullets.Add(bulletPresentation);
         }
 
-        public void ReturnBullet(BulletView bulletView)
+        public void ReturnBullet(BulletPresentation bulletPresentation)
         {
-            _activeBullets.Remove(bulletView);
-            _bulletPool.Return(bulletView);
+            _activeBullets.Remove(bulletPresentation);
+            _bulletPool.Return(bulletPresentation);
         }
     }
 }

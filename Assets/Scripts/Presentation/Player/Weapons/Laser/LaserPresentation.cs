@@ -9,7 +9,7 @@ using Asteroids.Core.Weapons;
 
 namespace Asteroids.Presentation.Player
 {
-    public class LaserView : MonoBehaviour, IInitializable, IDisposable
+    public class LaserPresentation : MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] private LineRenderer _lineRenderer;
 
@@ -109,10 +109,10 @@ namespace Asteroids.Presentation.Player
                     continue;
                 }
 
-                var enemy = collider.GetComponent<EnemyView>();
+                var enemy = collider.GetComponent<EnemyPresentation>();
                 if (enemy == null)
                 {
-                    enemy = collider.GetComponentInParent<EnemyView>();
+                    enemy = collider.GetComponentInParent<EnemyPresentation>();
                 }
 
                 if (enemy != null && enemy.Entity != null)

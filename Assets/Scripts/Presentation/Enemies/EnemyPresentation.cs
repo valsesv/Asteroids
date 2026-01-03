@@ -8,7 +8,7 @@ using Asteroids.Presentation.Effects;
 
 namespace Asteroids.Presentation.Enemies
 {
-    public abstract class EnemyView : MonoBehaviour, IInitializable, IDisposable
+    public abstract class EnemyPresentation : MonoBehaviour, IInitializable, IDisposable
     {
         public GameEntity Entity { get; protected set; }
 
@@ -78,15 +78,15 @@ namespace Asteroids.Presentation.Enemies
 
         protected virtual void OnCollisionEnter2D(Collision2D collision)
         {
-            var bulletView = collision.gameObject.GetComponent<BulletView>();
-            if (bulletView != null)
+            var bulletPresentation = collision.gameObject.GetComponent<BulletPresentation>();
+            if (bulletPresentation != null)
             {
                 GetDamage();
                 return;
             }
 
-            var shipView = collision.gameObject.GetComponent<ShipView>();
-            if (shipView == null)
+            var shipPresentation = collision.gameObject.GetComponent<ShipPresentation>();
+            if (shipPresentation == null)
             {
                 return;
             }

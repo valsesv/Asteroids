@@ -8,7 +8,7 @@ namespace Asteroids.Installers
 {       
     public class ProjectileInstaller : MonoInstaller
     {
-        [SerializeField] private BulletView _bulletViewPrefab;
+        [SerializeField] private BulletPresentation _bulletPresentationPrefab;
 
         public override void InstallBindings()
         {
@@ -19,7 +19,7 @@ namespace Asteroids.Installers
 
         private void AssertBulletViewPrefab()
         {
-            Assert.IsNotNull(_bulletViewPrefab, "BulletViewPrefab is not assigned in ProjectileInstaller!");
+            Assert.IsNotNull(_bulletPresentationPrefab, "BulletPresentationPrefab is not assigned in ProjectileInstaller!");
         }
 
         private void InstallSignals()
@@ -31,8 +31,8 @@ namespace Asteroids.Installers
 
         private void InstallBulletView()
         {
-            Container.Bind<BulletView>().FromInstance(_bulletViewPrefab).AsSingle();
-            Container.BindInterfacesTo<BulletView>().FromInstance(_bulletViewPrefab);
+            Container.Bind<BulletPresentation>().FromInstance(_bulletPresentationPrefab).AsSingle();
+            Container.BindInterfacesTo<BulletPresentation>().FromInstance(_bulletPresentationPrefab);
         }
     }
 }

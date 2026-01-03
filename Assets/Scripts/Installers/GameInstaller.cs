@@ -24,11 +24,11 @@ namespace Asteroids.Installers
         private const string ScoreSettingsFileName = "score_settings.json";
 
         [SerializeField] private KeyboardInputSettings _inputSettings;
-        [SerializeField] private ShipView _shipViewPrefab;
+        [SerializeField] private ShipPresentation _shipPresentationPrefab;
         [SerializeField] private EnemySpawner _enemySpawner;
         [SerializeField] private ProjectileSpawner _projectileSpawner;
         [SerializeField] private ParticleEffectSpawner _particleEffectSpawner;
-        [SerializeField] private LaserView _laserView;
+        [SerializeField] private LaserPresentation _laserPresentation;
         [SerializeField] private ScoreView _scoreView;
         [SerializeField] private HealthView _healthView;
         [SerializeField] private PlayerStatsView _playerStatsView;
@@ -156,7 +156,7 @@ namespace Asteroids.Installers
 
             Container.Bind<EnemyFactory>().AsSingle();
 
-            Container.Bind<ShipView>().FromInstance(_shipViewPrefab).AsSingle();
+            Container.Bind<ShipPresentation>().FromInstance(_shipPresentationPrefab).AsSingle();
 
             Assert.IsNotNull(_projectileSpawner, "ProjectileSpawner is not assigned in GameInstaller!");
             Container.BindInterfacesAndSelfTo<ProjectileSpawner>().FromInstance(_projectileSpawner).AsSingle();
@@ -192,9 +192,9 @@ namespace Asteroids.Installers
 
         private void InstallLaserView()
         {
-            if (_laserView != null)
+            if (_laserPresentation != null)
             {
-                Container.BindInterfacesAndSelfTo<LaserView>().FromInstance(_laserView).AsSingle();
+                Container.BindInterfacesAndSelfTo<LaserPresentation>().FromInstance(_laserPresentation).AsSingle();
             }
         }
 

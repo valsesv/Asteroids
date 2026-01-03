@@ -2,35 +2,29 @@ using UnityEngine;
 using Zenject;
 using Asteroids.Core.Enemies;
 using Asteroids.Core.Entity;
+using Asteroids.Core.Entity.Components;
+using Asteroids.Presentation.Player;
 
 namespace Asteroids.Presentation.Enemies
 {
-    public class FragmentView : EnemyView
-    {
+    public class UfoPresentation : EnemyPresentation
+        {
         [Inject]
         public void Construct(
             SignalBus signalBus,
             ScreenBounds screenBounds,
+            ShipPresentation shipPresentation,
             EnemySettings enemySettings,
             EnemyFactory enemyFactory)
         {
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
-            Entity = enemyFactory.CreateFragment(position, rotation, signalBus, enemySettings.FragmentSpeed, screenBounds);
+            var playerTransform = shipPresentation.Entity.GetComponent<TransformComponent>();
 
-            _container.BindInstance(Entity).AsSingle();
+            Entity = enemyFactory.CreateUfo(position, rotation, signalBus, playerTransform, enemySettings, screenBounds);
             RegisterTickableComponents();
-        }
-
-        public void SetDirection(Vector2 direction)
-        {
-            if (Entity == null)
-            {
-                return;
-            }
-            var movement = Entity.GetComponent<AsteroidMovement>();
-            movement.SetDirection(direction);
+            _container.BindInstance(Entity).AsSingle();
         }
 
         public override void GetDamage()

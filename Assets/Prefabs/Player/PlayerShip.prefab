@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9bb31fcf619447f28e9668dbc3ea50a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shipViewPrefab: {fileID: 7321096486281084091}
+  _shipPresentationPrefab: {fileID: 7321096486281084091}
 --- !u!114 &7321096486281084091
 MonoBehaviour:
   m_ObjectHideFlags: 0

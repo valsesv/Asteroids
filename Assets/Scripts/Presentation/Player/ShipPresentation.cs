@@ -9,7 +9,7 @@ using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.Player
 {
-    public class ShipView : MonoBehaviour, IInitializable, IDisposable
+    public class ShipPresentation : MonoBehaviour, IInitializable, IDisposable
     {
         public GameEntity Entity { get; private set; }
 
@@ -41,10 +41,10 @@ namespace Asteroids.Presentation.Player
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            Debug.Log($"[ShipView] Collision entered with: {collision.gameObject.name}");
+            Debug.Log($"[ShipPresentation] Collision entered with: {collision.gameObject.name}");
 
-            var enemyView = collision.gameObject.GetComponent<EnemyView>();
-            if (enemyView == null)
+            var enemyPresentation = collision.gameObject.GetComponent<EnemyPresentation>();
+            if (enemyPresentation == null)
             {
                 return;
             }
@@ -52,7 +52,7 @@ namespace Asteroids.Presentation.Player
             var damageHandler = Entity?.GetComponent<DamageHandler>();
             if (damageHandler == null)
             {
-                Debug.LogWarning("[ShipView] DamageHandler not found on GameEntity!");
+                Debug.LogWarning("[ShipPresentation] DamageHandler not found on GameEntity!");
                 return;
             }
 
@@ -61,12 +61,12 @@ namespace Asteroids.Presentation.Player
                 return;
             }
 
-            GameEntity enemyEntity = enemyView.Entity;
+            GameEntity enemyEntity = enemyPresentation.Entity;
             bool damageTaken = damageHandler.HandleCollision(enemyEntity, 1f);
             if (damageTaken)
             {
                 var healthComponent = Entity?.GetComponent<HealthComponent>();
-                Debug.Log($"[ShipView] Player took damage! Health: {healthComponent?.CurrentHealth}/{healthComponent?.MaxHealth}");
+                Debug.Log($"[ShipPresentation] Player took damage! Health: {healthComponent?.CurrentHealth}/{healthComponent?.MaxHealth}");
             }
         }
 

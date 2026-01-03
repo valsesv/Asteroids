@@ -20,18 +20,18 @@ namespace Asteroids.Presentation.Enemies
         private DiContainer _container;
         private EnemySettings _enemySettings;
 
-        private ObjectPool<AsteroidView> _asteroidPool;
-        private ObjectPool<UfoView> _ufoPool;
-        private ObjectPool<FragmentView> _fragmentPool;
+        private ObjectPool<AsteroidPresentation> _asteroidPool;
+        private ObjectPool<UfoPresentation> _ufoPool;
+        private ObjectPool<FragmentPresentation> _fragmentPool;
 
-        private EnemyViewFactory<AsteroidView> _asteroidFactory;
-        private EnemyViewFactory<UfoView> _ufoFactory;
-        private EnemyViewFactory<FragmentView> _fragmentFactory;
+        private EnemyPresentationFactory<AsteroidPresentation> _asteroidFactory;
+        private EnemyPresentationFactory<UfoPresentation> _ufoFactory;
+        private EnemyPresentationFactory<FragmentPresentation> _fragmentFactory;
 
-        private List<EnemyView> _activeEnemies = new List<EnemyView>();
+        private List<EnemyPresentation> _activeEnemies = new List<EnemyPresentation>();
         private bool _isSpawningEnabled = false;
 
-        public List<EnemyView> ActiveEnemies => _activeEnemies;
+        public List<EnemyPresentation> ActiveEnemies => _activeEnemies;
 
         public void SetSpawningEnabled(bool enabled)
         {
@@ -50,13 +50,13 @@ namespace Asteroids.Presentation.Enemies
         {
             _lastSpawnTime = Time.time;
 
-            _asteroidFactory = new EnemyViewFactory<AsteroidView>(_container, _asteroidPrefab);
-            _ufoFactory = new EnemyViewFactory<UfoView>(_container, _ufoPrefab);
-            _fragmentFactory = new EnemyViewFactory<FragmentView>(_container, _fragmentPrefab);
+            _asteroidFactory = new EnemyPresentationFactory<AsteroidPresentation>(_container, _asteroidPrefab);
+            _ufoFactory = new EnemyPresentationFactory<UfoPresentation>(_container, _ufoPrefab);
+            _fragmentFactory = new EnemyPresentationFactory<FragmentPresentation>(_container, _fragmentPrefab);
 
-            _asteroidPool = new ObjectPool<AsteroidView>(() => _asteroidFactory.Create(Vector2.zero), _asteroidParent);
-            _ufoPool = new ObjectPool<UfoView>(() => _ufoFactory.Create(Vector2.zero), _ufoParent);
-            _fragmentPool = new ObjectPool<FragmentView>(() => _fragmentFactory.Create(Vector2.zero), _fragmentParent);
+            _asteroidPool = new ObjectPool<AsteroidPresentation>(() => _asteroidFactory.Create(Vector2.zero), _asteroidParent);
+            _ufoPool = new ObjectPool<UfoPresentation>(() => _ufoFactory.Create(Vector2.zero), _ufoParent);
+            _fragmentPool = new ObjectPool<FragmentPresentation>(() => _fragmentFactory.Create(Vector2.zero), _fragmentParent);
         }
 
         public void Tick()
@@ -86,7 +86,7 @@ namespace Asteroids.Presentation.Enemies
             float randomValue = Random.Range(0f, totalWeight);
             bool spawnAsteroid = randomValue < _enemySettings.AsteroidSpawnWeight;
 
-            EnemyView enemy;
+            EnemyPresentation enemy;
             if (spawnAsteroid)
             {
                 var asteroid = _asteroidPool.Get();
@@ -116,7 +116,7 @@ namespace Asteroids.Presentation.Enemies
             return new Vector2(x, y);
         }
 
-        public void ReturnEnemy(EnemyView enemy)
+        public void ReturnEnemy(EnemyPresentation enemy)
         {
             if (enemy == null)
             {
@@ -127,13 +127,13 @@ namespace Asteroids.Presentation.Enemies
 
             switch (enemy)
             {
-                case AsteroidView asteroid:
+                case AsteroidPresentation asteroid:
                     _asteroidPool.Return(asteroid);
                     break;
-                case UfoView ufo:
+                case UfoPresentation ufo:
                     _ufoPool.Return(ufo);
                     break;
-                case FragmentView fragment:
+                case FragmentPresentation fragment:
                     _fragmentPool.Return(fragment);
                     break;
             }
@@ -141,7 +141,7 @@ namespace Asteroids.Presentation.Enemies
 
         public void ClearAllEnemies()
         {
-            var enemiesToReturn = new List<EnemyView>(_activeEnemies);
+            var enemiesToReturn = new List<EnemyPresentation>(_activeEnemies);
 
             foreach (var enemy in enemiesToReturn)
             {
@@ -149,7 +149,7 @@ namespace Asteroids.Presentation.Enemies
             }
         }
 
-        public void FragmentAsteroid(AsteroidView originalAsteroid, Vector2 position, Vector2 originalVelocity, AsteroidComponent asteroidComponent)
+        public void FragmentAsteroid(AsteroidPresentation originalAsteroid, Vector2 position, Vector2 originalVelocity, AsteroidComponent asteroidComponent)
         {
             if (originalAsteroid == null || asteroidComponent == null)
             {

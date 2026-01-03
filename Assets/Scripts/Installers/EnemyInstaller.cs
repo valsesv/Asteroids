@@ -8,7 +8,7 @@ namespace Asteroids.Installers
 {
     public class EnemyInstaller : MonoInstaller
     {
-        [SerializeField] private EnemyView _enemyViewPrefab;
+        [SerializeField] private EnemyPresentation _enemyPresentationPrefab;
 
         public override void InstallBindings()
         {
@@ -19,7 +19,7 @@ namespace Asteroids.Installers
 
         private void AssertEnemyViewPrefab()
         {
-            Assert.IsNotNull(_enemyViewPrefab, "EnemyViewPrefab is not assigned in EnemyInstaller!");
+            Assert.IsNotNull(_enemyPresentationPrefab, "EnemyPresentationPrefab is not assigned in EnemyInstaller!");
         }
 
         private void InstallSignals()
@@ -30,8 +30,8 @@ namespace Asteroids.Installers
 
         private void InstallEnemyView()
         {
-            Container.Bind<EnemyView>().FromInstance(_enemyViewPrefab).AsSingle();
-            Container.BindInterfacesTo<EnemyView>().FromInstance(_enemyViewPrefab);
+            Container.Bind<EnemyPresentation>().FromInstance(_enemyPresentationPrefab).AsSingle();
+            Container.BindInterfacesTo<EnemyPresentation>().FromInstance(_enemyPresentationPrefab);
         }
     }
 }

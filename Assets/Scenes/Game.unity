@@ -2473,6 +2473,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1898704494}
     - target: {fileID: 2124988984619475679, guid: 104650bb7e4a04556bcbdcac3ce5a146, type: 3}
+      propertyPath: _laserPresentation
+      value: 
+      objectReference: {fileID: 300910372}
+    - target: {fileID: 2124988984619475679, guid: 104650bb7e4a04556bcbdcac3ce5a146, type: 3}
       propertyPath: _projectileSpawner
       value: 
       objectReference: {fileID: 374777427}
@@ -2484,6 +2488,10 @@ PrefabInstance:
       propertyPath: _mobileInputPanelPrefab
       value: 
       objectReference: {fileID: 3615102080541563813, guid: 48de76743c7de48b1a4fe322093cb259, type: 3}
+    - target: {fileID: 2124988984619475679, guid: 104650bb7e4a04556bcbdcac3ce5a146, type: 3}
+      propertyPath: _shipPresentationPrefab
+      value: 
+      objectReference: {fileID: 443608694}
     - target: {fileID: 2124988984619475679, guid: 104650bb7e4a04556bcbdcac3ce5a146, type: 3}
       propertyPath: _mobileInputCanvasPrefab
       value: 

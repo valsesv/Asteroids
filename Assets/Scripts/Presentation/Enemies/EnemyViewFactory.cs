@@ -3,7 +3,7 @@ using Zenject;
 
 namespace Asteroids.Presentation.Enemies
 {
-    public class EnemyViewFactory<T> where T : EnemyView
+    public class EnemyPresentationFactory<T> where T : EnemyPresentation
     {
         private readonly DiContainer _container;
         private readonly GameObject _prefab;

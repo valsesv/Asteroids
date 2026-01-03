@@ -9,7 +9,7 @@ namespace Asteroids.Presentation.Player
         private readonly GameObject _prefab;
         private readonly Transform _parent;
 
-        public ProjectileViewFactory(DiContainer container, GameObject prefab, Transform parent)
+        public ProjectilePresentationFactory(DiContainer container, GameObject prefab, Transform parent)
         {
             _container = container;
             _prefab = prefab;

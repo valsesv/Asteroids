@@ -6,7 +6,7 @@ using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Presentation.Enemies
 {
-    public class AsteroidView : EnemyView
+    public class AsteroidPresentation : EnemyPresentation
     {
         [Inject]
         public void Construct(

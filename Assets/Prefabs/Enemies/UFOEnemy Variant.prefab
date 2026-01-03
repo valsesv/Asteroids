@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: _enemyViewPrefab
       value: 
       objectReference: {fileID: 4252625713325426781}
+    - target: {fileID: 1798924184592279106, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
+      propertyPath: _enemyPresentationPrefab
+      value: 
+      objectReference: {fileID: 4252625713325426781}
     - target: {fileID: 3311982111889348165, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -113,7 +117,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4e65f4cc43df42efac82b343a9196d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 100
 --- !u!1 &7628236989467209966 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 135667359233594294, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
