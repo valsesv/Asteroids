@@ -43,7 +43,7 @@ namespace Asteroids.Presentation.Effects
             particleSystem.Clear();
             particleSystem.Play();
 
-            ReturnParticleSystemAfterDelay(particleSystem).Forget();
+            _ = ReturnParticleSystemAfterDelay(particleSystem);
         }
 
         private async UniTask ReturnParticleSystemAfterDelay(ParticleSystem particleSystem)
@@ -53,7 +53,7 @@ namespace Asteroids.Presentation.Effects
                 await UniTask.Yield();
             }
 
-            await UniTask.Delay(System.TimeSpan.FromSeconds(0.1f));
+            await UniTask.WaitForSeconds(0.1f);
 
             if (particleSystem != null)
             {

@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Entity;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 namespace Asteroids.Core.Player
@@ -12,7 +11,8 @@ namespace Asteroids.Core.Player
     {
         private readonly HealthComponent _healthComponent;
         private readonly ShipComponent _shipComponent;
-        private readonly GameEntity _entity;
+        private readonly PhysicsComponent _physicsComponent;
+        private readonly TransformComponent _transformComponent;
         private readonly float _invincibilityDuration;
         private readonly float _bounceForce;
 
@@ -25,7 +25,8 @@ namespace Asteroids.Core.Player
         {
             _healthComponent = healthComponent;
             _shipComponent = entity.GetComponent<ShipComponent>();
-            _entity = entity;
+            _physicsComponent = entity.GetComponent<PhysicsComponent>();
+            _transformComponent = entity.GetComponent<TransformComponent>();
             _invincibilityDuration = invincibilityDuration;
             _bounceForce = bounceForce;
         }
@@ -36,7 +37,6 @@ namespace Asteroids.Core.Player
             {
                 return false;
             }
-
             if (IsInvincible)
             {
                 return false;
@@ -45,10 +45,9 @@ namespace Asteroids.Core.Player
             ApplyBounce(enemyEntity);
 
             _healthComponent.TakeDamage(damage);
-
-            if (!_healthComponent.IsDead)
+            if (_healthComponent.IsDead == false)
             {
-                StartInvincibility().Forget();
+                _ = StartInvincibilityAsync();
             }
 
             return true;
@@ -56,15 +55,9 @@ namespace Asteroids.Core.Player
 
         private void ApplyBounce(GameEntity enemyEntity)
         {
-            var shipPhysics = _entity.GetComponent<PhysicsComponent>();
-
-            Assert.IsNotNull(shipPhysics);
-
-
-            var shipTransform = _entity.GetComponent<TransformComponent>();
             var enemyTransform = enemyEntity?.GetComponent<TransformComponent>();
 
-            Vector2 shipPosition = shipTransform.Position;
+            Vector2 shipPosition = _transformComponent.Position;
             Vector2 enemyPosition = enemyTransform.Position;
 
             Vector2 direction = (shipPosition - enemyPosition).normalized;
@@ -76,26 +69,20 @@ namespace Asteroids.Core.Player
             }
 
             Vector2 shipImpulse = direction * _bounceForce;
-            shipPhysics.ApplyImpulse(shipImpulse);
+            _physicsComponent.ApplyImpulse(shipImpulse);
         }
 
-        private async UniTask StartInvincibility()
+        private async UniTask StartInvincibilityAsync()
         {
             IsInvincible = true;
+            _shipComponent.CanControl = false;
             OnInvincibilityStarted?.Invoke();
-            if (_shipComponent != null)
-            {
-                _shipComponent.CanControl = false;
-            }
 
             await UniTask.Delay(TimeSpan.FromSeconds(_invincibilityDuration));
 
             IsInvincible = false;
+            _shipComponent.CanControl = true;
             OnInvincibilityEnded?.Invoke();
-            if (_shipComponent != null && !_healthComponent.IsDead)
-            {
-                _shipComponent.CanControl = true;
-            }
         }
     }
 }

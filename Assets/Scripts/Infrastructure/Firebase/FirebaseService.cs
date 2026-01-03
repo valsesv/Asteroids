@@ -21,28 +21,21 @@ namespace Asteroids.Infrastructure.Firebase
         public void Initialize()
         {
             _signalBus.Subscribe<GameStartedSignal>(OnGameStarted);
-            InitializeAsync().Forget();
+            _ = InitializeAsync();
         }
 
         private async UniTask InitializeAsync()
         {
-            try
-            {
-                var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync().AsUniTask();
+            var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync().AsUniTask();
 
-                if (dependencyStatus == DependencyStatus.Available)
-                {
-                    FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
-                    _isInitialized = true;
-                }
-                else
-                {
-                    Debug.LogError($"[FirebaseService] Could not resolve all Firebase dependencies: {dependencyStatus}");
-                }
-            }
-            catch (Exception ex)
+            if (dependencyStatus == DependencyStatus.Available)
             {
-                Debug.LogError($"[FirebaseService] Exception during Firebase initialization: {ex.Message}");
+                FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
+                _isInitialized = true;
+            }
+            else
+            {
+                Debug.LogError($"[FirebaseService] Could not resolve all Firebase dependencies: {dependencyStatus}");
             }
         }
 

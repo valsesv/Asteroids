@@ -10,10 +10,13 @@ namespace Asteroids.Core.Game
     public class GameController : IInitializable, IDisposable
     {
         private readonly SignalBus _signalBus;
-        private readonly GameEntity _playerEntity;
         private readonly EnemySpawner _enemySpawner;
         private readonly StartPositionSettings _startPositionSettings;
 
+        private HealthComponent _healthComponent;
+        private ShipComponent _shipComponent;
+        private TransformComponent _transformComponent;
+        private PhysicsComponent _physicsComponent;
         private GameState _currentState = GameState.WaitingToStart;
 
         public GameState CurrentState => _currentState;
@@ -26,9 +29,12 @@ namespace Asteroids.Core.Game
             StartPositionSettings startPositionSettings)
         {
             _signalBus = signalBus;
-            _playerEntity = playerEntity;
             _enemySpawner = enemySpawner;
             _startPositionSettings = startPositionSettings;
+            _healthComponent = playerEntity.GetComponent<HealthComponent>();
+            _shipComponent = playerEntity.GetComponent<ShipComponent>();
+            _transformComponent = playerEntity.GetComponent<TransformComponent>();
+            _physicsComponent = playerEntity.GetComponent<PhysicsComponent>();
         }
 
         public void Initialize()
@@ -36,22 +42,14 @@ namespace Asteroids.Core.Game
             SetGameState(GameState.WaitingToStart);
             _signalBus.Subscribe<GameOverSignal>(OnGameOver);
 
-            var healthComponent = _playerEntity.GetComponent<HealthComponent>();
-            if (healthComponent != null)
-            {
-                healthComponent.OnDeath += OnPlayerDeath;
-            }
+            _healthComponent.OnDeath += OnPlayerDeath;
         }
 
         public void Dispose()
         {
             _signalBus?.Unsubscribe<GameOverSignal>(OnGameOver);
 
-            var healthComponent = _playerEntity?.GetComponent<HealthComponent>();
-            if (healthComponent != null)
-            {
-                healthComponent.OnDeath -= OnPlayerDeath;
-            }
+            _healthComponent.OnDeath -= OnPlayerDeath;
         }
 
         public void StartGame()
@@ -80,8 +78,7 @@ namespace Asteroids.Core.Game
                 return;
             }
 
-            var shipComponent = _playerEntity.GetComponent<ShipComponent>();
-            shipComponent.CanControl = false;
+            _shipComponent.CanControl = false;
 
             StopAllEnemies();
             SetGameState(GameState.GameOver);
@@ -89,18 +86,11 @@ namespace Asteroids.Core.Game
 
         private void ResetPlayer()
         {
-            var transformComponent = _playerEntity.GetComponent<TransformComponent>();
-            transformComponent.SetPosition(_startPositionSettings.Position);
-            transformComponent.SetRotation(_startPositionSettings.Rotation);
-
-            var physicsComponent = _playerEntity.GetComponent<PhysicsComponent>();
-            physicsComponent.SetVelocity(UnityEngine.Vector2.zero);
-
-            var healthComponent = _playerEntity.GetComponent<HealthComponent>();
-            healthComponent.ResetHealth();
-
-            var shipComponent = _playerEntity.GetComponent<ShipComponent>();
-            shipComponent.CanControl = true;
+            _transformComponent.SetPosition(_startPositionSettings.Position);
+            _transformComponent.SetRotation(_startPositionSettings.Rotation);
+            _physicsComponent.SetVelocity(UnityEngine.Vector2.zero);
+            _healthComponent.ResetHealth();
+            _shipComponent.CanControl = true;
         }
 
         private void StopAllEnemies()
@@ -121,8 +111,7 @@ namespace Asteroids.Core.Game
         {
             _currentState = newState;
 
-            var shipComponent = _playerEntity.GetComponent<ShipComponent>();
-            shipComponent.CanControl = newState == GameState.Playing;
+            _shipComponent.CanControl = newState == GameState.Playing;
         }
     }
 }

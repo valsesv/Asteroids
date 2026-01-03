@@ -64,19 +64,15 @@ namespace Asteroids.Presentation.Player
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource = new CancellationTokenSource();
 
-            DeactivateAfterDuration(_cancellationTokenSource.Token).Forget();
+            _ = DeactivateAfterDuration(_cancellationTokenSource.Token);
 
             CheckCollisionsWithEnemies();
         }
 
         private async UniTask DeactivateAfterDuration(CancellationToken cancellationToken)
         {
-            await UniTask.Delay((int)(_laserSettings.Duration * 1000), cancellationToken: cancellationToken);
-
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                Deactivate();
-            }
+            await UniTask.Delay(TimeSpan.FromSeconds(_laserSettings.Duration), cancellationToken: cancellationToken);
+            Deactivate();
         }
 
         private void UpdateLaserVisualization()
@@ -113,11 +109,11 @@ namespace Asteroids.Presentation.Player
                 {
                     enemy = collider.GetComponentInParent<EnemyPresentation>();
                 }
-
-                if (enemy != null && enemy.Entity != null)
+                if (enemy == null)
                 {
-                    enemy.HandleDeath();
+                    continue;
                 }
+                enemy.HandleDeath();
             }
         }
 
