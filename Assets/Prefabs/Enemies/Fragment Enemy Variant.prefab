@@ -65,28 +65,32 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -2775183085077640742}
     - target: {fileID: 3311982111889348165, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300022, guid: 1bd6c74c058d5f143a391104c445e845, type: 3}
+    - target: {fileID: 3311982111889348165, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_Color.b
-      value: 0.30588233
+      value: 0.5613208
       objectReference: {fileID: 0}
     - target: {fileID: 3311982111889348165, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_Color.g
-      value: 0.59707576
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3311982111889348165, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.6800929
       objectReference: {fileID: 0}
     - target: {fileID: 3918986215985810163, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.41805
       objectReference: {fileID: 0}
     - target: {fileID: 3918986215985810163, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.41805
       objectReference: {fileID: 0}
     - target: {fileID: 3918986215985810163, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.41805
       objectReference: {fileID: 0}
     - target: {fileID: 3918986215985810163, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -150,7 +154,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.56
 --- !u!1 &6282731507384293212 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6800194182389164290, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}

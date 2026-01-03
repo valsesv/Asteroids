@@ -65,20 +65,32 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4252625713325426781}
     - target: {fileID: 3311982111889348165, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8e342ee52782242dcbd2c91a8eeaf039, type: 3}
+    - target: {fileID: 3311982111889348165, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_Color.b
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3311982111889348165, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_Color.g
-      value: 0.9365637
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3311982111889348165, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_Color.r
-      value: 0.2783019
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3918986215985810163, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.24182533
       objectReference: {fileID: 0}
     - target: {fileID: 3918986215985810163, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.4909
+      value: 0.16043934
+      objectReference: {fileID: 0}
+    - target: {fileID: 3918986215985810163, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.24182533
       objectReference: {fileID: 0}
     - target: {fileID: 6800194182389164290, guid: b0152a34dc50c42698d5f8e5bb02f78a, type: 3}
       propertyPath: m_Name
@@ -154,6 +166,6 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 1}
+  m_Offset: {x: 0, y: -0.18}
+  m_Size: {x: 2.46, y: 2.49}
   m_Direction: 1

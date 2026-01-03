@@ -20,14 +20,14 @@
     "Weapon": {
         "Bullet": {
             "Speed": 10.0,
-            "FireRate": 2.0,
+            "FireRate": 2.5,
             "Lifetime": 3.0
         },
         "Laser": {
             "MaxCharges": 3,
             "RechargeTime": 5.0,
-            "Duration": 0.2,
-            "Width": 0.2,
+            "Duration": 0.1,
+            "Width": 0.15,
             "Range": 15.0
         }
     }
