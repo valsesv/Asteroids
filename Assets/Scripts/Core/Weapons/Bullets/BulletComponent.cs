@@ -1,16 +1,29 @@
 using Asteroids.Core.Entity;
+using Asteroids.Core.Entity.Components;
+using Asteroids.Core.Weapons;
+using Zenject;
 
 namespace Asteroids.Core.Player
 {
-    public class BulletComponent : IComponent
+    public class BulletComponent : IInitializableComponent
     {
         public float Lifetime { get; set; }
-        public float Speed { get; set; }
 
-        public BulletComponent(float speed, float lifetime)
+        public BulletComponent()
         {
-            Speed = speed;
-            Lifetime = lifetime;
+        }
+
+        public void Initialize(GameEntity entity, DiContainer container)
+        {
+            var bulletSettings = container.Resolve<BulletSettings>();
+            Lifetime = bulletSettings.Lifetime;
+
+            var physicsComponent = entity.GetComponent<PhysicsComponent>();
+            var movement = new BulletMovement(physicsComponent, bulletSettings.Speed);
+            entity.AddComponent(movement);
+
+            var bulletLifetime = new BulletLifetime(entity);
+            entity.AddComponent(bulletLifetime);
         }
     }
 }

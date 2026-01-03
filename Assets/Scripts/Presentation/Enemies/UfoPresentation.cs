@@ -11,18 +11,12 @@ namespace Asteroids.Presentation.Enemies
         {
         [Inject]
         public void Construct(
-            ScreenBounds screenBounds,
-            ShipPresentation shipPresentation,
-            EnemySettings enemySettings,
-            EnemyFactory enemyFactory)
+            EntityFactory<UfoComponent> entityFactory)
         {
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
-            var playerTransform = shipPresentation.Entity.GetComponent<TransformComponent>();
-
-            Entity = enemyFactory.CreateUfo(position, rotation, playerTransform, enemySettings, screenBounds);
-            RegisterTickableComponents();
+            Entity = entityFactory.Create(position, rotation, physicsMass: 1f);
             _container.BindInstance(Entity).AsSingle();
         }
 

@@ -143,7 +143,10 @@ namespace Asteroids.Installers
                 .FromMethod(ctx => new ScreenBounds(Camera.main))
                 .AsSingle();
 
-            Container.Bind<EnemyFactory>().AsSingle();
+            Container.Bind<EntityFactory<AsteroidComponent>>().AsSingle();
+            Container.Bind<EntityFactory<FragmentComponent>>().AsSingle();
+            Container.Bind<EntityFactory<UfoComponent>>().AsSingle();
+            Container.Bind<EntityFactory<BulletComponent>>().AsSingle();
 
             Container.Bind<ShipPresentation>().FromInstance(_shipPresentationPrefab).AsSingle();
             Container.BindInterfacesAndSelfTo<ProjectileSpawner>().FromInstance(_projectileSpawner).AsSingle();

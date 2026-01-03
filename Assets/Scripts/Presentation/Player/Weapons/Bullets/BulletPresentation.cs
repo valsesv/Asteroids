@@ -20,14 +20,13 @@ namespace Asteroids.Presentation.Player
         private BulletLifetime _bulletLifetime;
 
         [Inject]
-        public void Construct(BulletSettings bulletSettings)
+        public void Construct(EntityFactory<BulletComponent> entityFactory)
         {
             var position = new Vector2(transform.position.x, transform.position.y);
 
-            Entity = BulletFactory.CreateBullet(position, bulletSettings.Speed, bulletSettings.Lifetime);
+            Entity = entityFactory.Create(position, 0f, physicsMass: 0.1f);
 
             _container.BindInstance(Entity).AsSingle();
-            RegisterTickableComponents();
         }
 
         public void Initialize()

@@ -10,17 +10,14 @@ namespace Asteroids.Presentation.Enemies
     {
         [Inject]
         public void Construct(
-            ScreenBounds screenBounds,
-            EnemySettings enemySettings,
-            EnemyFactory enemyFactory)
+            EntityFactory<AsteroidComponent> entityFactory)
         {
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
-            Entity = enemyFactory.CreateAsteroid(position, rotation, enemySettings.AsteroidSpeed, screenBounds);
+            Entity = entityFactory.Create(position, rotation, physicsMass: 1f);
 
             _container.BindInstance(Entity).AsSingle();
-            RegisterTickableComponents();
         }
 
         public void SetDirection(Vector2 direction)
