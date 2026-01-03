@@ -1,49 +1,57 @@
+using System;
 using System.Collections.Generic;
 using Zenject;
 using Asteroids.Core.Enemies;
-using Asteroids.Core.Entity.Components;
-using System;
+using Asteroids.Core.Entity;
+using Asteroids.Core.Game;
+using Asteroids.Presentation.Enemies;
 
 namespace Asteroids.Core.Score
 {
     public class ScoreService : IInitializable, IDisposable
     {
+        public int CurrentScore => _currentScore;
+        public event Action<int> OnScoreChanged;
+
         private readonly ScoreSettings _settings;
         private readonly SignalBus _signalBus;
+        private readonly EnemySpawner _enemySpawner;
 
         private Dictionary<EnemyType, int> _enemyRewards;
         private int _currentScore;
 
-        public int CurrentScore => _currentScore;
-
-        public ScoreService(ScoreSettings settings, SignalBus signalBus)
+        public ScoreService(ScoreSettings settings, SignalBus signalBus, EnemySpawner enemySpawner)
         {
             _settings = settings;
             _signalBus = signalBus;
+            _enemySpawner = enemySpawner;
         }
 
         public void Initialize()
         {
             InitializeRewards();
             _currentScore = 0;
-            _signalBus.Subscribe<EnemyDestroyedSignal>(OnEnemyDestroyed);
+            _enemySpawner.OnEnemyDestroyed += OnEnemyDestroyed;
             _signalBus.Subscribe<GameStartedSignal>(OnGameStarted);
         }
 
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<EnemyDestroyedSignal>(OnEnemyDestroyed);
+            if (_enemySpawner != null)
+            {
+                _enemySpawner.OnEnemyDestroyed -= OnEnemyDestroyed;
+            }
             _signalBus?.Unsubscribe<GameStartedSignal>(OnGameStarted);
         }
 
-        private void OnEnemyDestroyed(EnemyDestroyedSignal signal)
+        private void OnEnemyDestroyed(GameEntity entity)
         {
-            if (signal.Entity == null)
+            if (entity == null)
             {
                 return;
             }
 
-            var enemyComponent = signal.Entity.GetComponent<EnemyComponent>();
+            var enemyComponent = entity.GetComponent<EnemyComponent>();
             if (enemyComponent == null)
             {
                 return;
@@ -79,13 +87,7 @@ namespace Asteroids.Core.Score
         private void AddScore(int points)
         {
             _currentScore += points;
-
-            var scoreChangedSignal = new ScoreChangedSignal
-            {
-                CurrentScore = _currentScore,
-                PointsAdded = points
-            };
-            _signalBus.Fire(scoreChangedSignal);
+            OnScoreChanged?.Invoke(_currentScore);
         }
 
         private void OnGameStarted(GameStartedSignal _)
@@ -96,12 +98,7 @@ namespace Asteroids.Core.Score
         public void ResetScore()
         {
             _currentScore = 0;
-            var scoreChangedSignal = new ScoreChangedSignal
-            {
-                CurrentScore = _currentScore,
-                PointsAdded = 0
-            };
-            _signalBus.Fire(scoreChangedSignal);
+            OnScoreChanged?.Invoke(_currentScore);
         }
     }
 }

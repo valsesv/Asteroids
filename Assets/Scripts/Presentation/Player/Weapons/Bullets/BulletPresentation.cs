@@ -17,6 +17,9 @@ namespace Asteroids.Presentation.Player
         [Inject] private TickableManager _tickableManager;
         [Inject] private ProjectileSpawner _projectileSpawner;
 
+        private TransformComponent _transformComponent;
+        private BulletLifetime _bulletLifetime;
+
         [Inject]
         public void Construct(BulletSettings bulletSettings)
         {
@@ -27,9 +30,6 @@ namespace Asteroids.Presentation.Player
             _container.BindInstance(Entity).AsSingle();
             RegisterTickableComponents();
         }
-
-        private TransformComponent _transformComponent;
-        private BulletLifetime _bulletLifetime;
 
         public void Initialize()
         {

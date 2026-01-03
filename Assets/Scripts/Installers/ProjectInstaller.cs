@@ -1,6 +1,6 @@
 using Zenject;
 using Asteroids.Infrastructure.Firebase;
-using Asteroids.Core.Entity.Components;
+using Asteroids.Core.Game;
 
 namespace Asteroids.Installers
 {

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using Zenject;
-using Asteroids.Core.Entity.Components;
+using Asteroids.Core.Game;
 using UnityEngine.Assertions;
 
 namespace Asteroids.Presentation.UI

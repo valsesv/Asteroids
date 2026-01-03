@@ -1,52 +1,39 @@
 using System;
 using Zenject;
 using Asteroids.Core.Score;
-using Asteroids.Core.Entity.Components;
 
 namespace Asteroids.Presentation.UI
 {
     public class ScoreViewModel : IInitializable, IDisposable
     {
-        private readonly SignalBus _signalBus;
-        private readonly ScoreService _scoreService;
-
-        private int _currentScore;
-        public int CurrentScore
-        {
-            get => _currentScore;
-            private set
-            {
-                if (_currentScore != value)
-                {
-                    _currentScore = value;
-                    OnScoreChanged?.Invoke(_currentScore);
-                }
-            }
-        }
-
+        public int CurrentScore { get; private set; }
         public event Action<int> OnScoreChanged;
 
-        public ScoreViewModel(SignalBus signalBus, ScoreService scoreService)
+        private readonly ScoreService _scoreService;
+
+        public ScoreViewModel(ScoreService scoreService)
         {
-            _signalBus = signalBus;
             _scoreService = scoreService;
         }
 
         public void Initialize()
         {
-            _signalBus.Subscribe<ScoreChangedSignal>(OnScoreChangedSignal);
-
+            _scoreService.OnScoreChanged += OnScoreChangedHandler;
             CurrentScore = _scoreService.CurrentScore;
         }
 
         public void Dispose()
         {
-            _signalBus?.Unsubscribe<ScoreChangedSignal>(OnScoreChangedSignal);
+            if (_scoreService != null)
+            {
+                _scoreService.OnScoreChanged -= OnScoreChangedHandler;
+            }
         }
 
-        private void OnScoreChangedSignal(ScoreChangedSignal signal)
+        private void OnScoreChangedHandler(int currentScore)
         {
-            CurrentScore = signal.CurrentScore;
+            CurrentScore = currentScore;
+            OnScoreChanged?.Invoke(CurrentScore);
         }
     }
 }

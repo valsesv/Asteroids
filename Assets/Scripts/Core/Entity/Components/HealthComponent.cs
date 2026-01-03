@@ -1,20 +1,18 @@
-using Zenject;
+using System;
 
 namespace Asteroids.Core.Entity.Components
 {
     public class HealthComponent : IComponent
     {
-        private readonly SignalBus _signalBus;
-
         public float CurrentHealth { get; private set; }
         public float MaxHealth { get; private set; }
         public bool IsDead => CurrentHealth <= 0f;
+        public event Action OnDeath;
 
-        public HealthComponent(float maxHealth, SignalBus signalBus = null)
+        public HealthComponent(float maxHealth)
         {
             MaxHealth = maxHealth;
             CurrentHealth = maxHealth;
-            _signalBus = signalBus;
         }
 
         public void TakeDamage(float damage)
@@ -28,7 +26,7 @@ namespace Asteroids.Core.Entity.Components
 
             if (IsDead)
             {
-                _signalBus?.Fire<GameOverSignal>();
+                OnDeath?.Invoke();
             }
         }
 

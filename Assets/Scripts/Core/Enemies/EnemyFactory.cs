@@ -79,7 +79,7 @@ namespace Asteroids.Core.Enemies
             var ufoComponent = new UfoComponent();
             entity.AddComponent(ufoComponent);
 
-            var movement = new UfoMovement(entity, playerTransform, enemySettings.UfoSpeed, signalBus);
+            var movement = new UfoMovement(entity, playerTransform, enemySettings.UfoSpeed);
             entity.AddComponent(movement);
 
             return entity;

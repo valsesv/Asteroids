@@ -13,16 +13,14 @@ namespace Asteroids.Presentation.Enemies
     {
         public GameEntity Entity { get; protected set; }
 
-        [Inject] protected SignalBus _signalBus;
         [Inject] protected EnemySpawner _enemySpawner;
         [Inject] protected TickableManager _tickableManager;
         [Inject] protected DiContainer _container;
         [Inject(Optional = true)] protected ParticleEffectSpawner _particleEffectSpawner;
 
-        private bool _isPlayerInvincible;
-
         private TransformComponent _transformComponent;
         private GameEntity _playerEntity;
+        private bool _isPlayerInvincible;
 
         public virtual void Initialize()
         {
@@ -79,11 +77,6 @@ namespace Asteroids.Presentation.Enemies
             if (_enemySpawner != null)
             {
                 _enemySpawner.ReturnEnemy(this);
-            }
-
-            if (_signalBus != null && Entity != null)
-            {
-                _signalBus.Fire(new EnemyDestroyedSignal { Entity = Entity });
             }
         }
 

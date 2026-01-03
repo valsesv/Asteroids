@@ -36,11 +36,23 @@ namespace Asteroids.Core.Game
         {
             SetGameState(GameState.WaitingToStart);
             _signalBus.Subscribe<GameOverSignal>(OnGameOver);
+
+            var healthComponent = _playerEntity.GetComponent<HealthComponent>();
+            if (healthComponent != null)
+            {
+                healthComponent.OnDeath += OnPlayerDeath;
+            }
         }
 
         public void Dispose()
         {
             _signalBus?.Unsubscribe<GameOverSignal>(OnGameOver);
+
+            var healthComponent = _playerEntity?.GetComponent<HealthComponent>();
+            if (healthComponent != null)
+            {
+                healthComponent.OnDeath -= OnPlayerDeath;
+            }
         }
 
         public void StartGame()
@@ -55,6 +67,11 @@ namespace Asteroids.Core.Game
             ResetPlayer();
             SetGameState(GameState.Playing);
             _signalBus.Fire<GameStartedSignal>();
+        }
+
+        private void OnPlayerDeath()
+        {
+            _signalBus?.Fire<GameOverSignal>();
         }
 
         private void OnGameOver(GameOverSignal _)

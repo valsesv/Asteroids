@@ -1,14 +1,19 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Enemies;
 using UnityEngine.Assertions;
+using Random = UnityEngine.Random;
 
 namespace Asteroids.Presentation.Enemies
 {
     public class EnemySpawner : MonoBehaviour, IInitializable, ITickable
     {
+        public List<EnemyPresentation> ActiveEnemies => _activeEnemies;
+        public event Action<GameEntity> OnEnemyDestroyed;
+
         [SerializeField] private Transform _asteroidParent;
         [SerializeField] private Transform _ufoParent;
         [SerializeField] private Transform _fragmentParent;
@@ -16,7 +21,6 @@ namespace Asteroids.Presentation.Enemies
         [SerializeField] private GameObject _ufoPrefab;
         [SerializeField] private GameObject _fragmentPrefab;
 
-        private float _lastSpawnTime;
         private ScreenBounds _screenBounds;
         private DiContainer _container;
         private EnemySettings _enemySettings;
@@ -24,15 +28,12 @@ namespace Asteroids.Presentation.Enemies
         private ObjectPool<AsteroidPresentation> _asteroidPool;
         private ObjectPool<UfoPresentation> _ufoPool;
         private ObjectPool<FragmentPresentation> _fragmentPool;
-
         private EnemyPresentationFactory<AsteroidPresentation> _asteroidFactory;
         private EnemyPresentationFactory<UfoPresentation> _ufoFactory;
         private EnemyPresentationFactory<FragmentPresentation> _fragmentFactory;
-
         private List<EnemyPresentation> _activeEnemies = new List<EnemyPresentation>();
+        private float _lastSpawnTime;
         private bool _isSpawningEnabled = false;
-
-        public List<EnemyPresentation> ActiveEnemies => _activeEnemies;
 
         public void SetSpawningEnabled(bool enabled)
         {
@@ -129,6 +130,11 @@ namespace Asteroids.Presentation.Enemies
             if (enemy == null)
             {
                 return;
+            }
+
+            if (enemy.Entity != null)
+            {
+                OnEnemyDestroyed?.Invoke(enemy.Entity);
             }
 
             _activeEnemies.Remove(enemy);

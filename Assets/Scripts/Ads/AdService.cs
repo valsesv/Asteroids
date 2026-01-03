@@ -3,7 +3,7 @@ using Zenject;
 using YandexMobileAds;
 using YandexMobileAds.Base;
 using UnityEngine;
-using Asteroids.Core.Entity.Components;
+using Asteroids.Core.Game;
 
 namespace Asteroids.Infrastructure.Ads
 {

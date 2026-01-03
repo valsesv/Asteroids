@@ -7,12 +7,11 @@ using Asteroids.Core.Score;
 using Asteroids.Core.Weapons;
 using UnityEngine.Assertions;
 using Asteroids.Core.Entity;
-using Asteroids.Core.Entity.Components;
+using Asteroids.Core.Game;
 using Asteroids.Presentation.Player;
 using Asteroids.Presentation.Enemies;
 using Asteroids.Presentation.Effects;
 using Asteroids.Presentation.UI;
-using Asteroids.Core.Game;
 using Asteroids.Infrastructure;
 
 namespace Asteroids.Installers
@@ -74,8 +73,6 @@ namespace Asteroids.Installers
         {
             Container.DeclareSignal<GameStartedSignal>();
             Container.DeclareSignal<GameOverSignal>();
-            Container.DeclareSignal<EnemyDestroyedSignal>();
-            Container.DeclareSignal<ScoreChangedSignal>();
         }
 
         private void InstallSettings()

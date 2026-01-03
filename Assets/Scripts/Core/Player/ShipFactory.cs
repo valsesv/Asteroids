@@ -30,7 +30,7 @@ namespace Asteroids.Core.Player
             var shipMovement = new ShipMovement(entity, movementSettings, inputProvider, physicsComponent, signalBus);
             entity.AddComponent(shipMovement);
 
-            var healthComponent = new HealthComponent(healthSettings.MaxHealth, signalBus);
+            var healthComponent = new HealthComponent(healthSettings.MaxHealth);
             entity.AddComponent(healthComponent);
 
             var damageHandler = new DamageHandler(healthComponent, entity, signalBus, healthSettings.InvincibilityDuration, healthSettings.BounceForce);
