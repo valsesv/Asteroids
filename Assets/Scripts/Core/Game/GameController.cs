@@ -7,7 +7,7 @@ using Asteroids.Presentation.Enemies;
 
 namespace Asteroids.Core.Game
 {
-    public partial class GameController : IInitializable, IDisposable
+    public class GameController : IInitializable, IDisposable
     {
         private readonly SignalBus _signalBus;
         private readonly GameEntity _playerEntity;
@@ -23,8 +23,7 @@ namespace Asteroids.Core.Game
             SignalBus signalBus,
             GameEntity playerEntity,
             EnemySpawner enemySpawner,
-            StartPositionSettings startPositionSettings,
-            HealthSettings healthSettings)
+            StartPositionSettings startPositionSettings)
         {
             _signalBus = signalBus;
             _playerEntity = playerEntity;

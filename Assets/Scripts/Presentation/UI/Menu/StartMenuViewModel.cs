@@ -37,7 +37,7 @@ namespace Asteroids.Presentation.UI
             _signalBus.Subscribe<GameStartedSignal>(OnGameStarted);
             _signalBus.Subscribe<GameOverSignal>(OnGameOver);
 
-            IsVisible = _gameController.CurrentState != GameController.GameState.Playing;
+            IsVisible = _gameController.CurrentState != GameState.Playing;
         }
 
         public void Dispose()
