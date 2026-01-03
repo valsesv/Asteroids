@@ -65,7 +65,7 @@ namespace Asteroids.Presentation.Player
             CheckCollisionsWithEnemies();
         }
 
-        private async UniTaskVoid DeactivateAfterDuration(CancellationToken cancellationToken)
+        private async UniTask DeactivateAfterDuration(CancellationToken cancellationToken)
         {
             await UniTask.Delay((int)(_laserSettings.Duration * 1000), cancellationToken: cancellationToken);
 

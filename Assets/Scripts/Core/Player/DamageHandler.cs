@@ -73,7 +73,7 @@ namespace Asteroids.Core.Player
             shipPhysics.ApplyImpulse(shipImpulse);
         }
 
-        private async UniTaskVoid StartInvincibility()
+        private async UniTask StartInvincibility()
         {
             IsInvincible = true;
             if (_shipComponent != null)

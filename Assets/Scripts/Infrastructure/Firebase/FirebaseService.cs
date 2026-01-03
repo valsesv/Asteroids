@@ -24,7 +24,7 @@ namespace Asteroids.Infrastructure.Firebase
             InitializeAsync().Forget();
         }
 
-        private async UniTaskVoid InitializeAsync()
+        private async UniTask InitializeAsync()
         {
             try
             {

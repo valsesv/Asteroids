@@ -50,7 +50,7 @@ namespace Asteroids.Presentation.Effects
             ReturnParticleSystemAfterDelay(particleSystem).Forget();
         }
 
-        private async UniTaskVoid ReturnParticleSystemAfterDelay(ParticleSystem particleSystem)
+        private async UniTask ReturnParticleSystemAfterDelay(ParticleSystem particleSystem)
         {
             while (particleSystem != null && particleSystem.isPlaying)
             {
