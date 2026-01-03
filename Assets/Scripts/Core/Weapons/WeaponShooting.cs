@@ -11,7 +11,7 @@ namespace Asteroids.Core.Player
         private readonly BulletShootingLogic _bulletShooting;
         private readonly LaserShootingLogic _laserShooting;
 
-        public bool CanShooting { get; set; } = true;
+        public bool CanShooting { get; set; }
 
         public WeaponShooting(
             GameEntity entity,
@@ -22,7 +22,7 @@ namespace Asteroids.Core.Player
             var transform = entity.GetComponent<TransformComponent>();
 
             _bulletShooting = new BulletShootingLogic(transform, inputProvider, weaponSettings.Bullet, signalBus);
-            
+
             var laserComponent = entity.GetComponent<LaserComponent>();
             _laserShooting = new LaserShootingLogic(transform, inputProvider, laserComponent, signalBus);
         }

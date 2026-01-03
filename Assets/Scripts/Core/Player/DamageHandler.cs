@@ -18,7 +18,7 @@ namespace Asteroids.Core.Player
 
         public bool IsInvincible { get; private set; }
 
-        public DamageHandler(HealthComponent healthComponent, GameEntity entity, SignalBus signalBus, float invincibilityDuration = 3f, float bounceForce = 5f)
+        public DamageHandler(HealthComponent healthComponent, GameEntity entity, SignalBus signalBus, float invincibilityDuration, float bounceForce)
         {
             _healthComponent = healthComponent;
             _shipComponent = entity.GetComponent<ShipComponent>();

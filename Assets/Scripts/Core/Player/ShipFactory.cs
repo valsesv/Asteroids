@@ -23,7 +23,7 @@ namespace Asteroids.Core.Player
             entity.AddComponent(shipComponent);
 
             var transform = entity.GetComponent<TransformComponent>();
-            var physicsComponent = new PhysicsComponent(transform, signalBus, mass: 1f, frictionCoefficient: movementSettings.Friction);
+            var physicsComponent = new PhysicsComponent(transform, signalBus, frictionCoefficient: movementSettings.Friction);
             entity.AddComponent(physicsComponent);
 
             var shipMovement = new ShipMovement(entity, movementSettings, inputProvider, physicsComponent, signalBus);
