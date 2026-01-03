@@ -7,6 +7,7 @@ using Asteroids.Core.Score;
 using Asteroids.Core.Weapons;
 using UnityEngine.Assertions;
 using Asteroids.Core.Entity;
+using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Game;
 using Asteroids.Presentation.Player;
 using Asteroids.Presentation.Enemies;
@@ -160,15 +161,20 @@ namespace Asteroids.Installers
 
         private void InstallPlayerEntity()
         {
+            Container.Bind<ShipEntityBuilder>().AsSingle();
+
             Container.Bind<GameEntity>()
-                .FromMethod(ctx => ShipFactory.CreateShip(
-                    ctx.Container.Resolve<StartPositionSettings>(),
-                    ctx.Container.Resolve<MovementSettings>(),
-                    ctx.Container.Resolve<HealthSettings>(),
-                    ctx.Container.Resolve<WeaponSettings>(),
-                    ctx.Container.Resolve<IInputProvider>(),
-                    ctx.Container.Resolve<ScreenBounds>(),
-                    ctx.Container))
+                .FromMethod(ctx =>
+                {
+                    var builder = ctx.Container.Resolve<ShipEntityBuilder>();
+                    return builder.CreateShip(
+                        ctx.Container.Resolve<StartPositionSettings>(),
+                        ctx.Container.Resolve<MovementSettings>(),
+                        ctx.Container.Resolve<HealthSettings>(),
+                        ctx.Container.Resolve<WeaponSettings>(),
+                        ctx.Container.Resolve<IInputProvider>(),
+                        ctx.Container.Resolve<ScreenBounds>());
+                })
                 .AsSingle();
         }
 

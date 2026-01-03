@@ -1,21 +1,27 @@
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Core.PlayerInput;
-using Zenject;
 using Asteroids.Core.Weapons;
+using Zenject;
 
 namespace Asteroids.Core.Player
 {
-    public static class ShipFactory
+    public class ShipEntityBuilder
     {
-        public static GameEntity CreateShip(
+        private readonly DiContainer _container;
+
+        public ShipEntityBuilder(DiContainer container)
+        {
+            _container = container;
+        }
+
+        public GameEntity CreateShip(
             StartPositionSettings startPositionSettings,
             MovementSettings movementSettings,
             HealthSettings healthSettings,
             WeaponSettings weaponSettings,
             IInputProvider inputProvider,
-            ScreenBounds screenBounds,
-            DiContainer container)
+            ScreenBounds screenBounds)
         {
             var entity = new GameEntity(startPositionSettings.Position, startPositionSettings.Rotation);
 
@@ -41,13 +47,23 @@ namespace Asteroids.Core.Player
             var laserComponent = new LaserComponent(weaponSettings.Laser);
             entity.AddComponent(laserComponent);
 
-            var weaponShooting = container.Instantiate<WeaponShooting>(new object[] { entity });
+            var weaponShooting = _container.Instantiate<WeaponShooting>(new object[] { entity });
             entity.AddComponent(weaponShooting);
 
             weaponShooting.Initialize();
 
+            RegisterTickableComponents(entity);
+
             return entity;
+        }
+
+        private void RegisterTickableComponents(GameEntity entity)
+        {
+            var tickableManager = _container.Resolve<TickableManager>();
+            foreach (var tickableComponent in entity.GetTickableComponents())
+            {
+                tickableManager.Add(tickableComponent);
+            }
         }
     }
 }
-
