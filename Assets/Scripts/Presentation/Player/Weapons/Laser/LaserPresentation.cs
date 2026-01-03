@@ -116,7 +116,7 @@ namespace Asteroids.Presentation.Player
 
                 if (enemy != null && enemy.Entity != null)
                 {
-                    enemy.HandleInstaDeath();
+                    enemy.HandleDeath();
                 }
             }
         }

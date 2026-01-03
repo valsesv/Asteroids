@@ -8,6 +8,8 @@ namespace Asteroids.Presentation.Enemies
 {
     public class AsteroidPresentation : EnemyPresentation
     {
+        private AsteroidMovement _asteroidMovement;
+
         [Inject]
         public void Construct(
             EntityFactory<AsteroidComponent> entityFactory)
@@ -15,41 +17,29 @@ namespace Asteroids.Presentation.Enemies
             Vector2 position = new Vector2(transform.position.x, transform.position.y);
             float rotation = transform.eulerAngles.z;
 
-            Entity = entityFactory.Create(position, rotation, physicsMass: 1f);
+            Entity = entityFactory.Create(position, rotation);
+            _asteroidMovement = Entity.GetComponent<AsteroidMovement>();
 
             _container.BindInstance(Entity).AsSingle();
         }
 
         public void SetDirection(Vector2 direction)
         {
-            var movement = Entity.GetComponent<AsteroidMovement>();
-            if (movement != null)
-            {
-                movement.SetDirection(direction);
-            }
+            _asteroidMovement.SetDirection(direction);
         }
 
         public override void GetDamage()
         {
             base.GetDamage();
-
-            var asteroidComponent = Entity?.GetComponent<AsteroidComponent>();
-            if (asteroidComponent == null)
-            {
-                return;
-            }
-            var transformComponent = Entity.GetComponent<TransformComponent>();
-            var physicsComponent = Entity.GetComponent<PhysicsComponent>();
-
-            Vector2 position = transformComponent?.Position ?? Vector2.zero;
-            Vector2 velocity = physicsComponent?.Velocity ?? Vector2.zero;
-
-            _enemySpawner.FragmentAsteroid(this, position, velocity, asteroidComponent);
+            FragmentAsteroid();
         }
 
-        public override void HandleInstaDeath()
+        private void FragmentAsteroid()
         {
-            base.HandleInstaDeath();
+            PhysicsComponent physicsComponent = Entity.GetComponent<PhysicsComponent>();
+            Vector2 position = _transformComponent.Position;
+            Vector2 velocity = physicsComponent.Velocity;
+            _enemySpawner.FragmentAsteroid(this, position, velocity, Entity.GetComponent<AsteroidComponent>());
         }
     }
 }

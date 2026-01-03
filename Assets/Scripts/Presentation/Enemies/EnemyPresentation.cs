@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Zenject;
 using Asteroids.Core.Entity;
@@ -16,20 +15,15 @@ namespace Asteroids.Presentation.Enemies
         [Inject] protected EnemySpawner _enemySpawner;
         [Inject] protected TickableManager _tickableManager;
         [Inject] protected DiContainer _container;
-        [Inject(Optional = true)] protected ParticleEffectSpawner _particleEffectSpawner;
+        [Inject] protected ParticleEffectSpawner _particleEffectSpawner;
 
-        private TransformComponent _transformComponent;
-        private GameEntity _playerEntity;
-        private bool _isPlayerInvincible;
+        protected TransformComponent _transformComponent;
+        private ScreenWrapComponent _screenWrapComponent;
 
         public virtual void Initialize()
         {
             _transformComponent = Entity?.GetComponent<TransformComponent>();
-        }
-
-        public void SetPlayerEntity(GameEntity playerEntity)
-        {
-            _playerEntity = playerEntity;
+            _screenWrapComponent = Entity?.GetComponent<ScreenWrapComponent>();
         }
 
         private void LateUpdate()
@@ -59,25 +53,18 @@ namespace Asteroids.Presentation.Enemies
 
         public virtual void GetDamage()
         {
-            HandleInstaDeath();
+            HandleDeath();
         }
 
-        public virtual void HandleInstaDeath()
+        public virtual void HandleDeath()
         {
-            if (!IsEnemyInGameArea())
+            if (_screenWrapComponent.IsInGameArea == false)
             {
                 return;
             }
 
-            if (_particleEffectSpawner != null)
-            {
-                _particleEffectSpawner.SpawnExplosion(transform.position);
-            }
-
-            if (_enemySpawner != null)
-            {
-                _enemySpawner.ReturnEnemy(this);
-            }
+            _particleEffectSpawner.SpawnExplosion(transform.position);
+            _enemySpawner.ReturnEnemy(this);
         }
 
         protected virtual void OnCollisionEnter2D(Collision2D collision)
@@ -89,49 +76,19 @@ namespace Asteroids.Presentation.Enemies
                 return;
             }
 
-            var shipPresentation = collision.gameObject.GetComponent<ShipPresentation>();
-            if (shipPresentation == null)
+            if (collision.gameObject.TryGetComponent<ShipPresentation>(out var shipPresentation))
             {
-                return;
+                HandleShipCollision(shipPresentation);
             }
-            if (_isPlayerInvincible)
-            {
-                return;
-            }
+        }
 
+        private void HandleShipCollision(ShipPresentation shipPresentation)
+        {
+            if (shipPresentation.Entity.GetComponent<DamageHandler>().IsInvincible != false)
+            {
+                return;
+            }
             GetDamage();
-            return;
-        }
-
-        private bool IsEnemyInGameArea()
-        {
-            if (Entity == null)
-            {
-                return false;
-            }
-
-            var screenWrap = Entity.GetComponent<ScreenWrapComponent>();
-            return screenWrap != null && screenWrap.IsInGameArea;
-        }
-
-        protected virtual void RegisterTickableComponents()
-        {
-            foreach (var tickableComponent in Entity.GetTickableComponents())
-            {
-                _tickableManager.Add(tickableComponent);
-            }
-        }
-
-        private void Update()
-        {
-            if (_playerEntity != null)
-            {
-                var damageHandler = _playerEntity.GetComponent<DamageHandler>();
-                if (damageHandler != null)
-                {
-                    _isPlayerInvincible = damageHandler.IsInvincible;
-                }
-            }
         }
     }
 }

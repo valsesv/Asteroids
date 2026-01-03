@@ -1,8 +1,10 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Entity;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Random = UnityEngine.Random;
 
 namespace Asteroids.Core.Player
 {
@@ -15,6 +17,9 @@ namespace Asteroids.Core.Player
         private readonly float _bounceForce;
 
         public bool IsInvincible { get; private set; }
+
+        public event Action OnInvincibilityStarted;
+        public event Action OnInvincibilityEnded;
 
         public DamageHandler(HealthComponent healthComponent, GameEntity entity, float invincibilityDuration, float bounceForce)
         {
@@ -77,14 +82,16 @@ namespace Asteroids.Core.Player
         private async UniTask StartInvincibility()
         {
             IsInvincible = true;
+            OnInvincibilityStarted?.Invoke();
             if (_shipComponent != null)
             {
                 _shipComponent.CanControl = false;
             }
 
-            await UniTask.Delay(System.TimeSpan.FromSeconds(_invincibilityDuration));
+            await UniTask.Delay(TimeSpan.FromSeconds(_invincibilityDuration));
 
             IsInvincible = false;
+            OnInvincibilityEnded?.Invoke();
             if (_shipComponent != null && !_healthComponent.IsDead)
             {
                 _shipComponent.CanControl = true;

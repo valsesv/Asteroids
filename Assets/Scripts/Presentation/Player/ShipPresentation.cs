@@ -17,37 +17,40 @@ namespace Asteroids.Presentation.Player
 
         private TransformComponent _transformComponent;
         private DamageHandler _damageHandler;
-        private bool _lastInvincibilityState;
+        private HealthComponent _healthComponent;
 
         [Inject]
         public void Construct(GameEntity entity)
         {
             Entity = entity;
+
+            _transformComponent = Entity?.GetComponent<TransformComponent>();
+            _damageHandler = Entity?.GetComponent<DamageHandler>();
+            _healthComponent = Entity?.GetComponent<HealthComponent>();
         }
 
         public void Initialize()
         {
             Assert.IsNotNull(_invincibilityEffects, "InvincibilityEffects is not assigned in ShipPresentation!");
 
-            _transformComponent = Entity?.GetComponent<TransformComponent>();
-            _damageHandler = Entity?.GetComponent<DamageHandler>();
-            _lastInvincibilityState = _damageHandler?.IsInvincible ?? false;
-
             _invincibilityEffects.Initialize();
+
+            _damageHandler.OnInvincibilityStarted += OnInvincibilityStarted;
+            _damageHandler.OnInvincibilityEnded += OnInvincibilityEnded;
         }
 
         public void Dispose()
         {
+            _damageHandler.OnInvincibilityStarted -= OnInvincibilityStarted;
+            _damageHandler.OnInvincibilityEnded -= OnInvincibilityEnded;
+
             _invincibilityEffects?.Dispose();
         }
 
         private void LateUpdate()
         {
-            if (_transformComponent != null)
-            {
-                transform.position = new Vector3(_transformComponent.Position.x, _transformComponent.Position.y, 0f);
-                transform.rotation = Quaternion.Euler(0f, 0f, _transformComponent.Rotation);
-            }
+            transform.position = new Vector3(_transformComponent.Position.x, _transformComponent.Position.y, 0f);
+            transform.rotation = Quaternion.Euler(0f, 0f, _transformComponent.Rotation);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -60,45 +63,24 @@ namespace Asteroids.Presentation.Player
                 return;
             }
 
-            var damageHandler = Entity?.GetComponent<DamageHandler>();
-            if (damageHandler == null)
-            {
-                Debug.LogWarning("[ShipPresentation] DamageHandler not found on GameEntity!");
-                return;
-            }
-
-            if (damageHandler.IsInvincible)
+            if (_damageHandler.IsInvincible)
             {
                 return;
             }
 
             GameEntity enemyEntity = enemyPresentation.Entity;
-            bool damageTaken = damageHandler.HandleCollision(enemyEntity, 1f);
-            if (damageTaken)
-            {
-                var healthComponent = Entity?.GetComponent<HealthComponent>();
-                Debug.Log($"[ShipPresentation] Player took damage! Health: {healthComponent?.CurrentHealth}/{healthComponent?.MaxHealth}");
-            }
+            bool damageTaken = _damageHandler.HandleCollision(enemyEntity, 1f);
+            Debug.Log($"[ShipPresentation] Player took damage! Health: {_healthComponent?.CurrentHealth}/{_healthComponent?.MaxHealth}");
         }
 
-        private void Update()
+        private void OnInvincibilityStarted()
         {
-            if (_damageHandler != null)
-            {
-                bool currentInvincibility = _damageHandler.IsInvincible;
-                if (currentInvincibility != _lastInvincibilityState)
-                {
-                    _lastInvincibilityState = currentInvincibility;
-                    if (currentInvincibility)
-                    {
-                        _invincibilityEffects.StartEffects();
-                    }
-                    else
-                    {
-                        _invincibilityEffects.StopEffects();
-                    }
-                }
-            }
+            _invincibilityEffects.StartEffects();
+        }
+
+        private void OnInvincibilityEnded()
+        {
+            _invincibilityEffects.StopEffects();
         }
     }
 }
