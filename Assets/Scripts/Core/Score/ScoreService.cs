@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Zenject;
 using Asteroids.Core.Enemies;
-using Asteroids.Core.Entity;
 using Asteroids.Core.Game;
 using Asteroids.Presentation.Enemies;
 

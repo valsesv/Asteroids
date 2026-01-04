@@ -4,7 +4,6 @@ using Zenject;
 using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Player;
-using Asteroids.Core.Weapons;
 
 namespace Asteroids.Presentation.Player
 {

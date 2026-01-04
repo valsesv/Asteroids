@@ -1,4 +1,3 @@
-using UnityEngine;
 using UnityEngine.Assertions;
 using Utils.JsonLoader;
 using Asteroids.Core.Player;

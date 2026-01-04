@@ -1,7 +1,6 @@
 using UnityEngine;
 using Zenject;
 using Asteroids.Presentation.Player;
-using Asteroids.Core.Entity.Components;
 using UnityEngine.Assertions;
 
 namespace Asteroids.Installers

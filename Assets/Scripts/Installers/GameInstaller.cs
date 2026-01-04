@@ -7,7 +7,6 @@ using Asteroids.Core.Score;
 using Asteroids.Core.Weapons;
 using UnityEngine.Assertions;
 using Asteroids.Core.Entity;
-using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Game;
 using Asteroids.Presentation.Player;
 using Asteroids.Presentation.Enemies;
