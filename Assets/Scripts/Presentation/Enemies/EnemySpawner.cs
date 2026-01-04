@@ -138,12 +138,11 @@ namespace Asteroids.Presentation.Enemies
             bool spawnAsteroid = randomValue < _enemySettings.AsteroidSpawnWeight;
 
             EnemyPresentation enemy;
+
             if (spawnAsteroid)
             {
                 var asteroid = _asteroidPool.Get();
                 enemy = asteroid;
-
-                enemy.SetSpawnPosition(spawnPosition);
 
                 Vector2 targetPoint = GetRandomPointInsideGameArea();
                 Vector2 direction = (targetPoint - spawnPosition).normalized;
@@ -153,9 +152,9 @@ namespace Asteroids.Presentation.Enemies
             {
                 var ufo = _ufoPool.Get();
                 enemy = ufo;
-
-                enemy.SetSpawnPosition(spawnPosition);
             }
+
+            enemy.SetSpawnPosition(spawnPosition);
 
             _activeEnemies.Add(enemy);
         }
@@ -217,6 +216,7 @@ namespace Asteroids.Presentation.Enemies
         {
             float x = Random.Range(_screenBounds.Left, _screenBounds.Right);
             float y = Random.Range(_screenBounds.Bottom, _screenBounds.Top);
+
             return new Vector2(x, y);
         }
 
@@ -224,6 +224,7 @@ namespace Asteroids.Presentation.Enemies
         {
             float cos = Mathf.Cos(angle);
             float sin = Mathf.Sin(angle);
+
             return new Vector2(
                 vector.x * cos - vector.y * sin,
                 vector.x * sin + vector.y * cos
@@ -231,4 +232,3 @@ namespace Asteroids.Presentation.Enemies
         }
     }
 }
-

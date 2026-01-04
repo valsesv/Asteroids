@@ -22,4 +22,3 @@ namespace Asteroids.Core.Enemies
         }
     }
 }
-

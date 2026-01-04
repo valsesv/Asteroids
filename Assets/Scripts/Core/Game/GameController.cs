@@ -4,6 +4,7 @@ using Asteroids.Core.Entity;
 using Asteroids.Core.Entity.Components;
 using Asteroids.Core.Player;
 using Asteroids.Presentation.Enemies;
+using UnityEngine;
 
 namespace Asteroids.Core.Game
 {
@@ -40,15 +41,14 @@ namespace Asteroids.Core.Game
         public void Initialize()
         {
             SetGameState(GameState.WaitingToStart);
-            _signalBus.Subscribe<GameOverSignal>(OnGameOver);
 
+            _signalBus.Subscribe<GameOverSignal>(OnGameOver);
             _healthComponent.OnDeath += OnPlayerDeath;
         }
 
         public void Dispose()
         {
             _signalBus?.Unsubscribe<GameOverSignal>(OnGameOver);
-
             _healthComponent.OnDeath -= OnPlayerDeath;
         }
 
@@ -63,6 +63,7 @@ namespace Asteroids.Core.Game
             _enemySpawner.SetSpawningEnabled(true);
             ResetPlayer();
             SetGameState(GameState.Playing);
+
             _signalBus.Fire<GameStartedSignal>();
         }
 
@@ -88,7 +89,7 @@ namespace Asteroids.Core.Game
         {
             _transformComponent.SetPosition(_startPositionSettings.Position);
             _transformComponent.SetRotation(_startPositionSettings.Rotation);
-            _physicsComponent.SetVelocity(UnityEngine.Vector2.zero);
+            _physicsComponent.SetVelocity(Vector2.zero);
             _healthComponent.ResetHealth();
             _shipComponent.CanControl = true;
         }
@@ -96,14 +97,16 @@ namespace Asteroids.Core.Game
         private void StopAllEnemies()
         {
             _enemySpawner.SetSpawningEnabled(false);
+
             foreach (var enemy in _enemySpawner.ActiveEnemies)
             {
                 if (enemy?.Entity == null)
                 {
                     continue;
                 }
+
                 var physicsComponent = enemy.Entity.GetComponent<PhysicsComponent>();
-                physicsComponent.SetVelocity(UnityEngine.Vector2.zero);
+                physicsComponent.SetVelocity(Vector2.zero);
             }
         }
 
@@ -115,4 +118,3 @@ namespace Asteroids.Core.Game
         }
     }
 }
-

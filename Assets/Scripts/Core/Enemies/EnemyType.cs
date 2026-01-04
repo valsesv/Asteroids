@@ -7,4 +7,3 @@ namespace Asteroids.Core.Enemies
         Fragment
     }
 }
-

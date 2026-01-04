@@ -21,6 +21,7 @@ namespace Asteroids.Infrastructure.Firebase
         public void Initialize()
         {
             _signalBus.Subscribe<GameStartedSignal>(OnGameStarted);
+
             _ = InitializeAsync();
         }
 
@@ -53,4 +54,3 @@ namespace Asteroids.Infrastructure.Firebase
         }
     }
 }
-

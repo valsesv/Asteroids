@@ -24,4 +24,3 @@ namespace Asteroids.Presentation.Enemies
         }
     }
 }
-

@@ -1,4 +1,5 @@
 using UnityEngine;
+
 namespace Asteroids.Core.Entity.Components
 {
     public class ScreenWrapComponent : ITickableComponent
@@ -24,10 +25,9 @@ namespace Asteroids.Core.Entity.Components
         {
             var position = _transform.Position;
 
-            UpdateGameAreaFlag(position);
-
             if (!_isInGameArea)
             {
+                UpdateGameAreaFlag(position);
                 return;
             }
 
@@ -68,7 +68,8 @@ namespace Asteroids.Core.Entity.Components
                 newPosition.x = _screenBounds.Left;
                 return true;
             }
-            else if (position.x < _screenBounds.Left)
+
+            if (position.x < _screenBounds.Left)
             {
                 newPosition.x = _screenBounds.Right;
                 return true;
@@ -84,6 +85,7 @@ namespace Asteroids.Core.Entity.Components
                 newPosition.y = _screenBounds.Bottom;
                 return true;
             }
+
             if (position.y < _screenBounds.Bottom)
             {
                 newPosition.y = _screenBounds.Top;
@@ -94,4 +96,3 @@ namespace Asteroids.Core.Entity.Components
         }
     }
 }
-

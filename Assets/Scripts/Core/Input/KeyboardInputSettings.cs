@@ -34,4 +34,3 @@ namespace Asteroids.Core.PlayerInput
         public int[] ShootLaserMouseButtons = { 1 };
     }
 }
-

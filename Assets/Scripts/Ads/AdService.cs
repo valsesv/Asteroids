@@ -26,29 +26,39 @@ namespace Asteroids.Infrastructure.Ads
         public void Initialize()
         {
             _signalBus.Subscribe<GameOverSignal>(OnGameOver);
+
             _interstitialAdLoader = new InterstitialAdLoader();
             _interstitialAdLoader.OnAdLoaded += HandleAdLoaded;
             _interstitialAdLoader.OnAdFailedToLoad += HandleAdFailedToLoad;
+
             LoadAd();
         }
 
         public void Dispose()
         {
             _signalBus?.Unsubscribe<GameOverSignal>(OnGameOver);
+
             CleanupAd();
-            if (_interstitialAdLoader != null)
+
+            if (_interstitialAdLoader == null)
             {
-                _interstitialAdLoader.OnAdLoaded -= HandleAdLoaded;
-                _interstitialAdLoader.OnAdFailedToLoad -= HandleAdFailedToLoad;
-                _interstitialAdLoader = null;
+                return;
             }
+
+            _interstitialAdLoader.OnAdLoaded -= HandleAdLoaded;
+            _interstitialAdLoader.OnAdFailedToLoad -= HandleAdFailedToLoad;
+            _interstitialAdLoader = null;
         }
 
         private void LoadAd()
         {
-            if (_isLoading || _isAdReady) return;
+            if (_isLoading || _isAdReady)
+            {
+                return;
+            }
 
             string adUnitId = GetCurrentAdUnitId();
+
             if (string.IsNullOrEmpty(adUnitId))
             {
                 Debug.LogWarning("[AdService] Ad Unit ID is empty");
@@ -99,7 +109,10 @@ namespace Asteroids.Infrastructure.Ads
 
         private void CleanupAd()
         {
-            if (_currentInterstitial == null) return;
+            if (_currentInterstitial == null)
+            {
+                return;
+            }
 
             _currentInterstitial.OnAdShown -= HandleAdShown;
             _currentInterstitial.OnAdDismissed -= HandleAdDismissed;
@@ -124,6 +137,7 @@ namespace Asteroids.Infrastructure.Ads
         private void HandleAdFailedToLoad(object _, AdFailedToLoadEventArgs args)
         {
             Debug.LogWarning($"[AdService] Failed to load ad: {args.Message}");
+
             _isLoading = false;
             _isAdReady = false;
         }
@@ -136,6 +150,7 @@ namespace Asteroids.Infrastructure.Ads
         private void HandleAdDismissed(object _, EventArgs __)
         {
             _isAdReady = false;
+
             CleanupAd();
             LoadAd();
         }
@@ -144,9 +159,9 @@ namespace Asteroids.Infrastructure.Ads
         {
             Debug.LogWarning($"[AdService] Failed to show ad: {args.Message}");
             _isAdReady = false;
+
             CleanupAd();
             LoadAd();
         }
     }
 }
-

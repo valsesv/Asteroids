@@ -11,4 +11,3 @@ namespace Asteroids.Infrastructure.Ads
         }
     }
 }
-

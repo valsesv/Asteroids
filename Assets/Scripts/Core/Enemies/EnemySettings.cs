@@ -14,4 +14,3 @@ namespace Asteroids.Core.Enemies
         public int AsteroidFragmentCount;
     }
 }
-

@@ -38,4 +38,3 @@ namespace Asteroids.Presentation.UI
         }
     }
 }
-

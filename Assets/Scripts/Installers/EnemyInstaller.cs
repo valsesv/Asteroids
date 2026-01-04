@@ -12,17 +12,12 @@ namespace Asteroids.Installers
         public override void InstallBindings()
         {
             AssertEnemyViewPrefab();
-            InstallSignals();
             InstallEnemyView();
         }
 
         private void AssertEnemyViewPrefab()
         {
             Assert.IsNotNull(_enemyPresentationPrefab, "EnemyPresentationPrefab is not assigned in EnemyInstaller!");
-        }
-
-        private void InstallSignals()
-        {
         }
 
         private void InstallEnemyView()
@@ -32,4 +27,3 @@ namespace Asteroids.Installers
         }
     }
 }
-

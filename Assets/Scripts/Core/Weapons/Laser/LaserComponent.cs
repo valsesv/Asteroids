@@ -11,7 +11,6 @@ namespace Asteroids.Core.Player
         public int CurrentCharges { get; private set; }
         public int MaxCharges => _settings.MaxCharges;
         private float _rechargeTimer;
-        private bool _isRecharging;
 
         public float RechargeProgress => _rechargeTimer / _settings.RechargeTime;
 
@@ -20,7 +19,6 @@ namespace Asteroids.Core.Player
             _settings = settings;
             CurrentCharges = _settings.MaxCharges;
             _rechargeTimer = 0f;
-            _isRecharging = false;
         }
 
         public bool TryConsumeCharge()
@@ -39,29 +37,21 @@ namespace Asteroids.Core.Player
             if (CurrentCharges >= _settings.MaxCharges)
             {
                 _rechargeTimer = 0f;
-                _isRecharging = false;
                 return;
-            }
-
-            if (!_isRecharging)
-            {
-                _isRecharging = true;
-                _rechargeTimer = 0f;
             }
 
             _rechargeTimer += Time.deltaTime;
 
             if (_rechargeTimer >= _settings.RechargeTime)
             {
-                CurrentCharges++;
-                _rechargeTimer = 0f;
-
-                if (CurrentCharges >= _settings.MaxCharges)
-                {
-                    _isRecharging = false;
-                }
+                AddCharge();
             }
+        }
+
+        private void AddCharge()
+        {
+            CurrentCharges++;
+            _rechargeTimer = 0f;
         }
     }
 }
-

@@ -22,4 +22,3 @@ namespace Asteroids.Core.Weapons
         public float Range;
     }
 }
-

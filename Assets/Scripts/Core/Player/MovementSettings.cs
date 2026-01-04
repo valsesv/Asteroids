@@ -9,4 +9,3 @@ namespace Asteroids.Core.Player
         public float RotationSpeed;
     }
 }
-

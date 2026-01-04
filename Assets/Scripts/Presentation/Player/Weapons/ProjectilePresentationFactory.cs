@@ -26,4 +26,3 @@ namespace Asteroids.Presentation.Player
         }
     }
 }
-

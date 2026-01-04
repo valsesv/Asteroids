@@ -48,6 +48,7 @@ namespace Asteroids.Presentation.Player
             {
                 _laserShootingLogic.OnLaserShot -= OnLaserShot;
             }
+
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
         }
@@ -72,6 +73,7 @@ namespace Asteroids.Presentation.Player
         private async UniTask DeactivateAfterDuration(CancellationToken cancellationToken)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(_laserSettings.Duration), cancellationToken: cancellationToken);
+
             Deactivate();
         }
 
@@ -105,14 +107,17 @@ namespace Asteroids.Presentation.Player
                 }
 
                 var enemy = collider.GetComponent<EnemyPresentation>();
+
                 if (enemy == null)
                 {
                     enemy = collider.GetComponentInParent<EnemyPresentation>();
                 }
+
                 if (enemy == null)
                 {
                     continue;
                 }
+
                 enemy.HandleDeath();
             }
         }
@@ -124,4 +129,3 @@ namespace Asteroids.Presentation.Player
         }
     }
 }
-

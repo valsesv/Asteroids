@@ -22,4 +22,3 @@ namespace Asteroids.Core.Entity
         public float Width => ExtentWidth * 2.0f;
     }
 }
-

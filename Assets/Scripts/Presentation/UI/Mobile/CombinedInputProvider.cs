@@ -37,7 +37,9 @@ namespace Asteroids.Presentation.UI
             Vector2 mobileInput = _mobileProvider?.GetDirectionInput() ?? Vector2.zero;
 
             if (mobileInput.magnitude > 0.01f)
+            {
                 return mobileInput;
+            }
 
             return Vector2.zero;
         }
@@ -59,4 +61,3 @@ namespace Asteroids.Presentation.UI
         }
     }
 }
-

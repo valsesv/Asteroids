@@ -12,11 +12,10 @@ namespace Asteroids.Core.Enemies
         public override void Initialize(GameEntity entity, DiContainer container)
         {
             base.Initialize(entity, container);
-            
+
             var enemySettings = container.Resolve<EnemySettings>();
             var movement = new AsteroidMovement(entity, enemySettings.AsteroidSpeed);
             entity.AddComponent(movement);
         }
     }
 }
-

@@ -40,4 +40,3 @@ namespace Asteroids.Core.Player
         }
     }
 }
-

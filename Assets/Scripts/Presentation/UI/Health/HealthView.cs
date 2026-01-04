@@ -35,6 +35,7 @@ namespace Asteroids.Presentation.UI
             _viewModel.OnHealthChanged += OnHealthChanged;
 
             int maxHealthCount = Mathf.RoundToInt(_healthSettings.MaxHealth);
+
             for (int i = 0; i < maxHealthCount; i++)
             {
                 CreateHeart();

@@ -7,4 +7,3 @@ namespace Asteroids.Core.Entity
         void Initialize(GameEntity entity, DiContainer container);
     }
 }
-

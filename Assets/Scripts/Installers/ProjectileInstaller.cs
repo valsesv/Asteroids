@@ -12,17 +12,12 @@ namespace Asteroids.Installers
         public override void InstallBindings()
         {
             AssertBulletViewPrefab();
-            InstallSignals();
             InstallBulletView();
         }
 
         private void AssertBulletViewPrefab()
         {
             Assert.IsNotNull(_bulletPresentationPrefab, "BulletPresentationPrefab is not assigned in ProjectileInstaller!");
-        }
-
-        private void InstallSignals()
-        {
         }
 
         private void InstallBulletView()
@@ -32,4 +27,3 @@ namespace Asteroids.Installers
         }
     }
 }
-

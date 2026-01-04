@@ -5,25 +5,24 @@ namespace Asteroids.Core.Entity.Components
     public class PhysicsComponent : ITickableComponent
     {
         private readonly TransformComponent _transform;
-        private readonly float _frictionCoefficient;
 
         public Vector2 Velocity { get; private set; }
         public float Mass { get; private set; }
-        public float FrictionCoefficient => _frictionCoefficient;
+        public float FrictionCoefficient { get; private set; }
 
         public PhysicsComponent(TransformComponent transform, float mass = 1f, float frictionCoefficient = 1f)
         {
             _transform = transform;
             Mass = mass;
             Velocity = Vector2.zero;
-            _frictionCoefficient = frictionCoefficient;
+            FrictionCoefficient = frictionCoefficient;
         }
 
         public void Tick()
         {
-            if (_frictionCoefficient < 1f)
+            if (FrictionCoefficient < 1f)
             {
-                Velocity *= Mathf.Pow(_frictionCoefficient, Time.deltaTime);
+                Velocity *= Mathf.Pow(FrictionCoefficient, Time.deltaTime);
             }
 
             _transform.Move(Velocity * Time.deltaTime);
@@ -69,4 +68,3 @@ namespace Asteroids.Core.Entity.Components
         }
     }
 }
-

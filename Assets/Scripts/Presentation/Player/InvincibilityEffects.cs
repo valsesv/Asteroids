@@ -19,6 +19,7 @@ namespace Asteroids.Presentation.Player
         {
             Assert.IsNotNull(_particleSystem);
             Assert.IsNotNull(_spriteRenderer);
+
             _originalColor = _spriteRenderer.color;
         }
 
@@ -49,7 +50,9 @@ namespace Asteroids.Presentation.Player
         private void StartFlicker()
         {
             StopFlicker();
+
             Color targetColor = new Color(_originalColor.r, _originalColor.g, _originalColor.b, 0.3f);
+
             _flickerTween = DOTween.To(
                 () => _spriteRenderer.color,
                 x => _spriteRenderer.color = x,
@@ -72,4 +75,3 @@ namespace Asteroids.Presentation.Player
         }
     }
 }
-

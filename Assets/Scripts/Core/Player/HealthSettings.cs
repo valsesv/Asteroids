@@ -8,4 +8,3 @@ namespace Asteroids.Core.Player
         public float BounceForce;
     }
 }
-

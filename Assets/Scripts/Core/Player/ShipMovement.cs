@@ -24,19 +24,21 @@ namespace Asteroids.Core.Player
 
         public void Tick()
         {
-            if (_shipComponent != null && _shipComponent.CanControl)
+            if (_shipComponent == null || !_shipComponent.CanControl)
             {
-                Vector2 directionInput = _inputProvider.GetDirectionInput();
+                return;
+            }
 
-                if (directionInput.magnitude > 0.01f)
-                {
-                    HandleDirectionBasedMovement(directionInput);
-                }
-                else
-                {
-                    HandleRotation();
-                    HandleMovement();
-                }
+            Vector2 directionInput = _inputProvider.GetDirectionInput();
+
+            if (directionInput.magnitude > 0.01f)
+            {
+                HandleDirectionBasedMovement(directionInput);
+            }
+            else
+            {
+                HandleRotation();
+                HandleMovement();
             }
         }
 
@@ -49,10 +51,12 @@ namespace Asteroids.Core.Player
             float maxRotationDelta = rotationSpeed * Time.deltaTime;
             float rotationDelta = Mathf.Clamp(angleDiff, -maxRotationDelta, maxRotationDelta);
             float newRotation = currentAngle + rotationDelta;
+
             _transform.SetRotation(newRotation);
 
             Vector2 worldDirection = directionInput.normalized;
             Vector2 acceleration = worldDirection * _movementSettings.Acceleration;
+
             _physics.AddVelocity(acceleration * Time.deltaTime);
             _physics.ClampSpeed(_movementSettings.MaxSpeed);
         }
@@ -74,6 +78,7 @@ namespace Asteroids.Core.Player
         private void HandleMovement()
         {
             float forwardInput = _inputProvider.GetForwardInput();
+
             if (Mathf.Abs(forwardInput) < 0.01f)
             {
                 return;
@@ -82,9 +87,9 @@ namespace Asteroids.Core.Player
             float angle = (_transform.Rotation + 90f) * Mathf.Deg2Rad;
             Vector2 forwardDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
             Vector2 acceleration = forwardDirection * forwardInput * _movementSettings.Acceleration;
+
             _physics.AddVelocity(acceleration * Time.deltaTime);
             _physics.ClampSpeed(_movementSettings.MaxSpeed);
         }
     }
 }
-

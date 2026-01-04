@@ -59,6 +59,7 @@ namespace Asteroids.Presentation.Enemies
         protected virtual void OnCollisionEnter2D(Collision2D collision)
         {
             var bulletPresentation = collision.gameObject.GetComponent<BulletPresentation>();
+
             if (bulletPresentation != null)
             {
                 GetDamage();
@@ -77,8 +78,8 @@ namespace Asteroids.Presentation.Enemies
             {
                 return;
             }
+
             GetDamage();
         }
     }
 }
-

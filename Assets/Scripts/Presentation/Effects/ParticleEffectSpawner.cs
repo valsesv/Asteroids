@@ -29,10 +29,12 @@ namespace Asteroids.Presentation.Effects
         {
             var instance = Instantiate(_explosionPrefab, _particleParent);
             var particleSystem = instance.GetComponent<ParticleSystem>();
+
             if (particleSystem == null)
             {
                 particleSystem = instance.GetComponentInChildren<ParticleSystem>();
             }
+            
             return particleSystem;
         }
 
@@ -62,4 +64,3 @@ namespace Asteroids.Presentation.Effects
         }
     }
 }
-

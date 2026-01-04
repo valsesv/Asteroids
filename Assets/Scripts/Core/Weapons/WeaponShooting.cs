@@ -26,6 +26,7 @@ namespace Asteroids.Core.Player
         {
             var transform = _entity.GetComponent<TransformComponent>();
             var laserComponent = _entity.GetComponent<LaserComponent>();
+
             _bulletShooting.Init(transform);
             _laserShooting.Init(transform, laserComponent);
         }
@@ -42,4 +43,3 @@ namespace Asteroids.Core.Player
         }
     }
 }
-

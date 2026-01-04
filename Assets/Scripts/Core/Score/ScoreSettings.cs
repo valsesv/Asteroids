@@ -8,4 +8,3 @@ namespace Asteroids.Core.Score
         public int FragmentReward;
     }
 }
-

@@ -31,6 +31,7 @@ namespace Asteroids.Presentation.Enemies
         public override void GetDamage()
         {
             base.GetDamage();
+
             FragmentAsteroid();
         }
 
@@ -39,8 +40,8 @@ namespace Asteroids.Presentation.Enemies
             PhysicsComponent physicsComponent = Entity.GetComponent<PhysicsComponent>();
             Vector2 position = _transformComponent.Position;
             Vector2 velocity = physicsComponent.Velocity;
+
             _enemySpawner.FragmentAsteroid(this, position, velocity, Entity.GetComponent<AsteroidComponent>());
         }
     }
 }
-

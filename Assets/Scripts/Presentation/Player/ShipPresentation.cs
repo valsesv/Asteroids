@@ -58,6 +58,7 @@ namespace Asteroids.Presentation.Player
             Debug.Log($"[ShipPresentation] Collision entered with: {collision.gameObject.name}");
 
             var enemyPresentation = collision.gameObject.GetComponent<EnemyPresentation>();
+
             if (enemyPresentation == null)
             {
                 return;
@@ -84,4 +85,3 @@ namespace Asteroids.Presentation.Player
         }
     }
 }
-

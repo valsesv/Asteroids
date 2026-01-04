@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Asteroids.Core.Entity.Components
 {
@@ -22,7 +23,7 @@ namespace Asteroids.Core.Entity.Components
                 return;
             }
 
-            CurrentHealth = System.Math.Max(0f, CurrentHealth - damage);
+            CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
 
             if (IsDead)
             {
@@ -36,4 +37,3 @@ namespace Asteroids.Core.Entity.Components
         }
     }
 }
-

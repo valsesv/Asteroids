@@ -26,6 +26,7 @@ namespace Asteroids.Core.Entity
         public T Get()
         {
             T obj;
+
             if (_inactiveObjects.Count > 0)
             {
                 obj = _inactiveObjects.Pop();
@@ -97,4 +98,3 @@ namespace Asteroids.Core.Entity
         }
     }
 }
-

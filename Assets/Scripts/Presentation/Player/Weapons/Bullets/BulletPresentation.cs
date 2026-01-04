@@ -12,7 +12,6 @@ namespace Asteroids.Presentation.Player
         public GameEntity Entity { get; private set; }
 
         [Inject] private DiContainer _container;
-        [Inject] private TickableManager _tickableManager;
         [Inject] private ProjectileSpawner _projectileSpawner;
 
         private TransformComponent _transformComponent;
@@ -78,14 +77,6 @@ namespace Asteroids.Presentation.Player
         private void OnCollisionEnter2D(Collision2D _)
         {
             _projectileSpawner.ReturnBullet(this);
-        }
-
-        private void RegisterTickableComponents()
-        {
-            foreach (var tickableComponent in Entity.GetTickableComponents())
-            {
-                _tickableManager.Add(tickableComponent);
-            }
         }
     }
 }

@@ -62,6 +62,7 @@ namespace Asteroids.Core.Score
             {
                 return reward;
             }
+
             return 0;
         }
 
@@ -83,4 +84,3 @@ namespace Asteroids.Core.Score
         }
     }
 }
-

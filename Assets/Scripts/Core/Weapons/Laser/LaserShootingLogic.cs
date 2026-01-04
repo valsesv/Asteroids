@@ -43,11 +43,9 @@ namespace Asteroids.Core.Player
         {
             float angle = (_transform.Rotation + 90f) * Mathf.Deg2Rad;
             Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-
             Vector2 startPosition = _transform.Position;
 
             OnLaserShot?.Invoke(startPosition, direction);
         }
     }
 }
-

@@ -18,7 +18,10 @@ namespace Asteroids.Presentation.UI
         public float GetForwardInput()
         {
             if (_joystickView == null)
+            {
                 return 0f;
+            }
+
             return _joystickView.Direction.y;
         }
 
@@ -30,7 +33,9 @@ namespace Asteroids.Presentation.UI
         public Vector2 GetDirectionInput()
         {
             if (_joystickView == null)
+            {
                 return Vector2.zero;
+            }
 
             return _joystickView.Direction;
         }
@@ -38,7 +43,9 @@ namespace Asteroids.Presentation.UI
         public bool GetShootBulletInput()
         {
             if (_mobileInputView == null)
+            {
                 return false;
+            }
 
             return _mobileInputView.IsShootBulletPressed;
         }
@@ -59,4 +66,3 @@ namespace Asteroids.Presentation.UI
         }
     }
 }
-

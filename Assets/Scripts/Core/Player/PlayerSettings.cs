@@ -10,4 +10,3 @@ namespace Asteroids.Core.Player
         public WeaponSettings Weapon;
     }
 }
-

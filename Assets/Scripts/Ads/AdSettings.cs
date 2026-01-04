@@ -7,4 +7,3 @@ namespace Asteroids.Infrastructure.Ads
         public string InterstitialAdUnitIdIOS = "demo-interstitial-yandex";
     }
 }
-

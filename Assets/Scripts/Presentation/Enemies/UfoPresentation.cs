@@ -15,8 +15,8 @@ namespace Asteroids.Presentation.Enemies
             float rotation = transform.eulerAngles.z;
 
             Entity = entityFactory.Create(position, rotation, physicsMass: 1f);
+
             _container.BindInstance(Entity).AsSingle();
         }
     }
 }
-

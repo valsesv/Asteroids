@@ -29,4 +29,3 @@ namespace Asteroids.Core.Entity.Components
         }
     }
 }
-

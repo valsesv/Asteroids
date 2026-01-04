@@ -60,6 +60,7 @@ namespace Asteroids.Core.Player
         private void RegisterTickableComponents(GameEntity entity)
         {
             var tickableManager = _container.Resolve<TickableManager>();
+
             foreach (var tickableComponent in entity.GetTickableComponents())
             {
                 tickableManager.Add(tickableComponent);

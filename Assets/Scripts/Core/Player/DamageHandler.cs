@@ -37,6 +37,7 @@ namespace Asteroids.Core.Player
             {
                 return false;
             }
+
             if (IsInvincible)
             {
                 return false;
@@ -45,6 +46,7 @@ namespace Asteroids.Core.Player
             ApplyBounce(enemyEntity);
 
             _healthComponent.TakeDamage(damage);
+
             if (_healthComponent.IsDead == false)
             {
                 _ = StartInvincibilityAsync();

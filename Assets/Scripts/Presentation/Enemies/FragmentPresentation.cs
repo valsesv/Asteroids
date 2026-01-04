@@ -8,6 +8,7 @@ namespace Asteroids.Presentation.Enemies
     public class FragmentPresentation : EnemyPresentation
     {
         private AsteroidMovement _asteroidMovement;
+
         [Inject]
         public void Construct(
             EntityFactory<FragmentComponent> entityFactory)
@@ -17,6 +18,7 @@ namespace Asteroids.Presentation.Enemies
 
             Entity = entityFactory.Create(position, rotation);
             _asteroidMovement = Entity.GetComponent<AsteroidMovement>();
+
             _container.BindInstance(Entity).AsSingle();
         }
 
@@ -26,4 +28,3 @@ namespace Asteroids.Presentation.Enemies
         }
     }
 }
-

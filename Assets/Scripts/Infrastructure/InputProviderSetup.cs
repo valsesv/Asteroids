@@ -24,6 +24,7 @@ namespace Asteroids.Infrastructure
             }
 
             InputProviderType providerType;
+
             if (isEditor && joystickView != null && mobileInputView != null)
             {
                 providerType = InputProviderType.Combined;
@@ -60,4 +61,3 @@ namespace Asteroids.Infrastructure
         Combined
     }
 }
-

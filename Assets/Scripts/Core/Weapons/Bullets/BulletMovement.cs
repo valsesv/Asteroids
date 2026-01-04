@@ -16,8 +16,6 @@ namespace Asteroids.Core.Player
         {
             _physics = physics;
             _speed = speed;
-            _physics.SetVelocity(_direction * _speed);
-            _physics.ClampSpeed(_speed);
         }
 
         public void SetDirection(Vector2 direction)
@@ -28,4 +26,3 @@ namespace Asteroids.Core.Player
         }
     }
 }
-

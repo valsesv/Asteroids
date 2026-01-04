@@ -51,4 +51,3 @@ namespace Asteroids.Infrastructure
         public ScoreSettings ScoreSettings { get; set; }
     }
 }
-

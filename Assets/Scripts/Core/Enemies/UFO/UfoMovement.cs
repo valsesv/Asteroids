@@ -33,4 +33,3 @@ namespace Asteroids.Core.Enemies
         }
     }
 }
-
